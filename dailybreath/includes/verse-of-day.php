@@ -29,8 +29,10 @@ function dailybreath_verse_of_day(PDO $pdo, string $locale = 'en'): array
 
     $result = null;
     try {
-        $query = $pdo->prepare("SELECT verse_text, scripture_reference FROM verse_day_posts WHERE status='published' AND publish_date<=? AND locale=? ORDER BY publish_date DESC, id DESC LIMIT 1");
-        $query->execute([date('Y-m-d'), $locale]);
+        // Prefer the visitor's language, then use the managed English edition
+        // until a localized post has been published for the same experience.
+        $query = $pdo->prepare("SELECT verse_text, scripture_reference FROM verse_day_posts WHERE status='published' AND publish_date<=? AND locale IN (?, 'en') ORDER BY CASE WHEN locale=? THEN 0 ELSE 1 END, publish_date DESC, id DESC LIMIT 1");
+        $query->execute([date('Y-m-d'), $locale, $locale]);
         $row = $query->fetch(PDO::FETCH_ASSOC);
         if ($row && trim((string)($row['verse_text'] ?? '')) !== '') {
             $result = [

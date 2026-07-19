@@ -175,9 +175,21 @@
   }
   function draw(pulse=0){style()==='botanical'?drawBotanical(pulse):drawForest(pulse)}
 
-  function applyVerseItem(item){
-    const settings=languageSettings[verseLanguage()];$('heading').value=settings.heading;$('verse').value=item.verse;$('reference').value=item.reference;$('translation').value=item.translation||'KJV';$('footer').value=item.footer||'WALK IN FAITH TODAY.';
-    const now=new Date(),local=new Date(now.getTime()-now.getTimezoneOffset()*60000);$('publishDate').value=local.toISOString().slice(0,10);draw();
+  function applyVerseItem(item,preserveDate=false){
+    const settings=languageSettings[verseLanguage()];$('heading').value=item.heading||settings.heading;$('verse').value=item.verse;$('reference').value=item.reference;$('translation').value=item.translation||'KJV';$('footer').value=item.footer||'WALK IN FAITH TODAY.';
+    if(!preserveDate){const now=new Date(),local=new Date(now.getTime()-now.getTimezoneOffset()*60000);$('publishDate').value=local.toISOString().slice(0,10)}draw();
+  }
+  async function loadManagedVerse(showMessage=false){
+    const date=value('publishDate');
+    if(!date)return;
+    try{
+      const params=new URLSearchParams({type:'bible',managed:'1',date,language:verseLanguage()});
+      const response=await fetch(`/server/admin/daily-studio/api/random-content.php?${params}`,{cache:'no-store'});
+      const data=await response.json();
+      if(!response.ok)throw new Error(data.error||'Managed verse could not be loaded.');
+      if(data.item){applyVerseItem(data.item,true);if(showMessage)status(`${data.item.status==='published'?'Published':'Draft'} Content Manager verse loaded for ${date}.`)}
+      else if(showMessage)status(`No managed verse for ${date}; the generator placeholder is ready.`);
+    }catch(error){if(showMessage)status(error.message,true)}
   }
   function populateBooks(){
     const books=[...new Set(verseCatalog.map(item=>item.book))];$('verseBook').innerHTML=books.map(book=>`<option value="${book}">${book}</option>`).join('');populateChapters();
@@ -286,12 +298,12 @@
   }
   if('speechSynthesis' in window){window.speechSynthesis.onvoiceschanged=populateVoices;populateVoices()}
   document.querySelectorAll('input[name="narrationLanguage"]').forEach(input=>input.addEventListener('change',()=>{populateVoices();status(`${input.nextElementSibling.textContent.trim()} narrator selected.`);draw()}));
-  document.querySelectorAll('input[name="verseLanguage"]').forEach(input=>input.addEventListener('change',()=>{const settings=languageSettings[input.value];const narration=document.querySelector(`input[name="narrationLanguage"][value="${settings.narration}"]`);if(narration)narration.checked=true;$('locale').value=settings.locale;$('heading').value=settings.heading;populateVoices();loadVerseCatalog();status(`${input.nextElementSibling.textContent.trim()} selected for verse text and audio.`);draw()}));
-  $('verseBook').addEventListener('change',populateChapters);$('verseChapter').addEventListener('change',populateVerseNumbers);$('loadSelectedVerse').addEventListener('click',loadSelectedVerse);
+  document.querySelectorAll('input[name="verseLanguage"]').forEach(input=>input.addEventListener('change',()=>{const settings=languageSettings[input.value];const narration=document.querySelector(`input[name="narrationLanguage"][value="${settings.narration}"]`);if(narration)narration.checked=true;$('locale').value=settings.locale;$('heading').value=settings.heading;populateVoices();loadVerseCatalog();loadManagedVerse();status(`${input.nextElementSibling.textContent.trim()} selected for verse text and audio.`);draw()}));
+  $('verseBook').addEventListener('change',populateChapters);$('verseChapter').addEventListener('change',populateVerseNumbers);$('loadSelectedVerse').addEventListener('click',loadSelectedVerse);$('publishDate').addEventListener('change',()=>loadManagedVerse(true));
 
   controls.forEach(control=>{control.addEventListener(control.type==='file'?'change':'input',draw);control.addEventListener('change',draw)});
   $('downloadPng').addEventListener('click',downloadPng);$('saveDraft').addEventListener('click',saveDraft);$('previewAudio').addEventListener('click',previewNarration);$('stopAudio').addEventListener('click',()=>{stopNarration();status('Narration stopped.')});$('exportVideo').addEventListener('click',exportVideo);$('exportAllVideo').addEventListener('click',exportAllLanguagesVideo);$('exportMp3').addEventListener('click',exportMp3);$('generateTodayVerse').addEventListener('click',generateTodayVerse);
-  forest.onload=draw;botanical.onload=draw;loadVerseCatalog();draw();
+  forest.onload=draw;botanical.onload=draw;loadVerseCatalog();loadManagedVerse();draw();
 })();
 </script>
 </body>

@@ -1,3 +1,3 @@
 <?php
-header('Location: /admin/stencil-pack-generator.php');
+header('Location: /server/admin/daily-studio/stencil-packs.php');
 exit;

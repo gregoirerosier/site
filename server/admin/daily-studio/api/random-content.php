@@ -38,6 +38,34 @@ try {
     if ($type === 'bible') {
         $language = strtolower((string)($_GET['language'] ?? 'en'));
         if (!in_array($language, ['en','fr','es','jm','ht'], true)) $language = 'en';
+
+        // Let the generator use the dated Content Manager entry first. Public
+        // pages still expose published rows only; authenticated Studio users
+        // may preview either a draft or a published entry here.
+        if (isset($_GET['managed']) && $_GET['managed'] === '1') {
+            $managedDate = (string)($_GET['date'] ?? date('Y-m-d'));
+            if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $managedDate)) {
+                jsonOut(['ok'=>false, 'error'=>'A valid managed-content date is required.'], 422);
+            }
+            require $root . '/beyond-id/includes/db.php';
+            $managedLocale = $language === 'jm' ? 'en' : $language;
+            $statement = $pdo->prepare("SELECT publish_date,locale,translation_code,heading,verse_text,scripture_reference,footer_message,status FROM verse_day_posts WHERE publish_date=? AND locale IN (?, 'en') ORDER BY CASE WHEN locale=? THEN 0 ELSE 1 END, CASE WHEN status='published' THEN 0 ELSE 1 END, id DESC LIMIT 1");
+            $statement->execute([$managedDate, $managedLocale, $managedLocale]);
+            $managed = $statement->fetch(PDO::FETCH_ASSOC);
+            if (!$managed || trim((string)($managed['verse_text'] ?? '')) === '') {
+                jsonOut(['ok'=>true, 'item'=>null, 'source'=>'generator_placeholder']);
+            }
+            jsonOut(['ok'=>true, 'source'=>'content_manager', 'item'=>[
+                'verse'=>(string)$managed['verse_text'],
+                'reference'=>(string)$managed['scripture_reference'],
+                'translation'=>(string)($managed['translation_code'] ?: 'KJV'),
+                'heading'=>(string)($managed['heading'] ?: 'VERSE OF THE DAY'),
+                'footer'=>(string)($managed['footer_message'] ?: 'WALK IN FAITH TODAY.'),
+                'publish_date'=>(string)$managed['publish_date'],
+                'locale'=>(string)$managed['locale'],
+                'status'=>(string)$managed['status'],
+            ]]);
+        }
         $historyFile = $storage . '/bible-history-' . $language . '.json';
         if ($reset) { writeHistory($historyFile, []); jsonOut(['ok'=>true,'reset'=>true,'language'=>$language]); }
         // Local KJV bank: generation does not depend on a web request or WEB text file.

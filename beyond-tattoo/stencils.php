@@ -97,6 +97,9 @@ foreach ($collections as $collection) {
 
 <section class="bt-page-hero"><div class="bt-wrap"><p class="bt-gold-kicker">✦ SEASON ONE LIBRARY</p><h1>55 HAND-DESIGNED<br><strong>STENCIL DROPS</strong></h1><p>Browse the complete release schedule. Finished drops include clean linework, a printable PDF, watermarked preview, placement guidance and matching video assets.</p><div class="bt-main-actions"><a class="bt-glow-button" href="<?= e($downloadFile) ?>" download>↓ Download today’s stencil</a><a class="bt-outline-button" href="collections.php">Browse collections</a></div></div></section>
 <section class="bt-page-section"><div class="bt-wrap">
+  <?php if (($stencilDay['updated_at'] ?? '') !== ''): ?>
+  <section class="bt-library-group" id="studio-release"><div class="bt-library-heading"><div><p>BEYOND STUDIO RELEASE</p><h2>Latest published stencil</h2></div><span>Live now</span></div><div class="bt-stencil-schedule-grid"><article class="bt-schedule-card is-current is-unlocked" role="button" tabindex="0" aria-haspopup="dialog" aria-label="View <?= e($stencilDay['title']) ?> stencil" data-stencil-preview="<?= e($stencilDay['preview_url']) ?>" data-stencil-title="<?= e($stencilDay['title']) ?>" data-stencil-collection="<?= e($stencilDay['collection']) ?>" data-stencil-date="<?= e($stencilDay['display_date']) ?>" data-stencil-download="<?= e($stencilDay['transfer_png_url']) ?>"><div class="bt-schedule-number">AI</div><div><time datetime="<?= e($stencilDay['iso_date']) ?>"><?= e($stencilDay['display_date']) ?></time><h3><?= e($stencilDay['title']) ?></h3><p><?= e($stencilDay['description']) ?></p></div><span>View stencil</span></article></div></section>
+  <?php endif; ?>
   <div class="bt-category-browser" aria-label="Browse stencils by category">
     <a class="<?= $activeCategory === '' ? 'is-active' : '' ?>" href="stencils.php"><b>▦</b><span>All</span><small>55</small></a>
     <?php foreach ($categoryOptions as $slug => $option): ?>

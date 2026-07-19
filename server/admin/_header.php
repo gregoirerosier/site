@@ -13,8 +13,8 @@ $studioGroups = [
     ],
     'Beyond Tattoo' => [
         ['/server/admin/daily-studio/tattoo-generator.php', 'Stencil library', '✒️'],
-        ['/admin/stencil-pack-generator.php', 'Stencil pack generator', '🎨'],
-        ['/server/admin/daily-studio/publish-tattoo.php', 'Publish tattoo content', '📤'],
+        ['/server/admin/daily-studio/stencil-packs.php', 'Stencil packs', '🎨'],
+        ['/server/admin/daily-studio/stencil-library.php', 'Generate & publish', '📤'],
     ],
     'Shared tools' => [
         ['/server/admin/daily-studio/voice-settings.php', 'Voice settings', '🎙️'],

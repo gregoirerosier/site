@@ -35,23 +35,41 @@ function studio_narration_generate(string $text,string $locale): array {
     'elevenlabs'=>new ElevenLabsProvider((array)$cfg['providers']['elevenlabs']),
     'azure'=>new AzureSpeechProvider((array)$cfg['providers']['azure']),
   ]);
-  $provider=studio_narration_provider();
-  $voice=studio_narration_voice($provider,$locale);
-  if($provider==='elevenlabs' && $voice===''){
-    $voice=studio_elevenlabs_first_voice((array)$cfg['providers']['elevenlabs']);
-    if($voice==='') throw new RuntimeException('No ElevenLabs voice is configured and no account voice could be discovered. Add a voice in ElevenLabs, then save its Voice ID in Premium Voices.');
-    // Make the discovered voice available to this request without persisting secrets or account data.
-    $cfg['providers']['elevenlabs']['voices'][$locale]=$voice;
-    $service=new NarrationService([
-      'openai'=>new OpenAIProvider((array)$cfg['providers']['openai']),
-      'elevenlabs'=>new ElevenLabsProvider((array)$cfg['providers']['elevenlabs']),
-      'azure'=>new AzureSpeechProvider((array)$cfg['providers']['azure']),
-    ]);
+  $primary=studio_narration_provider();
+  $queue=array_values(array_unique(array_merge([$primary],(array)($cfg['fallback_providers']??[]),['openai','azure'])));
+  $lastError=null;
+  foreach($queue as $provider){
+    $provider=strtolower(trim((string)$provider));
+    $providerCfg=(array)($cfg['providers'][$provider]??[]);
+    if($provider==='openai' && trim((string)($providerCfg['api_key']??''))==='') continue;
+    if($provider==='elevenlabs' && trim((string)($providerCfg['api_key']??''))==='') continue;
+    if($provider==='azure' && (trim((string)($providerCfg['api_key']??''))===''||trim((string)($providerCfg['region']??''))==='')) continue;
+    $voice=studio_narration_voice($provider,$locale);
+    if($provider==='openai' && $voice==='') $voice='coral';
+    if($provider==='elevenlabs' && $voice==='') $voice=studio_elevenlabs_first_voice($providerCfg);
+    try{
+      return $service->generate($provider,[
+        'text'=>$text,'language'=>$locale,'voice'=>$voice,'format'=>'mp3','speed'=>1.0,
+        'instructions'=>'Warm, clear, natural premium narration. Preserve scripture references and French pronunciation accurately.'
+      ]);
+    }catch(Throwable $error){
+      $lastError=$error;
+      // A saved ElevenLabs voice can be removed or lose access. Discover an
+      // account voice and retry once before moving to another provider.
+      if($provider==='elevenlabs'){
+        $discovered=studio_elevenlabs_first_voice($providerCfg);
+        if($discovered!=='' && $discovered!==$voice){
+          $retryCfg=$cfg;
+          $retryCfg['providers']['elevenlabs']['voices'][$locale]=$discovered;
+          $retryService=new NarrationService(['elevenlabs'=>new ElevenLabsProvider((array)$retryCfg['providers']['elevenlabs'])]);
+          try{return $retryService->generate('elevenlabs',['text'=>$text,'language'=>$locale,'voice'=>$discovered,'format'=>'mp3','speed'=>1.0,'instructions'=>'Warm, clear, natural premium narration.']);}catch(Throwable $retryError){$lastError=$retryError;}
+        }
+      }
+      error_log('Studio narration provider '.$provider.' failed: '.$error->getMessage());
+    }
   }
-  return $service->generate($provider,[
-    'text'=>$text,'language'=>$locale,'voice'=>$voice,'format'=>'mp3','speed'=>1.0,
-    'instructions'=>'Warm, clear, natural premium narration. Preserve scripture references and French pronunciation accurately.'
-  ],(array)($cfg['fallback_providers']??[]));
+  if($lastError instanceof Throwable) throw $lastError;
+  throw new RuntimeException('No narration provider is fully configured. Add an ElevenLabs, OpenAI, or Azure Speech key in Premium Voices.');
 }
 function studio_store_mp3(string $audio,string $library,string $date,string $locale,string $text): array {
   if(strlen($audio)<128) throw new RuntimeException('The narration provider returned invalid audio.');

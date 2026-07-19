@@ -8,8 +8,8 @@ $tabs=[
   'french'=>['Beyond French','Generator','french-generator.php'],
   'french-options'=>['Beyond French','Options','french-options.php'],
   'tattoo-library'=>['Beyond Tattoo','Stencil library','tattoo-generator.php'],
-  'tattoo-pack'=>['Beyond Tattoo','Stencil packs','/admin/stencil-pack-generator.php'],
-  'tattoo-publish'=>['Beyond Tattoo','Publish','publish-tattoo.php'],
+  'tattoo-pack'=>['Beyond Tattoo','Stencil packs','stencil-packs.php'],
+  'tattoo-publish'=>['Beyond Tattoo','Publish','stencil-library.php#publish'],
   'voices'=>['Shared','Voices','voice-settings.php'],
 ];
 ?>

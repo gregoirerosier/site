@@ -2,9 +2,12 @@
 declare(strict_types=1);
 require __DIR__ . '/bootstrap.php';
 require_once dirname(__DIR__, 3) . '/beyond-tattoo/includes/stencil-content.php';
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header('Location: /server/admin/daily-studio/stencil-library.php#publish', true, 302);
+    exit;
+}
 header('Content-Type: application/json; charset=UTF-8');
 try {
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') throw new RuntimeException('POST required.');
     if (!Auth::check()) { http_response_code(403); throw new RuntimeException('Administrator access required.'); }
     $csrf = is_string($_SERVER['HTTP_X_CSRF_TOKEN'] ?? null) ? $_SERVER['HTTP_X_CSRF_TOKEN'] : null;
     if (!Auth::verifyCsrf($csrf)) { http_response_code(403); throw new RuntimeException('Invalid security token.'); }
