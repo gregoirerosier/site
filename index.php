@@ -58,8 +58,6 @@ if (is_file($frenchLessonsPath)) {
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <script>(function(){try{const t=localStorage.getItem('beyond-theme');document.documentElement.dataset.theme=['dark','light','sunset'].includes(t)?t:'sunset';}catch(e){document.documentElement.dataset.theme='sunset';}})();</script>
 <meta name="theme-color" content="#050817">
-<link rel="icon" type="image/webp" href="assets/icons/beyond-os-192.webp">
-<link rel="apple-touch-icon" href="assets/icons/beyond-os.webp">
 <title>Beyond OS 2.2.1 | Live. Learn. Earn. Explore.</title>
 <meta name="description" content="Health, education, wallet and entertainment connected through one secure Beyond ID and one shared bit$ balance.">
 <style>
@@ -101,13 +99,18 @@ html[data-theme="light"]{background:#f4f6fc}html[data-theme="light"] body{color:
 html[data-theme="light"] .world.wallet{background:linear-gradient(130deg,#eef5ff,#e2ecff 58%,#f2e9ff)}
 #beyond-os-shell .locale-picker,#beyond-os-shell .theme-toggle{width:38px;height:38px;flex:0 0 38px}
 @media(max-width:650px){#beyond-os-shell .bos-actions{gap:6px}}
+.brand-atom{position:relative;display:inline-block;width:34px;height:34px;border:1px solid rgba(255,255,255,.18);border-radius:10px;vertical-align:middle;margin-right:9px;background:#0b0b1d;box-shadow:0 6px 18px rgba(88,108,255,.3)}
+.brand-atom i{position:absolute;left:6px;top:13px;width:20px;height:7px;border:1.7px solid #8d70ff;border-radius:50%}.brand-atom i:nth-child(2){transform:rotate(60deg)}.brand-atom i:nth-child(3){transform:rotate(120deg)}
+.brand-atom u{position:absolute;left:14px;top:15px;width:5px;height:5px;border-radius:50%;background:#f05ab8;box-shadow:0 0 7px #f05ab8;text-decoration:none}
+.nav>a:nth-child(1){border-color:#f2469d}.nav>a:nth-child(2){border-color:#4ee097}.nav>a:nth-child(3){border-color:#ffbf32}.nav>a:nth-child(4){border-color:#448cff}
+.nav>a:nth-child(1):hover,.nav>a:nth-child(1):focus-visible{color:#ff73ba}.nav>a:nth-child(2):hover,.nav>a:nth-child(2):focus-visible{color:#70e9a0}.nav>a:nth-child(3):hover,.nav>a:nth-child(3):focus-visible{color:#ffd16b}.nav>a:nth-child(4):hover,.nav>a:nth-child(4):focus-visible{color:#70a7ff}
 </style>
 </head>
 <body>
 <header class="top wrap">
-    <a class="brand" href="./"><img src="assets/icons/beyond-os-192.webp" alt="" style="width:34px;height:34px;border-radius:10px;vertical-align:middle;margin-right:9px">BEYOND <span>OS</span><small>THE CONNECTED IMAGINATION ECOSYSTEM</small></a>
+    <a class="brand" href="./"><b class="brand-atom" aria-hidden="true"><i></i><i></i><i></i><u></u></b>BEYOND <span>OS</span><small>THE CONNECTED IMAGINATION ECOSYSTEM</small></a>
     <nav class="nav" aria-label="Primary navigation">
-        <a href="app-store/">App Store</a><a href="beyond-finance/">Wallet</a><a href="beyond-investing/">Investing</a><a href="beyond-tv/">TV</a>
+        <a href="/app-store/">App Store</a><a href="/beyond-finance/">Wallet</a><a href="/beyond-investing/">Investing</a><a href="/beyond-tv/">TV</a>
     </nav>
 </header>
 <main>
