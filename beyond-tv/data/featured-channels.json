@@ -1,0 +1,98 @@
+[
+  {
+    "number": 1,
+    "slug": "classic-cartoon-theater",
+    "name": "Classic Cartoon Theater",
+    "icon": "🎞️",
+    "description": "Vintage animation and weekend cartoon blocks.",
+    "category": "Cartoons"
+  },
+  {
+    "number": 2,
+    "slug": "beyond-cartoons",
+    "name": "Beyond Cartoons",
+    "icon": "📺",
+    "description": "Anime, action cartoons, and animated comedy.",
+    "category": "Cartoons"
+  },
+  {
+    "number": 3,
+    "slug": "bubble-guppies",
+    "name": "Preschool TV",
+    "icon": "🐾",
+    "description": "Bluey and curated Nick Jr. libraries.",
+    "category": "Preschool"
+  },
+  {
+    "number": 4,
+    "slug": "space-tv",
+    "name": "Beyond Space",
+    "icon": "🛰️",
+    "description": "Space science, NASA, and cosmic ambience.",
+    "category": "Science"
+  },
+  {
+    "number": 5,
+    "slug": "beyond-ancient",
+    "name": "Beyond Ancient",
+    "icon": "🏺",
+    "description": "Archaeology, civilizations, and ancient history.",
+    "category": "History"
+  },
+  {
+    "number": 6,
+    "slug": "classic-cinema",
+    "name": "Beyond Movies",
+    "icon": "🎬",
+    "description": "Features, double bills, and weekend marathons.",
+    "category": "Movies"
+  },
+  {
+    "number": 7,
+    "slug": "beyond-french",
+    "name": "Beyond French",
+    "icon": "🇫🇷",
+    "description": "Lessons, conversation, and French culture.",
+    "category": "Education"
+  },
+  {
+    "number": 8,
+    "slug": "beyond-health",
+    "name": "Beyond Health",
+    "icon": "💚",
+    "description": "Fitness, nutrition, meditation, and wellness.",
+    "category": "Wellness"
+  },
+  {
+    "number": 9,
+    "slug": "beyond-comedy",
+    "name": "Beyond Comedy",
+    "icon": "😂",
+    "description": "Sitcoms, teen comedy, and feel-good movies.",
+    "category": "Comedy"
+  },
+  {
+    "number": 10,
+    "slug": "beyond-mystery",
+    "name": "Beyond Mystery",
+    "icon": "🔎",
+    "description": "Detectives, puzzles, thrillers, and mysteries.",
+    "category": "Mystery"
+  },
+  {
+    "number": 11,
+    "slug": "beyond-after-dark",
+    "name": "Beyond After Dark",
+    "icon": "🌙",
+    "description": "Goosebumps, Haunting Hour, and supernatural anthologies.",
+    "category": "Horror"
+  },
+  {
+    "number": 12,
+    "slug": "beyond-family",
+    "name": "Beyond Family",
+    "icon": "✨",
+    "description": "Fantasy, storybook classics, and family adventures.",
+    "category": "Family"
+  }
+]

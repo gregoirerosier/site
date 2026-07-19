@@ -1,0 +1,18 @@
+{
+  "title": "Celestial Rose",
+  "date": "2026-07-14",
+  "version": "1.0",
+  "assets": {
+    "preview": "celestial-rose-preview.webp",
+    "transfer_svg": "celestial-rose-transfer.svg",
+    "transfer_png": "celestial-rose-transfer.png",
+    "transfer_pdf": "celestial-rose-transfer.pdf",
+    "editable": "celestial-rose-editable.svg"
+  },
+  "use": [
+    "client preview",
+    "thermal transfer",
+    "advanced editing"
+  ],
+  "note": "Final sizing and placement must be approved by the tattoo artist."
+}

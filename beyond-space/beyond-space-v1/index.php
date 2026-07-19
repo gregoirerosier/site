@@ -1,0 +1,144 @@
+<?php
+require_once __DIR__ . '/../../includes/ecosystem.php';
+$beyondWallet = beyond_app_bootstrap('Beyond Space');
+$featured = [
+  ['title'=>'Solar System','eyebrow'=>'Explore','icon'=>'🪐','copy'=>'Travel from the Sun to Neptune and compare every world along the way.'],
+  ['title'=>'Deep Space','eyebrow'=>'Discover','icon'=>'🌌','copy'=>'Explore galaxies, nebulae, stars, pulsars, and the mysteries beyond our neighbourhood.'],
+  ['title'=>'Space Technology','eyebrow'=>'Innovation','icon'=>'🚀','copy'=>'Learn how rockets, satellites, telescopes, rovers, and space stations work.'],
+  ['title'=>'Life Beyond Earth','eyebrow'=>'Astrobiology','icon'=>'👽','copy'=>'Investigate habitable worlds, biosignatures, ocean moons, and the search for life.'],
+];
+$signs = [
+  ['name'=>'Aries','symbol'=>'♈','dates'=>'Mar 21 – Apr 19','message'=>'Lead with curiosity today. A bold question may open a surprising path.'],
+  ['name'=>'Taurus','symbol'=>'♉','dates'=>'Apr 20 – May 20','message'=>'Slow down and notice the details. Steady progress beats a rushed launch.'],
+  ['name'=>'Gemini','symbol'=>'♊','dates'=>'May 21 – Jun 20','message'=>'Share an idea, ask a question, and let conversation spark discovery.'],
+  ['name'=>'Cancer','symbol'=>'♋','dates'=>'Jun 21 – Jul 22','message'=>'Protect your energy while staying open to one meaningful connection.'],
+  ['name'=>'Leo','symbol'=>'♌','dates'=>'Jul 23 – Aug 22','message'=>'Let your creativity take the spotlight. Build something unmistakably yours.'],
+  ['name'=>'Virgo','symbol'=>'♍','dates'=>'Aug 23 – Sep 22','message'=>'A small adjustment can improve the whole system. Refine before expanding.'],
+  ['name'=>'Libra','symbol'=>'♎','dates'=>'Sep 23 – Oct 22','message'=>'Balance imagination with evidence. The strongest choice may combine both.'],
+  ['name'=>'Scorpio','symbol'=>'♏','dates'=>'Oct 23 – Nov 21','message'=>'Look beneath the surface. A hidden pattern is ready to be understood.'],
+  ['name'=>'Sagittarius','symbol'=>'♐','dates'=>'Nov 22 – Dec 21','message'=>'Explore beyond the familiar. A new subject may become your next obsession.'],
+  ['name'=>'Capricorn','symbol'=>'♑','dates'=>'Dec 22 – Jan 19','message'=>'Choose one ambitious target and give it structure. Momentum follows clarity.'],
+  ['name'=>'Aquarius','symbol'=>'♒','dates'=>'Jan 20 – Feb 18','message'=>'Your unusual perspective is useful today. Test the idea instead of shrinking it.'],
+  ['name'=>'Pisces','symbol'=>'♓','dates'=>'Feb 19 – Mar 20','message'=>'Make room for wonder, then ground it with one practical next step.'],
+];
+?><!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#030612">
+  <title>Beyond Space — Version 2.0</title>
+  <meta name="description" content="An interactive AI-powered journey through space, astronomy, technology, and astrology.">
+  <link rel="icon" href="/beyond-space/beyond-space-v1/assets/img/beyond-space-logo.webp">
+  <link rel="stylesheet" href="/beyond-space/beyond-space-v1/assets/css/app.css?v=1.0.0">
+</head>
+<body>
+<div class="space-dust" aria-hidden="true"></div>
+<header class="topbar">
+  <a class="brand" href="#top" aria-label="Beyond Space home">
+    <img src="/beyond-space/beyond-space-v1/assets/img/beyond-space-logo.webp" alt="Beyond Space logo">
+    <span><b>Beyond Space</b><small>AI Explorer • Version 2.0</small></span>
+  </a>
+  <button class="menu" id="menuBtn" aria-label="Open menu">☰</button>
+  <nav id="nav">
+    <a href="#explore">Explore</a><a href="#system">Solar System</a><a href="#horoscope">Horoscope</a><a href="#quiz">Quiz</a>
+  </nav>
+</header>
+
+<main id="top">
+<section class="hero">
+  <div class="nebula"></div><div class="planet planet-one"></div><div class="planet planet-two"></div><div class="moon"></div>
+  <div class="orbit orbit-a"><i></i></div><div class="orbit orbit-b"><i></i></div><div class="rocket" aria-hidden="true">🚀</div>
+  <div class="hero-copy reveal">
+    <span class="kicker">🚀 Launch into the unknown</span>
+    <h1>The universe is<br><em>yours to explore.</em></h1>
+    <p>Discover planets, galaxies, astronomy, space technology, possible life beyond Earth, and a daily astrology experience—all inside one animated learning world.</p>
+    <div class="actions"><a class="btn primary" href="#explore">Start exploring</a><button class="btn ghost" id="watchIntro">▶ Watch launch</button></div>
+    <div class="stats"><span><b>8</b> planets</span><span><b>12</b> zodiac signs</span><span><b>1</b> living universe</span></div>
+  </div>
+  <button class="scroll-cue" aria-label="Scroll to explore" onclick="document.querySelector('#explore').scrollIntoView({behavior:'smooth'})">⌄</button>
+</section>
+
+<section class="section" id="explore">
+  <div class="section-head reveal"><span>Choose a destination</span><h2>Explore Beyond Earth</h2><p>Every destination opens as a visual, interactive story rather than a static textbook page.</p></div>
+  <div class="cards">
+    <?php foreach($featured as $i=>$item): ?>
+    <button class="card reveal" data-story="<?= $i ?>">
+      <span class="card-icon"><?= htmlspecialchars($item['icon']) ?></span>
+      <small><?= htmlspecialchars($item['eyebrow']) ?></small>
+      <h3><?= htmlspecialchars($item['title']) ?></h3>
+      <p><?= htmlspecialchars($item['copy']) ?></p>
+      <b>Open experience →</b>
+    </button>
+    <?php endforeach; ?>
+  </div>
+</section>
+
+<section class="section solar" id="system">
+  <div class="section-head reveal"><span>Interactive orbit</span><h2>Solar System Explorer</h2><p>Select a planet to reveal its quick profile.</p></div>
+  <div class="solar-stage reveal">
+    <div class="sun"></div>
+    <button class="world mercury" data-planet="Mercury" data-fact="The smallest planet and the closest world to the Sun." aria-label="Mercury"></button>
+    <button class="world venus" data-planet="Venus" data-fact="A cloud-covered world with the hottest surface of any planet." aria-label="Venus"></button>
+    <button class="world earth" data-planet="Earth" data-fact="Our ocean world and the only place currently known to host life." aria-label="Earth"></button>
+    <button class="world mars" data-planet="Mars" data-fact="A cold desert world with giant volcanoes and signs of ancient water." aria-label="Mars"></button>
+    <button class="world jupiter" data-planet="Jupiter" data-fact="The largest planet, famous for its Great Red Spot and vast moon system." aria-label="Jupiter"></button>
+    <button class="world saturn" data-planet="Saturn" data-fact="A gas giant surrounded by an intricate system of icy rings." aria-label="Saturn"></button>
+    <button class="world uranus" data-planet="Uranus" data-fact="An ice giant rotating almost completely on its side." aria-label="Uranus"></button>
+    <button class="world neptune" data-planet="Neptune" data-fact="The farthest major planet, with some of the fastest winds known." aria-label="Neptune"></button>
+  </div>
+  <div class="planet-panel reveal" id="planetPanel"><span>Selected world</span><h3>Earth</h3><p>Tap any planet above to begin your tour.</p></div>
+</section>
+
+<section class="split section feature">
+  <div class="black-hole reveal"><div class="disc"></div><div class="core"></div><span>Tap to distort spacetime</span></div>
+  <div class="reveal"><span class="kicker">Cosmic phenomenon</span><h2>Inside a Black Hole</h2><p>Use animations to visualize gravity, the event horizon, accretion disks, and why light bends around massive objects.</p>
+    <div class="fact" id="factBox"><b>Quick fact</b><span>A black hole is detected through its effects on nearby matter and light.</span></div>
+    <button class="btn primary" id="nextFact">Reveal another fact</button>
+  </div>
+</section>
+
+<section class="section horoscope" id="horoscope">
+  <div class="section-head reveal"><span>Astrology • For entertainment</span><h2>Your Daily Cosmic Reading</h2><p>Choose a zodiac sign for a playful daily message. Astronomy and astrology remain clearly separated throughout the app.</p></div>
+  <div class="horoscope-layout">
+    <div class="zodiac-grid reveal" id="zodiacGrid">
+      <?php foreach($signs as $i=>$sign): ?>
+      <button data-sign="<?= $i ?>"><b><?= $sign['symbol'] ?></b><span><?= htmlspecialchars($sign['name']) ?></span></button>
+      <?php endforeach; ?>
+    </div>
+    <article class="reading reveal" id="reading"><span class="reading-symbol">♈</span><small>Daily reading</small><h3>Aries</h3><em>Mar 21 – Apr 19</em><p>Lead with curiosity today. A bold question may open a surprising path.</p><small class="disclaimer">Astrology content is provided for reflection and entertainment, not as scientific or professional advice.</small></article>
+  </div>
+</section>
+
+<section class="section missions">
+  <div class="section-head reveal"><span>Humanity in motion</span><h2>Mission Timeline</h2></div>
+  <div class="timeline" role="list">
+    <article class="era reveal"><b>1957</b><h3>Sputnik 1</h3><p>The first artificial satellite begins the space age.</p></article>
+    <article class="era reveal"><b>1969</b><h3>Apollo 11</h3><p>Humans walk on the Moon for the first time.</p></article>
+    <article class="era reveal"><b>1977</b><h3>Voyager</h3><p>Twin probes begin a journey through and beyond the outer Solar System.</p></article>
+    <article class="era reveal"><b>2021</b><h3>James Webb</h3><p>A new infrared observatory opens an extraordinary window on cosmic history.</p></article>
+  </div>
+</section>
+
+<section class="section quiz" id="quiz">
+  <div class="section-head reveal"><span>One-minute challenge</span><h2>Test your space knowledge</h2></div>
+  <div class="quiz-box reveal">
+    <p id="question">Which planet is the largest in our Solar System?</p>
+    <div id="answers"></div><div id="feedback" aria-live="polite"></div>
+    <button class="btn ghost hidden" id="nextQuestion">Next question</button>
+  </div>
+</section>
+
+<section class="section beta" id="about">
+  <div class="reveal"><span class="kicker">Built for Beyond Learn</span><h2>An interactive universe, ready to expand.</h2><p>Version 2.0 delivers an animated landing experience, responsive navigation, destination cards, Solar System selector, horoscope module, mission timeline, quiz engine, and shared-hosting-ready PHP foundation.</p></div>
+  <div class="beta-list reveal"><span>✓ Mobile-first responsive UI</span><span>✓ Beyond ID secured</span><span>✓ PHP shared-hosting ready</span><span>✓ Horoscope included in v2.0</span><span>✓ Motion-reduction support</span></div>
+</section>
+</main>
+
+<footer><img src="/beyond-space/beyond-space-v1/assets/img/beyond-space-logo.webp" alt=""><p>Beyond Space • Part of Beyond Learn</p><small>Version 2.0 — interactive educational experience</small></footer>
+
+<div class="modal" id="modal" aria-hidden="true"><div class="modal-card"><button class="close" aria-label="Close">×</button><span id="modalIcon">🪐</span><small id="modalEyebrow"></small><h2 id="modalTitle"></h2><p id="modalCopy"></p><div class="progress"><i></i></div><p class="coming">Interactive chapter preview • Full experience coming in the next beta.</p></div></div>
+<div class="modal" id="videoModal" aria-hidden="true"><div class="modal-card video-card"><button class="close" aria-label="Close">×</button><div class="cinema"><div class="cinema-earth"></div><div class="cinema-moon"></div><div class="cinema-rocket">🚀</div></div><h2>Welcome to Beyond Space</h2><p>A lightweight animated launch sequence ready to be replaced by an MP4 or WebM cinematic.</p></div></div>
+<script>window.BS_STORIES = <?= json_encode($featured, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES) ?>; window.BS_SIGNS = <?= json_encode($signs, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES) ?>;</script>
+<script src="/beyond-space/beyond-space-v1/assets/js/app.js?v=1.0.0"></script>
+</body></html>

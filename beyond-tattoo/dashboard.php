@@ -1,0 +1,27 @@
+<?php
+require __DIR__ . '/includes/config.php';
+require_login();
+$users=json_read(DATA_DIR.'/users.json'); $current=null;
+foreach($users as $u) if(($u['email']??'')===current_user_email()){ $current=$u; break; }
+$role=(string)($current['role']??$_SESSION['user_role']??'client');
+$_SESSION['user_role']=$role;
+$pageTitle='Dashboard — Beyond Tattoo'; require __DIR__.'/includes/header.php'; $success=flash('success');
+?>
+<div class="app-shell">
+<header class="app-header"><div class="container app-header-inner"><a class="brand" href="dashboard.php"><img class="brand-icon" src="../assets/icons/beyond-tattoo-192.webp" alt=""><span>BEYOND <b>TATTOO</b></span></a><span class="role-badge"><?= e($role === 'client' ? 'Canvas' : ucfirst($role)) ?></span></div></header>
+<main class="container dashboard">
+<?php if($success):?><div class="notice"><?=e($success)?></div><?php endif;?>
+<div class="welcome-row"><div><span class="eyebrow"><?= $role==='owner'?'🏪 Studio workspace':($role==='artist'?'🎨 Artist workspace':'🖼️ Canvas workspace') ?></span><h2 class="section-title">Welcome, <?=e($_SESSION['user_name']??'Alex')?>.</h2><p class="section-copy"><?= $role==='owner'?'Manage your studio, opportunities and team from one place.':($role==='artist'?'Show your work, manage opportunities and grow your bookings.':'Discover artists, collect artwork, plan tattoos and track healing.') ?></p></div></div>
+<?php if($role==='owner'): ?>
+<div class="metric-grid"><div class="panel"><small>Active artists</small><strong>4</strong></div><div class="panel"><small>Open roles</small><strong>2</strong></div><div class="panel"><small>Consultations</small><strong>8</strong></div></div>
+<section class="panel action-panel"><div><h2>Hire your next artist</h2><p class="meta">Search by style, experience and availability. Invite artists directly through Beyond Tattoo.</p></div><a class="btn btn-primary" href="hire-artists.php">Explore artists →</a></section>
+<div class="dashboard-grid"><section class="panel"><h2>Studio pipeline</h2><div class="plan"><div class="task"><span>New applications</span><strong>6</strong></div><div class="task"><span>Interviews this week</span><strong>3</strong></div><div class="task"><span>Pending offers</span><strong>1</strong></div></div></section><aside class="panel"><h3>Quick actions</h3><div class="form-grid"><a class="btn btn-secondary" href="hire-artists.php">Post opportunity</a><a class="btn btn-secondary" href="studios.php">Edit studio profile</a><a class="btn btn-secondary" href="profile.php">Account settings</a></div></aside></div>
+<?php elseif($role==='artist'): ?>
+<div class="metric-grid"><div class="panel"><small>Profile views</small><strong>128</strong></div><div class="panel"><small>Studio invites</small><strong>3</strong></div><div class="panel"><small>Store sales</small><strong>7</strong></div></div>
+<div class="dashboard-grid"><section class="panel"><h2>New opportunities</h2><div class="plan"><div class="task"><span>Resident artist • Black Rose Studio<br><small class="meta">Vancouver • Full-time</small></span><strong>›</strong></div><div class="task"><span>Guest spot • North Ink<br><small class="meta">Victoria • August</small></span><strong>›</strong></div></div></section><aside class="panel"><h3>Portfolio strength</h3><div class="progress"><span style="width:72%"></span></div><p class="meta">Add 3 more pieces to improve discovery.</p><a class="btn btn-primary btn-block" href="profile.php">Update portfolio</a><a class="btn btn-secondary btn-block" style="margin-top:10px" href="../beyond-market/sell.php">Sell your art</a><a class="btn btn-secondary btn-block" style="margin-top:10px" href="../beyond-canvas/">View Beyond Canvas</a></aside></div>
+<?php else: ?>
+<div class="dashboard-grid"><section><div class="panel"><h2>Your tattoo journey</h2><div class="tattoo-grid"><article class="tattoo-mini"><span class="status">● Planning</span><h3>Next tattoo idea</h3><p class="meta">Browse artists and request a consultation.</p><a class="btn btn-primary" href="studios.php">Find an artist</a></article><article class="tattoo-mini"><span class="status">● Active healing</span><h3>Tiger Sleeve</h3><p class="meta">Day 9 of 28 • Peeling stage</p><div class="progress"><span style="width:32%"></span></div></article></div></div><div class="panel" style="margin-top:18px"><h2>Today's aftercare</h2><div class="plan"><button class="task input" data-task><span>💧 Moisturize</span><strong data-marker>○</strong></button><button class="task input" data-task><span>🫧 Gentle wash</span><strong data-marker>○</strong></button></div></div></section><aside class="panel"><h3>Recommended artists</h3><div class="plan"><div class="task"><span>Maya Chen<br><small class="meta">Fine line • 4.9</small></span><strong>›</strong></div><div class="task"><span>Andre Lewis<br><small class="meta">Realism • 4.8</small></span><strong>›</strong></div></div><a class="btn btn-secondary btn-block" href="studios.php">Explore</a></aside></div>
+<?php endif; ?>
+</main>
+<nav class="bottom-nav"><a class="active" href="dashboard.php"><span>⌂</span>Home</a><?php if($role==='owner'):?><a href="hire-artists.php"><span>🤝</span>Hire</a><?php elseif($role==='artist'):?><a href="profile.php"><span>🖼️</span>Portfolio</a><?php else:?><a href="my-tattoos.php"><span>🎨</span>Tattoos</a><?php endif;?><a href="studios.php"><span>📍</span>Discover</a><a href="../beyond-canvas/"><span>🖼️</span>Canvas</a><a href="profile.php"><span>👤</span>Profile</a></nav>
+</div><?php require __DIR__.'/includes/footer.php'; ?>

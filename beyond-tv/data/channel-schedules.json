@@ -1,0 +1,698 @@
+{
+  "classic-cartoon-theater": [
+    {
+      "start": 0,
+      "end": 3,
+      "icon": "▶",
+      "title": "Midnight Toons",
+      "lineup": "Midnight Toons"
+    },
+    {
+      "start": 3,
+      "end": 6,
+      "icon": "▶",
+      "title": "Golden-Age Cartoons",
+      "lineup": "Golden-Age Cartoons"
+    },
+    {
+      "start": 6,
+      "end": 9,
+      "icon": "▶",
+      "title": "Breakfast Cartoons",
+      "lineup": "Breakfast Cartoons"
+    },
+    {
+      "start": 9,
+      "end": 12,
+      "icon": "▶",
+      "title": "Hero Hour",
+      "lineup": "Hero Hour"
+    },
+    {
+      "start": 12,
+      "end": 15,
+      "icon": "▶",
+      "title": "Comedy Cartoons",
+      "lineup": "Comedy Cartoons"
+    },
+    {
+      "start": 15,
+      "end": 18,
+      "icon": "▶",
+      "title": "Afternoon Adventures",
+      "lineup": "Afternoon Adventures"
+    },
+    {
+      "start": 18,
+      "end": 21,
+      "icon": "▶",
+      "title": "Prime-Time Classics",
+      "lineup": "Prime-Time Classics"
+    },
+    {
+      "start": 21,
+      "end": 24,
+      "icon": "▶",
+      "title": "Late-Night Animation",
+      "lineup": "Late-Night Animation"
+    }
+  ],
+  "beyond-cartoons": [
+    {
+      "start": 0,
+      "end": 3,
+      "icon": "▶",
+      "title": "Anime Overnight",
+      "lineup": "Anime Overnight"
+    },
+    {
+      "start": 3,
+      "end": 6,
+      "icon": "▶",
+      "title": "Zatch Bell",
+      "lineup": "Zatch Bell"
+    },
+    {
+      "start": 6,
+      "end": 9,
+      "icon": "▶",
+      "title": "Yu-Gi-Oh!",
+      "lineup": "Yu-Gi-Oh!"
+    },
+    {
+      "start": 9,
+      "end": 12,
+      "icon": "▶",
+      "title": "Mr. Bean & Friends",
+      "lineup": "Mr. Bean & Friends"
+    },
+    {
+      "start": 12,
+      "end": 15,
+      "icon": "▶",
+      "title": "Adventure Animation",
+      "lineup": "Adventure Animation"
+    },
+    {
+      "start": 15,
+      "end": 18,
+      "icon": "▶",
+      "title": "Cartoon Mix",
+      "lineup": "Cartoon Mix"
+    },
+    {
+      "start": 18,
+      "end": 21,
+      "icon": "▶",
+      "title": "Anime Prime Time",
+      "lineup": "Anime Prime Time"
+    },
+    {
+      "start": 21,
+      "end": 24,
+      "icon": "▶",
+      "title": "Courage After Dark",
+      "lineup": "Courage After Dark"
+    }
+  ],
+  "bubble-guppies": [
+    {
+      "start": 0,
+      "end": 3,
+      "icon": "▶",
+      "title": "Sleepy-Time Preschool",
+      "lineup": "Sleepy-Time Preschool"
+    },
+    {
+      "start": 3,
+      "end": 6,
+      "icon": "▶",
+      "title": "Bluey Breakfast",
+      "lineup": "Bluey Breakfast"
+    },
+    {
+      "start": 6,
+      "end": 9,
+      "icon": "▶",
+      "title": "Blue’s Clues",
+      "lineup": "Blue’s Clues"
+    },
+    {
+      "start": 9,
+      "end": 12,
+      "icon": "▶",
+      "title": "Allegra’s Window",
+      "lineup": "Allegra’s Window"
+    },
+    {
+      "start": 12,
+      "end": 15,
+      "icon": "▶",
+      "title": "Gullah Gullah Island",
+      "lineup": "Gullah Gullah Island"
+    },
+    {
+      "start": 15,
+      "end": 18,
+      "icon": "▶",
+      "title": "Preschool Playtime",
+      "lineup": "Preschool Playtime"
+    },
+    {
+      "start": 18,
+      "end": 21,
+      "icon": "▶",
+      "title": "Family Favorites",
+      "lineup": "Family Favorites"
+    },
+    {
+      "start": 21,
+      "end": 24,
+      "icon": "▶",
+      "title": "Bedtime Stories",
+      "lineup": "Bedtime Stories"
+    }
+  ],
+  "space-tv": [
+    {
+      "start": 0,
+      "end": 3,
+      "icon": "▶",
+      "title": "Milky Way Overnight",
+      "lineup": "Milky Way Overnight"
+    },
+    {
+      "start": 3,
+      "end": 6,
+      "icon": "▶",
+      "title": "The Sun in 4K",
+      "lineup": "The Sun in 4K"
+    },
+    {
+      "start": 6,
+      "end": 9,
+      "icon": "▶",
+      "title": "NASA Morning",
+      "lineup": "NASA Morning"
+    },
+    {
+      "start": 9,
+      "end": 12,
+      "icon": "▶",
+      "title": "Solar System",
+      "lineup": "Solar System"
+    },
+    {
+      "start": 12,
+      "end": 15,
+      "icon": "▶",
+      "title": "Deep Space",
+      "lineup": "Deep Space"
+    },
+    {
+      "start": 15,
+      "end": 18,
+      "icon": "▶",
+      "title": "Astronomy Lab",
+      "lineup": "Astronomy Lab"
+    },
+    {
+      "start": 18,
+      "end": 21,
+      "icon": "▶",
+      "title": "Space Documentary",
+      "lineup": "Space Documentary"
+    },
+    {
+      "start": 21,
+      "end": 24,
+      "icon": "▶",
+      "title": "Cosmic Ambience",
+      "lineup": "Cosmic Ambience"
+    }
+  ],
+  "beyond-ancient": [
+    {
+      "start": 0,
+      "end": 3,
+      "icon": "▶",
+      "title": "Ancient Egypt After Dark",
+      "lineup": "Ancient Egypt After Dark"
+    },
+    {
+      "start": 3,
+      "end": 6,
+      "icon": "▶",
+      "title": "Dynasties of the Nile",
+      "lineup": "Dynasties of the Nile"
+    },
+    {
+      "start": 6,
+      "end": 9,
+      "icon": "▶",
+      "title": "Dawn of Civilization",
+      "lineup": "Dawn of Civilization"
+    },
+    {
+      "start": 9,
+      "end": 12,
+      "icon": "▶",
+      "title": "Pyramid Engineering",
+      "lineup": "Pyramid Engineering"
+    },
+    {
+      "start": 12,
+      "end": 15,
+      "icon": "▶",
+      "title": "Pharaohs & Queens",
+      "lineup": "Pharaohs & Queens"
+    },
+    {
+      "start": 15,
+      "end": 18,
+      "icon": "▶",
+      "title": "Tombs & Afterlife",
+      "lineup": "Tombs & Afterlife"
+    },
+    {
+      "start": 18,
+      "end": 21,
+      "icon": "▶",
+      "title": "Prime Documentary",
+      "lineup": "Prime Documentary"
+    },
+    {
+      "start": 21,
+      "end": 24,
+      "icon": "▶",
+      "title": "Archaeology Night",
+      "lineup": "Archaeology Night"
+    }
+  ],
+  "classic-cinema": [
+    {
+      "start": 0,
+      "end": 3,
+      "icon": "▶",
+      "title": "Midnight Movie",
+      "lineup": "Midnight Movie"
+    },
+    {
+      "start": 3,
+      "end": 6,
+      "icon": "▶",
+      "title": "Early Feature",
+      "lineup": "Early Feature"
+    },
+    {
+      "start": 6,
+      "end": 9,
+      "icon": "▶",
+      "title": "Family Matinee",
+      "lineup": "Family Matinee"
+    },
+    {
+      "start": 9,
+      "end": 12,
+      "icon": "▶",
+      "title": "Comedy Feature",
+      "lineup": "Comedy Feature"
+    },
+    {
+      "start": 12,
+      "end": 15,
+      "icon": "▶",
+      "title": "Adventure Feature",
+      "lineup": "Adventure Feature"
+    },
+    {
+      "start": 15,
+      "end": 18,
+      "icon": "▶",
+      "title": "Double Bill",
+      "lineup": "Double Bill"
+    },
+    {
+      "start": 18,
+      "end": 21,
+      "icon": "▶",
+      "title": "Movie Premiere",
+      "lineup": "Movie Premiere"
+    },
+    {
+      "start": 21,
+      "end": 24,
+      "icon": "▶",
+      "title": "Late Feature",
+      "lineup": "Late Feature"
+    }
+  ],
+  "beyond-french": [
+    {
+      "start": 0,
+      "end": 3,
+      "icon": "▶",
+      "title": "French Listening",
+      "lineup": "French Listening"
+    },
+    {
+      "start": 3,
+      "end": 6,
+      "icon": "▶",
+      "title": "Vocabulary Loop",
+      "lineup": "Vocabulary Loop"
+    },
+    {
+      "start": 6,
+      "end": 9,
+      "icon": "▶",
+      "title": "Bonjour Morning",
+      "lineup": "Bonjour Morning"
+    },
+    {
+      "start": 9,
+      "end": 12,
+      "icon": "▶",
+      "title": "French Foundations",
+      "lineup": "French Foundations"
+    },
+    {
+      "start": 12,
+      "end": 15,
+      "icon": "▶",
+      "title": "Conversation Practice",
+      "lineup": "Conversation Practice"
+    },
+    {
+      "start": 15,
+      "end": 18,
+      "icon": "▶",
+      "title": "Grammar Workshop",
+      "lineup": "Grammar Workshop"
+    },
+    {
+      "start": 18,
+      "end": 21,
+      "icon": "▶",
+      "title": "Français du Jour",
+      "lineup": "Français du Jour"
+    },
+    {
+      "start": 21,
+      "end": 24,
+      "icon": "▶",
+      "title": "Review & Quiz",
+      "lineup": "Review & Quiz"
+    }
+  ],
+  "beyond-health": [
+    {
+      "start": 0,
+      "end": 3,
+      "icon": "▶",
+      "title": "Sleep & Calm",
+      "lineup": "Sleep & Calm"
+    },
+    {
+      "start": 3,
+      "end": 6,
+      "icon": "▶",
+      "title": "Morning Mobility",
+      "lineup": "Morning Mobility"
+    },
+    {
+      "start": 6,
+      "end": 9,
+      "icon": "▶",
+      "title": "Fitness Basics",
+      "lineup": "Fitness Basics"
+    },
+    {
+      "start": 9,
+      "end": 12,
+      "icon": "▶",
+      "title": "Healthy Cooking",
+      "lineup": "Healthy Cooking"
+    },
+    {
+      "start": 12,
+      "end": 15,
+      "icon": "▶",
+      "title": "Mindful Break",
+      "lineup": "Mindful Break"
+    },
+    {
+      "start": 15,
+      "end": 18,
+      "icon": "▶",
+      "title": "Strength & Balance",
+      "lineup": "Strength & Balance"
+    },
+    {
+      "start": 18,
+      "end": 21,
+      "icon": "▶",
+      "title": "Wellness Feature",
+      "lineup": "Wellness Feature"
+    },
+    {
+      "start": 21,
+      "end": 24,
+      "icon": "▶",
+      "title": "Evening Meditation",
+      "lineup": "Evening Meditation"
+    }
+  ],
+  "beyond-comedy": [
+    {
+      "start": 0,
+      "end": 3,
+      "icon": "▶",
+      "title": "Sitcom Overnight",
+      "lineup": "Sitcom Overnight"
+    },
+    {
+      "start": 3,
+      "end": 6,
+      "icon": "▶",
+      "title": "3rd Rock",
+      "lineup": "3rd Rock"
+    },
+    {
+      "start": 6,
+      "end": 9,
+      "icon": "▶",
+      "title": "Malcolm in the Middle",
+      "lineup": "Malcolm in the Middle"
+    },
+    {
+      "start": 9,
+      "end": 12,
+      "icon": "▶",
+      "title": "Workplace Comedy",
+      "lineup": "Workplace Comedy"
+    },
+    {
+      "start": 12,
+      "end": 15,
+      "icon": "▶",
+      "title": "Teen Comedy",
+      "lineup": "Teen Comedy"
+    },
+    {
+      "start": 15,
+      "end": 18,
+      "icon": "▶",
+      "title": "Comedy Movies",
+      "lineup": "Comedy Movies"
+    },
+    {
+      "start": 18,
+      "end": 21,
+      "icon": "▶",
+      "title": "Prime-Time Sitcoms",
+      "lineup": "Prime-Time Sitcoms"
+    },
+    {
+      "start": 21,
+      "end": 24,
+      "icon": "▶",
+      "title": "Late-Night Comedy",
+      "lineup": "Late-Night Comedy"
+    }
+  ],
+  "beyond-mystery": [
+    {
+      "start": 0,
+      "end": 3,
+      "icon": "▶",
+      "title": "Midnight Mystery",
+      "lineup": "Midnight Mystery"
+    },
+    {
+      "start": 3,
+      "end": 6,
+      "icon": "▶",
+      "title": "Classic Detectives",
+      "lineup": "Classic Detectives"
+    },
+    {
+      "start": 6,
+      "end": 9,
+      "icon": "▶",
+      "title": "Family Mysteries",
+      "lineup": "Family Mysteries"
+    },
+    {
+      "start": 9,
+      "end": 12,
+      "icon": "▶",
+      "title": "Puzzle Box",
+      "lineup": "Puzzle Box"
+    },
+    {
+      "start": 12,
+      "end": 15,
+      "icon": "▶",
+      "title": "Mystery Matinee",
+      "lineup": "Mystery Matinee"
+    },
+    {
+      "start": 15,
+      "end": 18,
+      "icon": "▶",
+      "title": "Benoit Blanc Watchlist",
+      "lineup": "Benoit Blanc Watchlist"
+    },
+    {
+      "start": 18,
+      "end": 21,
+      "icon": "▶",
+      "title": "Prime Mystery",
+      "lineup": "Prime Mystery"
+    },
+    {
+      "start": 21,
+      "end": 24,
+      "icon": "▶",
+      "title": "Unsolved After Hours",
+      "lineup": "Unsolved After Hours"
+    }
+  ],
+  "beyond-after-dark": [
+    {
+      "start": 0,
+      "end": 3,
+      "icon": "▶",
+      "title": "Tales from the Darkside",
+      "lineup": "Tales from the Darkside"
+    },
+    {
+      "start": 3,
+      "end": 6,
+      "icon": "▶",
+      "title": "Haunting Hour",
+      "lineup": "Haunting Hour"
+    },
+    {
+      "start": 6,
+      "end": 9,
+      "icon": "▶",
+      "title": "Goosebumps",
+      "lineup": "Goosebumps"
+    },
+    {
+      "start": 9,
+      "end": 12,
+      "icon": "▶",
+      "title": "Eerie Adventures",
+      "lineup": "Eerie Adventures"
+    },
+    {
+      "start": 12,
+      "end": 15,
+      "icon": "▶",
+      "title": "Supernatural Stories",
+      "lineup": "Supernatural Stories"
+    },
+    {
+      "start": 15,
+      "end": 18,
+      "icon": "▶",
+      "title": "Are You Afraid?",
+      "lineup": "Are You Afraid?"
+    },
+    {
+      "start": 18,
+      "end": 21,
+      "icon": "▶",
+      "title": "After Dark Premiere",
+      "lineup": "After Dark Premiere"
+    },
+    {
+      "start": 21,
+      "end": 24,
+      "icon": "▶",
+      "title": "Midnight Anthology",
+      "lineup": "Midnight Anthology"
+    }
+  ],
+  "beyond-family": [
+    {
+      "start": 0,
+      "end": 3,
+      "icon": "▶",
+      "title": "Storybook Overnight",
+      "lineup": "Storybook Overnight"
+    },
+    {
+      "start": 3,
+      "end": 6,
+      "icon": "▶",
+      "title": "Winnie the Pooh",
+      "lineup": "Winnie the Pooh"
+    },
+    {
+      "start": 6,
+      "end": 9,
+      "icon": "▶",
+      "title": "Peter Rabbit",
+      "lineup": "Peter Rabbit"
+    },
+    {
+      "start": 9,
+      "end": 12,
+      "icon": "▶",
+      "title": "Family Fantasy",
+      "lineup": "Family Fantasy"
+    },
+    {
+      "start": 12,
+      "end": 15,
+      "icon": "▶",
+      "title": "Narnia Adventures",
+      "lineup": "Narnia Adventures"
+    },
+    {
+      "start": 15,
+      "end": 18,
+      "icon": "▶",
+      "title": "Zathura & Spiderwick",
+      "lineup": "Zathura & Spiderwick"
+    },
+    {
+      "start": 18,
+      "end": 21,
+      "icon": "▶",
+      "title": "Family Movie Night",
+      "lineup": "Family Movie Night"
+    },
+    {
+      "start": 21,
+      "end": 24,
+      "icon": "▶",
+      "title": "Bedtime Classics",
+      "lineup": "Bedtime Classics"
+    }
+  ]
+}

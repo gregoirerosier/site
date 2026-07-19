@@ -1,0 +1,20 @@
+BEYOND TV 2.2 — CLASSIC CARTOON THEATER PATCH
+
+Implemented
+- Classic Cartoon Theater replaces Yu-Gi-Oh! TV as the free public Beyond TV stream.
+- Yu-Gi-Oh! TV now requires Beyond ID.
+- Only released channels are shown publicly.
+- Future public channels remain hidden until their content, schedule and release status are complete.
+- Added an America/Vancouver schedule engine and live API.
+- Added the daily guide:
+  12:00 AM Overnight Theater
+  6:00 AM Golden Classics
+  9:00 AM Looney Tunes Morning
+  12:00 PM 90s Favorites
+  3:00 PM Millennium Cartoons
+  6:00 PM Prime Time Classics
+  9:00 PM Late Night Cartoons
+- Added a mobile-first public homepage with live player, Now Playing, Up Next and guide.
+
+Content note
+The schedule framework is ready. Blocks without approved sources currently use the verified Classic Cartoon Theater public-domain rotation until more cartoons are added and released.

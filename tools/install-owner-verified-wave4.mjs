@@ -1,0 +1,13 @@
+import { readFile, writeFile } from 'node:fs/promises';
+const path=new URL('../beyond-tv/data/catalog.json',import.meta.url);const catalog=JSON.parse(await readFile(path,'utf8'));
+const items=[
+ ['21-jump-street-2012','movie','21 Jump Street','2012','R','Comedy · Action','🚔','21.-jump.-street.-2012','Two underachieving officers go undercover at a high school.','beyond-comedy'],
+ ['the-princess-bride','movie','The Princess Bride','1987','PG','Fantasy · Adventure · Romance','👑','the-princess-bride_202402','A storybook adventure filled with romance, swordplay, and comedy.','beyond-family'],
+ ['matilda-1996','movie','Matilda','1996','PG','Family · Fantasy · Comedy','📚','matilda-1996_202405','A brilliant girl discovers extraordinary abilities and stands up to cruel adults.','beyond-family'],
+ ['jungle-book-1991-vhs','movie','The Jungle Book','1991 VHS edition','G','Animation · Family','🐻','the-jungle-book-1991-vhs-10of-17','A VHS edition of the animated jungle adventure.','beyond-family'],
+ ['that-70s-show-season-1','show',"That ’70s Show · Season 1",'1998–1999','TV-14','Comedy · Sitcom','🛋️','that-70s-show-season-1','The first season of the Wisconsin-set ensemble sitcom.','beyond-comedy'],
+ ['the-hateful-eight-extended','movie','The Hateful Eight · Extended Version','2015','R','Western · Mystery · Thriller','❄️','the-hateful-eight-extended-version','An extended presentation of the snowbound western mystery.','beyond-mystery'],
+ ['that-70s-show-season-3','show',"That ’70s Show · Season 3",'2000–2001','TV-14','Comedy · Sitcom','📺','that-70s-show-season-3','The third season of the Wisconsin-set ensemble sitcom.','beyond-comedy'],
+ ['aladdin-1993-vhs','movie','Aladdin','1993 VHS edition','G','Animation · Family · Fantasy','🧞','aladdin-1993-vhs_202504','A VHS edition of the animated fantasy adventure.','beyond-family']
+].map(([slug,type,title,year,rating,genre,icon,archive_id,description,channel_slug])=>({slug,type,title,subtitle:`${type==='show'?'TV library':'Movie'} · Owner-verified Archive source`,description,icon,gradient:type==='show'?'linear-gradient(135deg,#322243,#8a466e 55%,#db9e4e)':'linear-gradient(135deg,#182a40,#416d89 55%,#d4aa50)',rating,year,genre,runtime:type==='movie'?'Feature film':undefined,source_type:'archive_embed',archive_id,source_label:'Internet Archive · Owner-verified source',candidate_url:`https://archive.org/details/${archive_id}`,channel_slug,approved_by:'owner',approved_at:'2026-07-19'}));
+for(const item of items){const i=catalog.findIndex(x=>x.slug===item.slug);if(i>=0)catalog.splice(i,1)}catalog.unshift(...items);await writeFile(path,`${JSON.stringify(catalog,null,2)}\n`,'utf8');console.log(`Installed ${items.length} owner-verified Archive embeds.`);

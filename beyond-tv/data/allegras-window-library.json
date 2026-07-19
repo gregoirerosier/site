@@ -1,0 +1,402 @@
+[
+  {
+    "season": 1,
+    "episode": 1,
+    "title": "My First Day at Daycare",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 1x01 - My First Day at Daycare.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%201x01%20-%20My%20First%20Day%20at%20Daycare.mp4"
+  },
+  {
+    "season": 1,
+    "episode": 2,
+    "title": "Where's Godfrey",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 1x02 - Where's Godfrey.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%201x02%20-%20Where's%20Godfrey.mp4"
+  },
+  {
+    "season": 1,
+    "episode": 3,
+    "title": "My Own Monster",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 1x03 - My Own Monster.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%201x03%20-%20My%20Own%20Monster.mp4"
+  },
+  {
+    "season": 1,
+    "episode": 4,
+    "title": "Small Is Beautiful",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 1x04 - Small Is Beautiful.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%201x04%20-%20Small%20Is%20Beautiful.mp4"
+  },
+  {
+    "season": 1,
+    "episode": 5,
+    "title": "The Imaginary Zoo",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 1x05 - The Imaginary Zoo.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%201x05%20-%20The%20Imaginary%20Zoo.mp4"
+  },
+  {
+    "season": 1,
+    "episode": 6,
+    "title": "The Zootabaga Caper",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 1x06 - The Zootabaga Caper.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%201x06%20-%20The%20Zootabaga%20Caper.mp4"
+  },
+  {
+    "season": 1,
+    "episode": 7,
+    "title": "I've Got a Secret",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 1x07 - I've Got a Secret.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%201x07%20-%20I've%20Got%20a%20Secret.mp4"
+  },
+  {
+    "season": 1,
+    "episode": 8,
+    "title": "Lots of Turkey Pox",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 1x08 - Lots of Turkey Pox.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%201x08%20-%20Lots%20of%20Turkey%20Pox.mp4"
+  },
+  {
+    "season": 1,
+    "episode": 9,
+    "title": "Don't Touch My Stuff",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 1x09 - Don't Touch My Stuff.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%201x09%20-%20Don't%20Touch%20My%20Stuff.mp4"
+  },
+  {
+    "season": 1,
+    "episode": 10,
+    "title": "The Big Concert",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 1x10 - The Big Concert.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%201x10%20-%20The%20Big%20Concert.mp4"
+  },
+  {
+    "season": 1,
+    "episode": 11,
+    "title": "Puppy Power to the Rescue",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 1x11 - Puppy Power to the Rescue.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%201x11%20-%20Puppy%20Power%20to%20the%20Rescue.mp4"
+  },
+  {
+    "season": 1,
+    "episode": 12,
+    "title": "When is Reed Coming Home",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 1x12 - When is Reed Coming Home.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%201x12%20-%20When%20is%20Reed%20Coming%20Home.mp4"
+  },
+  {
+    "season": 1,
+    "episode": 13,
+    "title": "Bandages R Us!",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 1x13 - Bandages R Us!.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%201x13%20-%20Bandages%20R%20Us!.mp4"
+  },
+  {
+    "season": 1,
+    "episode": 14,
+    "title": "Read Me a Story",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 1x14 - Read Me a Story.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%201x14%20-%20Read%20Me%20a%20Story.mp4"
+  },
+  {
+    "season": 1,
+    "episode": 15,
+    "title": "Allegra Has a Bad Day",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 1x15 - Allegra Has a Bad Day.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%201x15%20-%20Allegra%20Has%20a%20Bad%20Day.mp4"
+  },
+  {
+    "season": 1,
+    "episode": 16,
+    "title": "Waiting for Grandma",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 1x16 - Waiting for Grandma.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%201x16%20-%20Waiting%20for%20Grandma.mp4"
+  },
+  {
+    "season": 1,
+    "episode": 17,
+    "title": "Nothing to Do",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 1x17 - Nothing to Do.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%201x17%20-%20Nothing%20to%20Do.mp4"
+  },
+  {
+    "season": 1,
+    "episode": 18,
+    "title": "Time Out",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 1x18 - Time Out.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%201x18%20-%20Time%20Out.mp4"
+  },
+  {
+    "season": 2,
+    "episode": 1,
+    "title": "A Box Divided",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 2x01 - A Box Divided.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%202x01%20-%20A%20Box%20Divided.mp4"
+  },
+  {
+    "season": 2,
+    "episode": 2,
+    "title": "Mr. Cook Baby-sits",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 2x02 - Mr. Cook Baby-sits.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%202x02%20-%20Mr.%20Cook%20Baby-sits.mp4"
+  },
+  {
+    "season": 2,
+    "episode": 3,
+    "title": "Here's Poco",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 2x03 - Here's Poco.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%202x03%20-%20Here's%20Poco.mp4"
+  },
+  {
+    "season": 2,
+    "episode": 4,
+    "title": "The Big Mystery",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 2x04 - The Big Mystery.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%202x04%20-%20The%20Big%20Mystery.mp4"
+  },
+  {
+    "season": 2,
+    "episode": 5,
+    "title": "Copy Cat, Copy Cat Go Away",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 2x05 - Copy Cat, Copy Cat Go Away.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%202x05%20-%20Copy%20Cat%2C%20Copy%20Cat%20Go%20Away.mp4"
+  },
+  {
+    "season": 2,
+    "episode": 6,
+    "title": "A Frog Called Steve",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 2x06 - A Frog Called Steve.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%202x06%20-%20A%20Frog%20Called%20Steve.mp4"
+  },
+  {
+    "season": 2,
+    "episode": 7,
+    "title": "Topsy Turvy Day",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 2x07 - Topsy Turvy Day.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%202x07%20-%20Topsy%20Turvy%20Day.mp4"
+  },
+  {
+    "season": 2,
+    "episode": 8,
+    "title": "Kids That Go Bump in the Night",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 2x08 - Kids That Go Bump in the Night.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%202x08%20-%20Kids%20That%20Go%20Bump%20in%20the%20Night.mp4"
+  },
+  {
+    "season": 2,
+    "episode": 9,
+    "title": "Stop Making Sense",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 2x09 - Stop Making Sense.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%202x09%20-%20Stop%20Making%20Sense.mp4"
+  },
+  {
+    "season": 2,
+    "episode": 10,
+    "title": "Spring is Here",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 2x10 - Spring is Here.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%202x10%20-%20Spring%20is%20Here.mp4"
+  },
+  {
+    "season": 2,
+    "episode": 11,
+    "title": "Best Friend Blues",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 2x11 - Best Friend Blues.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%202x11%20-%20Best%20Friend%20Blues.mp4"
+  },
+  {
+    "season": 2,
+    "episode": 12,
+    "title": "Beautiful Dreamers",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 2x12 - Beautiful Dreamers.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%202x12%20-%20Beautiful%20Dreamers.mp4"
+  },
+  {
+    "season": 2,
+    "episode": 13,
+    "title": "Strange Vet Fellows",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 2x13 - Strange Vet Fellows.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%202x13%20-%20Strange%20Vet%20Fellows.mp4"
+  },
+  {
+    "season": 2,
+    "episode": 14,
+    "title": "Clean-up Kids",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 2x14 - Clean-up Kids.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%202x14%20-%20Clean-up%20Kids.mp4"
+  },
+  {
+    "season": 2,
+    "episode": 15,
+    "title": "Mitten Weather",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 2x15 - Mitten Weather.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%202x15%20-%20Mitten%20Weather.mp4"
+  },
+  {
+    "season": 2,
+    "episode": 16,
+    "title": "Poco's 2 1 2 Birthday",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 2x16 - Poco's 2 1 2 Birthday.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%202x16%20-%20Poco's%202%201%202%20Birthday.mp4"
+  },
+  {
+    "season": 2,
+    "episode": 17,
+    "title": "Doodlehead",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 2x17 - Doodlehead.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%202x17%20-%20Doodlehead.mp4"
+  },
+  {
+    "season": 2,
+    "episode": 18,
+    "title": "Brother For Sale",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 2x18 - Brother For Sale.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%202x18%20-%20Brother%20For%20Sale.mp4"
+  },
+  {
+    "season": 2,
+    "episode": 19,
+    "title": "Quacky Quack",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 2x19 - Quacky Quack.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%202x19%20-%20Quacky%20Quack.mp4"
+  },
+  {
+    "season": 2,
+    "episode": 20,
+    "title": "The Wishing Stone",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 2x20 - The Wishing Stone.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%202x20%20-%20The%20Wishing%20Stone.mp4"
+  },
+  {
+    "season": 2,
+    "episode": 21,
+    "title": "I Made it Myself",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 2x21 - I Made it Myself.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%202x21%20-%20I%20Made%20it%20Myself.mp4"
+  },
+  {
+    "season": 2,
+    "episode": 22,
+    "title": "Play It Again, Allegra",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 2x22 - Play It Again, Allegra.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%202x22%20-%20Play%20It%20Again%2C%20Allegra.mp4"
+  },
+  {
+    "season": 3,
+    "episode": 1,
+    "title": "Nest Sweet Nest",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 3x01 - Nest Sweet Nest.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%203x01%20-%20Nest%20Sweet%20Nest.mp4"
+  },
+  {
+    "season": 3,
+    "episode": 2,
+    "title": "Pony, No Baloney",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 3x02 - Pony, No Baloney.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%203x02%20-%20Pony%2C%20No%20Baloney.mp4"
+  },
+  {
+    "season": 3,
+    "episode": 3,
+    "title": "Bubble Trouble",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 3x03 - Bubble Trouble.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%203x03%20-%20Bubble%20Trouble.mp4"
+  },
+  {
+    "season": 3,
+    "episode": 4,
+    "title": "Have Your Cakes",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 3x04 - Have Your Cakes.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%203x04%20-%20Have%20Your%20Cakes.mp4"
+  },
+  {
+    "season": 3,
+    "episode": 5,
+    "title": "A Hero's Tail",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 3x05 - A Hero's Tail.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%203x05%20-%20A%20Hero's%20Tail.mp4"
+  },
+  {
+    "season": 3,
+    "episode": 6,
+    "title": "Make It Special",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 3x06 - Make It Special.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%203x06%20-%20Make%20It%20Special.mp4"
+  },
+  {
+    "season": 3,
+    "episode": 7,
+    "title": "Fun House",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 3x07 - Fun House.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%203x07%20-%20Fun%20House.mp4"
+  },
+  {
+    "season": 3,
+    "episode": 8,
+    "title": "A Tangled Web",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 3x08 - A Tangled Web.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%203x08%20-%20A%20Tangled%20Web.mp4"
+  },
+  {
+    "season": 3,
+    "episode": 9,
+    "title": "Sticky Situation",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 3x09 - Sticky Situation.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%203x09%20-%20Sticky%20Situation.mp4"
+  },
+  {
+    "season": 3,
+    "episode": 10,
+    "title": "Mr. Cook's Christmas",
+    "runtime_seconds": 1440,
+    "archive_file": "Allegra's Window - 3x10 - Mr. Cook's Christmas.mp4",
+    "video_url": "https://archive.org/download/img-4382/Allegra's%20Window%20-%203x10%20-%20Mr.%20Cook's%20Christmas.mp4"
+  }
+]

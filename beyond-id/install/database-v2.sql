@@ -1,0 +1,28 @@
+-- Beyond ID v2 minimal schema patch
+CREATE TABLE IF NOT EXISTS profiles (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  avatar VARCHAR(255),
+  phone VARCHAR(50),
+  country VARCHAR(100),
+  province VARCHAR(100),
+  city VARCHAR(100),
+  bio TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS activity_logs (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NULL,
+  action VARCHAR(255),
+  ip_address VARCHAR(45),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS query_history (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NULL,
+  query_text TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

@@ -1,0 +1,1 @@
+!function(){"use strict";var e=["midnight","light","ocean","forest","sunset"];window.setBeyondTheme=function(t){-1!==e.indexOf(t)&&(document.documentElement.setAttribute("data-theme",t),document.cookie="beyond_theme="+encodeURIComponent(t)+"; path=/; max-age=31536000; SameSite=Lax",window.dispatchEvent(new CustomEvent("beyond-theme-change",{detail:{theme:t}})))}}();

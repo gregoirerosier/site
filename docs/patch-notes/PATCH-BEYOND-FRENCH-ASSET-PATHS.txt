@@ -1,0 +1,7 @@
+Beyond French UI asset-path repair
+Date: 2026-07-15
+
+- Converted Beyond French CSS, JavaScript, logo, and primary navigation paths to deployment-safe absolute application URLs.
+- Added file-version cache busting for style.css and app.js.
+- Preserved Beyond OS shared navigation, lesson content, voice controls, beta form, mobile tab bar, and responsive behavior.
+- Validated all Beyond French PHP files with php -l.

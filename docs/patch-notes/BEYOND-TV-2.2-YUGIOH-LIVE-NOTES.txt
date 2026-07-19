@@ -1,0 +1,16 @@
+Beyond TV 2.2 — Yu-Gi-Oh! synchronized channel
+
+- Danny Phantom has been replaced by Yu-Gi-Oh! TV.
+- Playlist: PLXBcsPKqNstB10447aKbDnkPEJdTV9sj-
+- All viewers resolve against server time in America/Vancouver.
+- Channel epoch: 2026-07-16 00:00:00 America/Vancouver.
+- Season 1 is configured as 49 programme slots at 24 minutes each.
+- When a viewer opens the public TV page, logs in, refreshes, or returns later,
+  playback joins the shared current episode and seek offset.
+- Public endpoint: /tv/
+- Full member channel: /beyond-tv/channel.php?slug=yugioh-tv
+- State endpoint: /beyond-tv/api/yugioh-live.php
+
+Note: YouTube may require muted autoplay and can introduce a small seek variance.
+Episode slot length can be refined in /beyond-tv/includes/yugioh-live.php once
+exact per-video durations are imported.

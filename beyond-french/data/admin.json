@@ -1,0 +1,4 @@
+{
+  "username": "admin",
+  "password_note": "Change the password hash in admin/login.php before public launch."
+}

@@ -1,0 +1,15 @@
+Beyond OS 2.1 — Tattoo + French UX Repair
+
+Beyond Tattoo
+- Removed mandatory splash-screen redirect.
+- /beyond-tattoo/splash.php now redirects directly to the app.
+- Removed the splash rewrite route.
+- Protected the shared e() helper with function_exists() to prevent fatal redeclaration errors when Beyond ID and Beyond Tattoo load together.
+
+Beyond French
+- Added a clear four-step daily flow: Learn, Practice, Review, Continue.
+- Added Listen, Copy, and Practice actions to the daily lesson.
+- Added a guided next-step card after each phrase.
+- Added a mobile premium bottom navigation bar.
+- Added French text-to-speech using the browser speech engine.
+- Improved sticky mobile header and small-screen button layout.

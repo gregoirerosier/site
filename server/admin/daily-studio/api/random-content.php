@@ -1,0 +1,168 @@
+<?php
+declare(strict_types=1);
+require dirname(__DIR__) . '/bootstrap.php';
+header('Content-Type: application/json; charset=utf-8');
+header('Cache-Control: no-store');
+
+$type = strtolower((string)($_GET['type'] ?? ''));
+$reset = isset($_GET['reset']) && $_GET['reset'] === '1';
+$root = dirname(__DIR__, 4);
+$storage = dirname(__DIR__) . '/storage';
+if (!is_dir($storage)) { @mkdir($storage, 0775, true); }
+
+function jsonOut(array $data, int $code = 200): never {
+    http_response_code($code);
+    echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    exit;
+}
+function readHistory(string $file): array {
+    if (!is_file($file)) return [];
+    $data = json_decode((string)file_get_contents($file), true);
+    return is_array($data) ? array_values(array_unique(array_map('strval', $data))) : [];
+}
+function writeHistory(string $file, array $history): void {
+    file_put_contents($file, json_encode(array_values($history), JSON_PRETTY_PRINT), LOCK_EX);
+}
+function chooseUnused(array $items, array $history, callable $keyFn): array {
+    $used = array_fill_keys($history, true);
+    $available = array_values(array_filter($items, fn($item) => !isset($used[(string)$keyFn($item)])));
+    $cycled = false;
+    if (!$available) { $available = array_values($items); $history = []; $cycled = true; }
+    if (!$available) throw new RuntimeException('The content bank is empty.');
+    $item = $available[random_int(0, count($available) - 1)];
+    $history[] = (string)$keyFn($item);
+    return [$item, $history, $cycled, count($available) - 1];
+}
+
+try {
+    if ($type === 'bible') {
+        $language = strtolower((string)($_GET['language'] ?? 'en'));
+        if (!in_array($language, ['en','fr','es','jm','ht'], true)) $language = 'en';
+        $historyFile = $storage . '/bible-history-' . $language . '.json';
+        if ($reset) { writeHistory($historyFile, []); jsonOut(['ok'=>true,'reset'=>true,'language'=>$language]); }
+        // Local KJV bank: generation does not depend on a web request or WEB text file.
+        $kjv = [
+          ['GEN 1:3','And God said, Let there be light: and there was light.','GENESIS 1:3'],
+          ['PSA 23:1','The LORD is my shepherd; I shall not want.','PSALM 23:1'],
+          ['PSA 27:1','The LORD is my light and my salvation; whom shall I fear?','PSALM 27:1'],
+          ['PSA 46:10','Be still, and know that I am God.','PSALM 46:10'],
+          ['PSA 56:3','What time I am afraid, I will trust in thee.','PSALM 56:3'],
+          ['PSA 118:24','This is the day which the LORD hath made; we will rejoice and be glad in it.','PSALM 118:24'],
+          ['PSA 119:105','Thy word is a lamp unto my feet, and a light unto my path.','PSALM 119:105'],
+          ['PRO 3:5','Trust in the LORD with all thine heart; and lean not unto thine own understanding.','PROVERBS 3:5'],
+          ['ISA 40:31','But they that wait upon the LORD shall renew their strength; they shall mount up with wings as eagles.','ISAIAH 40:31'],
+          ['ISA 41:10','Fear thou not; for I am with thee: be not dismayed; for I am thy God.','ISAIAH 41:10'],
+          ['MAT 5:16','Let your light so shine before men, that they may see your good works, and glorify your Father which is in heaven.','MATTHEW 5:16'],
+          ['MAT 11:28','Come unto me, all ye that labour and are heavy laden, and I will give you rest.','MATTHEW 11:28'],
+          ['MRK 10:27','With men it is impossible, but not with God: for with God all things are possible.','MARK 10:27'],
+          ['JHN 3:16','For God so loved the world, that he gave his only begotten Son.','JOHN 3:16'],
+          ['JHN 8:12','I am the light of the world: he that followeth me shall not walk in darkness, but shall have the light of life.','JOHN 8:12'],
+          ['JHN 14:27','Peace I leave with you, my peace I give unto you: Let not your heart be troubled, neither let it be afraid.','JOHN 14:27'],
+          ['ROM 8:28','And we know that all things work together for good to them that love God.','ROMANS 8:28'],
+          ['ROM 12:12','Rejoicing in hope; patient in tribulation; continuing instant in prayer.','ROMANS 12:12'],
+          ['1CO 13:13','And now abideth faith, hope, charity, these three; but the greatest of these is charity.','1 CORINTHIANS 13:13'],
+          ['2CO 5:7','For we walk by faith, not by sight.','2 CORINTHIANS 5:7'],
+          ['PHP 4:4','Rejoice in the Lord alway: and again I say, Rejoice.','PHILIPPIANS 4:4'],
+          ['PHP 4:13','I can do all things through Christ which strengtheneth me.','PHILIPPIANS 4:13'],
+          ['1TH 5:17','Pray without ceasing.','1 THESSALONIANS 5:17'],
+          ['HEB 11:1','Now faith is the substance of things hoped for, the evidence of things not seen.','HEBREWS 11:1']
+        ];
+        $french = [
+          ['PSA 23:1','L’Éternel est mon berger: je ne manquerai de rien.','PSAUME 23:1'],
+          ['PSA 46:10','Arrêtez, et sachez que je suis Dieu.','PSAUME 46:10'],
+          ['PSA 56:3','Quand je suis dans la crainte, en toi je me confie.','PSAUME 56:3'],
+          ['PSA 118:24','C’est ici la journée que l’Éternel a faite: qu’elle soit pour nous un sujet d’allégresse et de joie!','PSAUME 118:24'],
+          ['PRO 3:5','Confie-toi en l’Éternel de tout ton cœur, et ne t’appuie pas sur ta sagesse.','PROVERBES 3:5'],
+          ['MAT 11:28','Venez à moi, vous tous qui êtes fatigués et chargés, et je vous donnerai du repos.','MATTHIEU 11:28'],
+          ['JHN 14:27','Je vous laisse la paix, je vous donne ma paix. Que votre cœur ne se trouble point, et ne s’alarme point.','JEAN 14:27'],
+          ['2CO 5:7','Car nous marchons par la foi et non par la vue.','2 CORINTHIENS 5:7'],
+          ['PHP 4:13','Je puis tout par celui qui me fortifie.','PHILIPPIENS 4:13'],
+          ['1TH 5:17','Priez sans cesse.','1 THESSALONICIENS 5:17']
+        ];
+        $spanish = [
+          ['PSA 23:1','Jehová es mi pastor; nada me faltará.','SALMOS 23:1'],
+          ['PSA 46:10','Estad quietos, y conoced que yo soy Dios.','SALMOS 46:10'],
+          ['PSA 56:3','En el día que temo, yo en ti confío.','SALMOS 56:3'],
+          ['PSA 118:24','Este es el día que hizo Jehová; nos gozaremos y alegraremos en él.','SALMOS 118:24'],
+          ['PRO 3:5','Fíate de Jehová de todo tu corazón, y no te apoyes en tu propia prudencia.','PROVERBIOS 3:5'],
+          ['MAT 11:28','Venid a mí todos los que estáis trabajados y cargados, y yo os haré descansar.','MATEO 11:28'],
+          ['JHN 14:27','La paz os dejo, mi paz os doy; no se turbe vuestro corazón, ni tenga miedo.','JUAN 14:27'],
+          ['2CO 5:7','Porque por fe andamos, no por vista.','2 CORINTIOS 5:7'],
+          ['PHP 4:13','Todo lo puedo en Cristo que me fortalece.','FILIPENSES 4:13'],
+          ['1TH 5:17','Orad sin cesar.','1 TESALONICENSES 5:17']
+        ];
+        $patois = [
+          ['PSA 23:1','Di LORD a mi shepherd; mi nah go want.','PSALM 23:1'],
+          ['PSA 46:10','Keep still, an know seh mi a God.','PSALM 46:10'],
+          ['PSA 56:3','Any time mi fraid, a you mi put mi trust inna.','PSALM 56:3'],
+          ['PSA 118:24','A dis di day weh di LORD make; mek wi rejoice an glad inna it.','PSALM 118:24'],
+          ['PRO 3:5','Trust inna di LORD wid all yuh heart, an nuh lean pon yuh own understanding.','PROVERBS 3:5'],
+          ['MAT 11:28','Come to me, all a unnu weh tired an carry heavy load, an mi will gi unnu rest.','MATTHEW 11:28'],
+          ['JHN 14:27','Peace mi leave wid unnu; a mi peace mi give unnu. Nuh mek unnu heart trouble or fraid.','JOHN 14:27'],
+          ['2CO 5:7','For wi walk by faith, not by sight.','2 CORINTHIANS 5:7'],
+          ['PHP 4:13','Mi can do all things through Christ weh strengthen mi.','PHILIPPIANS 4:13'],
+          ['1TH 5:17','Pray without stopping.','1 THESSALONIANS 5:17']
+        ];
+        $kreyol = [
+          ['PSA 23:1','Seyè a se gadò mwen; mwen p ap manke anyen.','SÒM 23:1'],
+          ['PSA 46:10','Rete trankil, epi konnen se mwen menm ki Bondye.','SÒM 46:10'],
+          ['PSA 56:3','Lè mwen pè, se nan ou mwen mete konfyans mwen.','SÒM 56:3'],
+          ['PSA 118:24','Se jou sa a Seyè a fè; ann rejwi epi ann kontan ladan li.','SÒM 118:24'],
+          ['PRO 3:5','Mete tout konfyans ou nan Seyè a; pa konte sou pwòp konprann pa ou.','PWOVÈB 3:5'],
+          ['MAT 11:28','Vini jwenn mwen, nou tout ki fatige e ki chaje, epi m ap ban nou repo.','MATYE 11:28'],
+          ['JHN 14:27','Mwen kite lapè pou nou; mwen ban nou lapè mwen. Pa kite kè nou boulvèse ni pè.','JAN 14:27'],
+          ['2CO 5:7','Paske n ap mache grasa lafwa, pa grasa sa nou wè.','2 KORENTYEN 5:7'],
+          ['PHP 4:13','Mwen kapab fè tout bagay grasa Kris la ki ban mwen fòs.','FILIPYEN 4:13'],
+          ['1TH 5:17','Priye san rete.','1 TESALONISYEN 5:17']
+        ];
+        $banks = ['en'=>[$kjv,'KJV'], 'fr'=>[$french,'LSG'], 'es'=>[$spanish,'RVR'], 'jm'=>[$patois,'PATOIS'], 'ht'=>[$kreyol,'KREYÒL']];
+        [$bank,$translation] = $banks[$language];
+        $items = array_map(function ($v) use ($translation) {
+            preg_match('/^(.+)\s+(\d+):(\d+)$/u', $v[2], $parts);
+            return ['id'=>$v[0], 'verse'=>$v[1], 'reference'=>$v[2], 'translation'=>$translation, 'book'=>$parts[1] ?? $v[2], 'chapter'=>(int)($parts[2] ?? 1), 'verse_number'=>(int)($parts[3] ?? 1)];
+        }, $bank);
+        $footerBanks = [
+          'en'=>['BREATHE DEEP. GOD IS WITH YOU.','WALK IN FAITH TODAY.','LET PEACE GUIDE YOUR NEXT STEP.','TRUST GOD WITH TODAY.'],
+          'fr'=>['RESPIREZ PROFONDÉMENT. DIEU EST AVEC VOUS.','MARCHEZ DANS LA FOI AUJOURD’HUI.','LAISSEZ LA PAIX GUIDER VOS PAS.','CONFIEZ CETTE JOURNÉE À DIEU.'],
+          'es'=>['RESPIRA PROFUNDO. DIOS ESTÁ CONTIGO.','CAMINA EN FE HOY.','DEJA QUE LA PAZ GUÍE TUS PASOS.','CONFÍA ESTE DÍA A DIOS.'],
+          'jm'=>['BREATHE DEEP. GOD DEH WID YUH.','WALK INNA FAITH TODAY.','MEK PEACE GUIDE YUH NEXT STEP.','TRUST GOD WID TODAY.'],
+          'ht'=>['RESPIRE FON. BONDYE AVÈ W.','MACHE NAN LAFWA JODI A.','KITE LAPÈ GIDE PWOCHEN PA W.','KONFYE JOUNEN SA A NAN BONDYE.']
+        ];
+        $footers = $footerBanks[$language];
+        if (isset($_GET['catalog']) && $_GET['catalog'] === '1') {
+            $catalog = array_map(fn($i) => ['book'=>$i['book'],'chapter'=>$i['chapter'],'verse_number'=>$i['verse_number'],'reference'=>$i['reference']], $items);
+            jsonOut(['ok'=>true,'language'=>$language,'translation'=>$translation,'items'=>$catalog]);
+        }
+        $selectedBook = strtoupper(trim((string)($_GET['book'] ?? '')));
+        $selectedChapter = (int)($_GET['chapter'] ?? 0);
+        $selectedVerse = (int)($_GET['verse'] ?? 0);
+        $cycled = false;
+        $remaining = count($items);
+        if ($selectedBook !== '' && $selectedChapter > 0 && $selectedVerse > 0) {
+            $matches = array_values(array_filter($items, fn($i) => strtoupper($i['book']) === $selectedBook && $i['chapter'] === $selectedChapter && $i['verse_number'] === $selectedVerse));
+            if (!$matches) jsonOut(['error'=>'The selected verse is not available in this language bank.'], 404);
+            $item = $matches[0];
+        } else {
+            $history = readHistory($historyFile);
+            [$item,$history,$cycled,$remaining] = chooseUnused($items,$history,fn($i)=>$i['id']);
+            writeHistory($historyFile,$history);
+        }
+        $item['footer'] = $footers[random_int(0,count($footers)-1)];
+        jsonOut(['ok'=>true,'item'=>$item,'total'=>count($items),'remaining'=>$remaining,'cycle_restarted'=>$cycled]);
+    }
+
+    if ($type === 'french') {
+        $historyFile = $storage . '/french-history.json';
+        if ($reset) { writeHistory($historyFile, []); jsonOut(['ok'=>true,'reset'=>true]); }
+        $source = $root . '/beyond-french/data/lessons.json';
+        $items = json_decode((string)file_get_contents($source), true);
+        if (!is_array($items)) throw new RuntimeException('French lesson bank is invalid.');
+        $history = readHistory($historyFile);
+        [$item,$history,$cycled,$remaining] = chooseUnused($items,$history,fn($i)=>$i['id'] ?? sha1(json_encode($i)));
+        writeHistory($historyFile,$history);
+        jsonOut(['ok'=>true,'item'=>$item,'total'=>count($items),'remaining'=>$remaining,'cycle_restarted'=>$cycled]);
+    }
+    jsonOut(['error'=>'Unknown content type.'], 400);
+} catch (Throwable $e) {
+    jsonOut(['error'=>$e->getMessage()], 500);
+}

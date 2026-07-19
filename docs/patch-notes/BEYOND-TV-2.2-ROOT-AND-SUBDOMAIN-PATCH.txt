@@ -1,0 +1,11 @@
+Beyond TV 2.2 root + subdomain patch
+
+Updated deployment surfaces:
+- /index.php (https://beyondimagination.co.technology/)
+- /beyond-tv/ (main Beyond TV app)
+- /tv/ document root for https://tv.beyondimagination.co.technology/
+
+Public flagship: Classic Cartoon Theater
+Yu-Gi-Oh! TV: Beyond ID member channel
+Only released channels are publicly surfaced.
+Schedule timezone: America/Vancouver.

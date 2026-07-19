@@ -1,0 +1,34 @@
+[
+  {
+    "season": 1,
+    "episode": 1,
+    "title": "Armando's New Home",
+    "runtime_seconds": 1440,
+    "archive_file": "Gullah Gullah Island - Armando's New Home (Noggin Airing).mp4",
+    "video_url": "https://archive.org/download/img-4382/Gullah%20Gullah%20Island%20-%20Armando's%20New%20Home%20(Noggin%20Airing).mp4"
+  },
+  {
+    "season": 1,
+    "episode": 2,
+    "title": "Beat It",
+    "runtime_seconds": 1440,
+    "archive_file": "Gullah Gullah Island - Beat It (Noggin Airing).mp4",
+    "video_url": "https://archive.org/download/img-4382/Gullah%20Gullah%20Island%20-%20Beat%20It%20(Noggin%20Airing).mp4"
+  },
+  {
+    "season": 1,
+    "episode": 3,
+    "title": "Grandmas and Grandpas",
+    "runtime_seconds": 1440,
+    "archive_file": "Gullah Gullah Island - Grandmas and Grandpas (Noggin Airing).mp4",
+    "video_url": "https://archive.org/download/img-4382/Gullah%20Gullah%20Island%20-%20Grandmas%20and%20Grandpas%20(Noggin%20Airing).mp4"
+  },
+  {
+    "season": 1,
+    "episode": 4,
+    "title": "Shaina's Birthday",
+    "runtime_seconds": 1440,
+    "archive_file": "Gullah Gullah Island - Shaina's Birthday (Noggin Airing).mp4",
+    "video_url": "https://archive.org/download/img-4382/Gullah%20Gullah%20Island%20-%20Shaina's%20Birthday%20(Noggin%20Airing).mp4"
+  }
+]

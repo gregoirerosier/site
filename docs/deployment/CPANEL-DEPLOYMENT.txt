@@ -1,0 +1,41 @@
+BEYOND OS 2.1 - CPANEL DEPLOYMENT
+
+1. Back up the existing public_html folder and database.
+2. Upload this archive, then extract it so this package's public_html contents become the site's public_html contents.
+3. PHP 8.1 or newer is recommended. Enable PDO, PDO_SQLITE, PDO_MYSQL, mbstring, sodium, and OpenSSL.
+
+DEFAULT SQLITE MODE
+The application runs in SQLite mode when BEYOND_DB_DRIVER is not set.
+Its default database path is outside public_html:
+  account-home/var/beyond-os.sqlite
+The folder must be writable by PHP. To use another path, set BEYOND_SQLITE_PATH to an absolute server path.
+
+MYSQL / PHPMYADMIN MODE
+Set these server environment values in cPanel before switching drivers:
+  BEYOND_DB_DRIVER=mysql
+  BEYOND_DB_HOST=localhost
+  BEYOND_DB_NAME=your_database_name
+  BEYOND_DB_USER=your_database_user
+  BEYOND_DB_PASSWORD=your_database_password
+  BEYOND_DB_CHARSET=utf8mb4
+
+Do not store live database passwords in public files. A credential was present in the source archive and was removed from this build. Rotate that database password before deployment.
+
+DATABASE UPDATES
+On first database connection, the application automatically runs only the migration files for the selected driver and records them in schema_migrations. Matching SQLite and MySQL migrations are included for Remember Me, app login themes, DailyBreath, Bible Academy, narration, devotionals, practices, and the Verse of the Day generator.
+To disable automatic migrations, set BEYOND_AUTO_MIGRATE=false.
+
+PRIVATE JOURNAL
+Reflection journal entries are encrypted before storage. Set BEYOND_JOURNAL_KEY to a base64-encoded random 32-byte key. Keep the key outside public_html and back it up securely. The journal refuses to save unencrypted entries when this key is missing.
+
+ADMIN ACCESS
+Admin Review Hub:
+  /beyond-id/admin/review.php
+Verse of the Day Generator:
+  /beyond-id/admin/verse-generator.php
+SQL Console:
+  /beyond-id/admin/sql.php
+Both admin and super_admin roles are accepted by the shared guard.
+
+SECURITY CHECK
+After upload, test sign in, Remember me, sign out, password reset, the admin Review Hub, the DailyBreath home/Bible/Academy pages, and the Verse of the Day generator. Remove any old development copies from public web folders.

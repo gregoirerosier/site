@@ -1,0 +1,9 @@
+Beyond OS 2.1 hotfix
+
+1. Fixed Beyond Tattoo fatal error caused by duplicate e() declaration.
+2. Kept Beyond Tattoo landing and Stencil of the Day public.
+3. Added clean routes: /beyond-tattoo/stencilday, /splash, /artists, /studios, /healing.
+4. Replaced Education orbit/panel icon with a school and Finance with a bank.
+5. Restyled DailyBreath cards and practice panels with premium transparent green glass.
+
+Upload the contents of public_html over the existing public_html. Preserve your live database credentials.

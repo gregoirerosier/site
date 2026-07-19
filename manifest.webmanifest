@@ -1,0 +1,23 @@
+{
+  "name": "Beyond OS Beta Build 2.1.1",
+  "short_name": "Beyond OS",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#050817",
+  "theme_color": "#050817",
+  "description": "Live. Learn. Earn. Explore. Beyond OS Beta Build 2.1.1.",
+  "icons": [
+    {
+      "src": "assets/icons/beyond-os-192.webp",
+      "sizes": "192x192",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/beyond-os.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "season": 1,
+    "episode": 1,
+    "title": "Winnie the Pooh and the Honey Tree",
+    "year": 1966,
+    "runtime_seconds": 1500,
+    "archive_file": "2. Winnie the Pooh and the Honey Tree (1966).mp4",
+    "video_url": "https://archive.org/download/20231225_20231225_0425/2.%20Winnie%20the%20Pooh%20and%20the%20Honey%20Tree%20(1966).mp4"
+  },
+  {
+    "season": 1,
+    "episode": 2,
+    "title": "Winnie the Pooh and the Blustery Day",
+    "year": 1968,
+    "runtime_seconds": 1500,
+    "archive_file": "3. Winnie the Pooh and the Blustery Day (1968).mp4",
+    "video_url": "https://archive.org/download/20231225_20231225_0425/3.%20Winnie%20the%20Pooh%20and%20the%20Blustery%20Day%20(1968).mp4"
+  },
+  {
+    "season": 1,
+    "episode": 3,
+    "title": "Winnie the Pooh and Tigger Too",
+    "year": 1974,
+    "runtime_seconds": 1500,
+    "archive_file": "4. Winnie the Pooh and Tigger Too (1974).mp4",
+    "video_url": "https://archive.org/download/20231225_20231225_0425/4.%20Winnie%20the%20Pooh%20and%20Tigger%20Too%20(1974).mp4"
+  },
+  {
+    "season": 1,
+    "episode": 4,
+    "title": "Winnie the Pooh and a Day for Eeyore",
+    "year": 1983,
+    "runtime_seconds": 1500,
+    "archive_file": "5. Winnie the Pooh and a Day for Eeyore (1983).mp4",
+    "video_url": "https://archive.org/download/20231225_20231225_0425/5.%20Winnie%20the%20Pooh%20and%20a%20Day%20for%20Eeyore%20(1983).mp4"
+  }
+]

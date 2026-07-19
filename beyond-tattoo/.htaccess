@@ -1,0 +1,20 @@
+Options -Indexes
+DirectoryIndex index.php
+
+<FilesMatch "\.(json|log|ini)$">
+  Require all denied
+</FilesMatch>
+
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set X-Frame-Options "SAMEORIGIN"
+</IfModule>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^stencilday/?$ stencil-of-day.php [L,QSA]
+  RewriteRule ^artists/?$ hire-artists.php [L,QSA]
+  RewriteRule ^studios/?$ studios.php [L,QSA]
+  RewriteRule ^healing/?$ healing.php [L,QSA]
+</IfModule>

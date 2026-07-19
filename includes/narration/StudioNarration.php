@@ -1,0 +1,70 @@
+<?php
+declare(strict_types=1);
+require_once dirname(__DIR__,2) . '/config/bootstrap.php';
+require_once dirname(__DIR__,2) . '/beyond-french/includes/narration/NarrationProvider.php';
+require_once dirname(__DIR__,2) . '/beyond-french/includes/narration/NarrationService.php';
+require_once dirname(__DIR__,2) . '/beyond-french/includes/narration/OpenAIProvider.php';
+require_once dirname(__DIR__,2) . '/beyond-french/includes/narration/ElevenLabsProvider.php';
+require_once dirname(__DIR__,2) . '/beyond-french/includes/narration/AzureSpeechProvider.php';
+
+function studio_narration_config(): array { return require dirname(__DIR__,2) . '/beyond-french/config/narration.php'; }
+
+function studio_elevenlabs_first_voice(array $providerConfig): string {
+  $apiKey=trim((string)($providerConfig['api_key']??''));
+  if($apiKey===''||!function_exists('curl_init')) return '';
+  $ch=curl_init('https://api.elevenlabs.io/v2/voices?page_size=20');
+  curl_setopt_array($ch,[CURLOPT_RETURNTRANSFER=>true,CURLOPT_CONNECTTIMEOUT=>10,CURLOPT_TIMEOUT=>25,CURLOPT_HTTPHEADER=>['xi-api-key: '.$apiKey,'Accept: application/json']]);
+  $body=curl_exec($ch);$status=(int)curl_getinfo($ch,CURLINFO_HTTP_CODE);$err=curl_error($ch);curl_close($ch);
+  if($status<200||$status>=300||!is_string($body)){error_log('ElevenLabs voice discovery failed: HTTP '.$status.' '.$err);return '';}
+  $data=json_decode($body,true);if(!is_array($data))return '';
+  $voices=$data['voices']??[];if(!is_array($voices)||!$voices)return '';
+  foreach($voices as $voice){$id=trim((string)($voice['voice_id']??''));if($id!=='')return $id;}
+  return '';
+}
+function studio_narration_provider(): string { return strtolower((string)beyond_config('voice.provider','elevenlabs')); }
+function studio_narration_voice(string $provider,string $locale): string {
+  if($provider==='openai') return (string)beyond_config('narration.openai.voices.'.$locale,beyond_config('voice.openai_voice','coral'));
+  $v=beyond_config('narration.'.$provider.'.voices.'.$locale,beyond_config('voice.voices.'.$locale,''));
+  if(is_array($v)) { foreach($v as $k=>$label){ return is_string($k)?$k:(string)$label; } return ''; }
+  return (string)$v;
+}
+function studio_narration_generate(string $text,string $locale): array {
+  $cfg=studio_narration_config();
+  $service=new NarrationService([
+    'openai'=>new OpenAIProvider((array)$cfg['providers']['openai']),
+    'elevenlabs'=>new ElevenLabsProvider((array)$cfg['providers']['elevenlabs']),
+    'azure'=>new AzureSpeechProvider((array)$cfg['providers']['azure']),
+  ]);
+  $provider=studio_narration_provider();
+  $voice=studio_narration_voice($provider,$locale);
+  if($provider==='elevenlabs' && $voice===''){
+    $voice=studio_elevenlabs_first_voice((array)$cfg['providers']['elevenlabs']);
+    if($voice==='') throw new RuntimeException('No ElevenLabs voice is configured and no account voice could be discovered. Add a voice in ElevenLabs, then save its Voice ID in Premium Voices.');
+    // Make the discovered voice available to this request without persisting secrets or account data.
+    $cfg['providers']['elevenlabs']['voices'][$locale]=$voice;
+    $service=new NarrationService([
+      'openai'=>new OpenAIProvider((array)$cfg['providers']['openai']),
+      'elevenlabs'=>new ElevenLabsProvider((array)$cfg['providers']['elevenlabs']),
+      'azure'=>new AzureSpeechProvider((array)$cfg['providers']['azure']),
+    ]);
+  }
+  return $service->generate($provider,[
+    'text'=>$text,'language'=>$locale,'voice'=>$voice,'format'=>'mp3','speed'=>1.0,
+    'instructions'=>'Warm, clear, natural premium narration. Preserve scripture references and French pronunciation accurately.'
+  ],(array)($cfg['fallback_providers']??[]));
+}
+function studio_store_mp3(string $audio,string $library,string $date,string $locale,string $text): array {
+  if(strlen($audio)<128) throw new RuntimeException('The narration provider returned invalid audio.');
+  if(!preg_match('/^\d{4}-\d{2}-\d{2}$/',$date)) $date=date('Y-m-d');
+  $year=substr($date,0,4);$month=substr($date,5,2);
+  $folder=$library==='daily-breath'?'dailybreath':$library;
+  $base=dirname(__DIR__,2).'/'.$folder.'/assets/audio/'.$year.'/'.$month;
+  if(!is_dir($base) && !mkdir($base,0775,true) && !is_dir($base)) throw new RuntimeException('The audio library could not be created. Check PHP write permissions for '.$folder.'/assets/audio.');
+  if(!is_writable($base)) throw new RuntimeException('The audio library is not writable. Set '.$folder.'/assets/audio to 775 on the server.');
+  $slug=$library==='beyond-french'?'francais-du-jour':'daily-breath';
+  $name=$slug.'-'.$date.'-'.strtolower(str_replace('-','_',$locale)).'-'.substr(hash('sha256',$text),0,10).'.mp3';
+  $file=$base.'/'.$name;
+  if(!is_file($file) && file_put_contents($file,$audio,LOCK_EX)===false) throw new RuntimeException('The MP3 could not be saved.');
+  @chmod($file,0644);
+  return ['file'=>$file,'name'=>$name,'url'=>'/'.$folder.'/assets/audio/'.$year.'/'.$month.'/'.rawurlencode($name)];
+}

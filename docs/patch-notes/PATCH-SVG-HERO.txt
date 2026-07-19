@@ -1,0 +1,12 @@
+Beyond OS 2.1 — Animated SVG Hero Patch
+
+Updated: public_html/index.php
+
+Changes:
+- Replaced the CSS-only orbit rings and central atom/keyhole markup with an inline, responsive SVG.
+- Preserved the existing .orbit container, category node links, layout breakpoints, theme switcher, and JavaScript icon injection.
+- Added animated SVG orbit particles, flowing connection paths, a vector atom gateway, dark/light theme support, and reduced-motion support.
+- Added all new styles as additive overrides to avoid altering unrelated page CSS.
+
+Validation:
+- PHP syntax checked successfully.
