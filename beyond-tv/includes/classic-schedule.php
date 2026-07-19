@@ -33,12 +33,6 @@ function beyond_classic_libraries(): array
                 ['type'=>'playlist','id'=>'PLBJAZVFKjDq2vW8BovPYNyYNQTaJFhHn1','label'=>'Batman playlist'],
             ],
         ],
-        'x-men' => [
-            'name' => 'X-Men', 'icon' => '❌', 'episode_count' => 10,
-            'sources' => [
-                ['type'=>'playlist','id'=>'PLLhOnau-tupQEkDPJ6vZ5M3d938a_ppeA','label'=>'X-Men playlist'],
-            ],
-        ],
         'superman' => [
             'name' => 'Superman', 'icon' => '🦸', 'episode_count' => 10,
             'sources' => [
@@ -63,7 +57,7 @@ function beyond_classic_blocks(): array
         ['start'=>6,  'end'=>9,  'library'=>'popeye',      'title'=>'Morning Cartoon Classics'],
         ['start'=>9,  'end'=>12, 'library'=>'spider-man',  'title'=>'Spider-Man Classics'],
         ['start'=>12, 'end'=>15, 'library'=>'lucky-luke',  'title'=>'Lucky Luke'],
-        ['start'=>15, 'end'=>18, 'library'=>'x-men',       'title'=>'X-Men Animated'],
+        ['start'=>15, 'end'=>18, 'library'=>'mario',       'title'=>'Channel 1 Classics'],
         ['start'=>18, 'end'=>21, 'library'=>'superman',    'title'=>'Superman Prime Time'],
         ['start'=>21, 'end'=>24, 'library'=>'mario',       'title'=>'Channel 1 Classics'],
     ];
