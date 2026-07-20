@@ -11,6 +11,9 @@ function beyond_tv_eight_channel_guide(array $classicState, array $cartoonState)
         $rows = $schedules[$slug] ?? [];
         if ($slug === 'classic-cartoon-theater' && !empty($classicState['blocks'])) { $rows = $classicState['blocks']; }
         if ($slug === 'beyond-cartoons' && !empty($cartoonState['blocks'])) { $rows = $cartoonState['blocks']; }
+        if ($slug === 'yugioh-tv' && !$rows) {
+            $rows = [['start'=>0,'end'=>24,'icon'=>'🃏','title'=>'Yu-Gi-Oh! Duel Monsters','lineup'=>'Synchronized anime episode rotation']];
+        }
         if (!$rows) { continue; }
         $guide[] = [
             'slug' => $slug,

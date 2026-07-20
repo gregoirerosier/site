@@ -153,10 +153,9 @@ function beyond_shell_markup(string $appName, array $wallet): string {
     $signedIn = !empty($_SESSION['user_id']);
     $app = e($appName);
     $home = e(beyond_url());
-    $homeIconPath = beyond_app_icon('Beyond OS');
-    $homeIcon = $homeIconPath
-        ? '<img src="' . e($homeIconPath) . '" alt="">'
-        : '<span class="bos-logo-mark" aria-hidden="true"><i></i><i></i><i></i><b></b></span>';
+    // The full Beyond OS asset is a wordmark, not a compact navbar icon.
+    // Use the atom mark here so its text cannot be compressed beside the label.
+    $homeIcon = '<span class="bos-logo-mark" aria-hidden="true"><i></i><i></i><i></i><b></b></span>';
     $currentIconPath = beyond_app_icon($appName);
     $currentIcon = $currentIconPath ? '<img class="bos-current-icon" src="' . e($currentIconPath) . '" alt="">' : '';
     $appIdentity = strcasecmp(trim($appName), 'Beyond OS') === 0
@@ -184,7 +183,8 @@ function beyond_shell_markup(string $appName, array $wallet): string {
 #beyond-os-shell{position:relative;top:auto;z-index:100;min-height:58px;padding:max(8px,env(safe-area-inset-top)) 16px 8px;background:rgba(10,10,18,.94);color:#fff;border-bottom:1px solid rgba(255,255,255,.14);backdrop-filter:blur(18px);font:600 13px/1.3 system-ui,sans-serif}
 #beyond-os-shell *{box-sizing:border-box}#beyond-os-shell a{color:inherit;text-decoration:none}
 #beyond-os-shell .bos-row{width:100%;max-width:1320px;min-width:0;margin:auto;display:flex;align-items:center;gap:12px}
-#beyond-os-shell .bos-home{color:#a5b4fc;font-weight:900;letter-spacing:.04em;display:flex;align-items:center;gap:8px;flex:0 0 auto}
+#beyond-os-shell .bos-home{color:#a5b4fc;font-weight:900;letter-spacing:.04em;display:flex;align-items:center;gap:8px;flex:0 0 auto;white-space:nowrap}
+#beyond-os-shell .bos-home-label{display:block;white-space:nowrap;line-height:1}
 #beyond-os-shell .bos-home img,#beyond-os-shell .bos-current-icon,#beyond-os-shell .bos-logo-mark{width:30px;height:30px;border-radius:9px;object-fit:cover;border:1px solid rgba(255,255,255,.18)}
 #beyond-os-shell .bos-logo-mark{position:relative;display:block;background:#0b0b1d;box-shadow:0 6px 18px rgba(88,108,255,.3)}
 #beyond-os-shell .bos-logo-mark i{position:absolute;left:5px;top:11px;width:18px;height:6px;border:1.5px solid #8d70ff;border-radius:50%}

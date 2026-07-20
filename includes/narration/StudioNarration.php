@@ -46,7 +46,10 @@ function studio_narration_generate(string $text,string $locale): array {
     if($provider==='azure' && (trim((string)($providerCfg['api_key']??''))===''||trim((string)($providerCfg['region']??''))==='')) continue;
     $voice=studio_narration_voice($provider,$locale);
     if($provider==='openai' && $voice==='') $voice='coral';
-    if($provider==='elevenlabs' && $voice==='') $voice=studio_elevenlabs_first_voice($providerCfg);
+    if($provider==='elevenlabs' && $voice==='') {
+      $lastError=new RuntimeException('No ElevenLabs voice is selected for '.$locale.'. Choose the original speaker in Premium Voices.');
+      continue;
+    }
     try{
       return $service->generate($provider,[
         'text'=>$text,'language'=>$locale,'voice'=>$voice,'format'=>'mp3','speed'=>1.0,
@@ -54,17 +57,6 @@ function studio_narration_generate(string $text,string $locale): array {
       ]);
     }catch(Throwable $error){
       $lastError=$error;
-      // A saved ElevenLabs voice can be removed or lose access. Discover an
-      // account voice and retry once before moving to another provider.
-      if($provider==='elevenlabs'){
-        $discovered=studio_elevenlabs_first_voice($providerCfg);
-        if($discovered!=='' && $discovered!==$voice){
-          $retryCfg=$cfg;
-          $retryCfg['providers']['elevenlabs']['voices'][$locale]=$discovered;
-          $retryService=new NarrationService(['elevenlabs'=>new ElevenLabsProvider((array)$retryCfg['providers']['elevenlabs'])]);
-          try{return $retryService->generate('elevenlabs',['text'=>$text,'language'=>$locale,'voice'=>$discovered,'format'=>'mp3','speed'=>1.0,'instructions'=>'Warm, clear, natural premium narration.']);}catch(Throwable $retryError){$lastError=$retryError;}
-        }
-      }
       error_log('Studio narration provider '.$provider.' failed: '.$error->getMessage());
     }
   }
