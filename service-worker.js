@@ -1,1 +1,28 @@
-const CACHE="beyond-os-v2-shell-6",CORE=["./","offline.html","assets/img/beyond-logo.png"];self.addEventListener("install",e=>e.waitUntil(caches.open(CACHE).then(e=>e.addAll(CORE)).then(()=>self.skipWaiting()))),self.addEventListener("activate",e=>e.waitUntil(caches.keys().then(e=>Promise.all(e.filter(e=>e!==CACHE).map(e=>caches.delete(e)))).then(()=>self.clients.claim()))),self.addEventListener("fetch",e=>{"GET"===e.request.method&&new URL(e.request.url).origin===location.origin&&("navigate"!==e.request.mode?e.respondWith(/\/assets\/icons\//.test(new URL(e.request.url).pathname)?fetch(e.request,{cache:"reload"}).catch(()=>caches.match(e.request)):caches.match(e.request).then(t=>t||fetch(e.request))):e.respondWith(fetch(e.request).catch(()=>caches.match("offline.html"))))});
+const CACHE = "beyond-os-offline-v7";
+const OFFLINE_ASSETS = ["offline.html", "assets/img/beyond-logo.png"];
+
+self.addEventListener("install", event => {
+  event.waitUntil(
+    caches.open(CACHE)
+      .then(cache => cache.addAll(OFFLINE_ASSETS))
+      .then(() => self.skipWaiting())
+  );
+});
+
+self.addEventListener("activate", event => {
+  event.waitUntil(
+    caches.keys()
+      .then(keys => Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key))))
+      .then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener("fetch", event => {
+  if (event.request.method !== "GET" || event.request.mode !== "navigate") return;
+
+  // Always request live HTML. The cache is used only when the network fails.
+  event.respondWith(
+    fetch(event.request, { cache: "no-store" })
+      .catch(() => caches.match("offline.html"))
+  );
+});

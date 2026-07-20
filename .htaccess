@@ -17,7 +17,25 @@ DirectoryIndex index.php index.html
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
   Header always set X-Frame-Options "SAMEORIGIN"
 
-  <FilesMatch "\.(?:css|js|png|jpe?g|gif|webp|svg|woff2?)$">
+  # Deployments must be visible immediately. Dynamic pages and the service
+  # worker are revalidated on every request instead of being served stale.
+  <FilesMatch "\.(?:php|html?)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate, max-age=0"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </FilesMatch>
+  <Files "service-worker.js">
+    Header set Cache-Control "no-cache, no-store, must-revalidate, max-age=0"
+    Header set Service-Worker-Allowed "/"
+  </Files>
+
+  # CSS and JavaScript may be stored locally, but the browser must check for
+  # a newer deployed copy before using them.
+  <FilesMatch "\.(?:css|js)$">
+    Header set Cache-Control "no-cache, must-revalidate, max-age=0"
+  </FilesMatch>
+
+  <FilesMatch "\.(?:png|jpe?g|gif|webp|svg|woff2?)$">
     Header set Cache-Control "public, max-age=604800"
   </FilesMatch>
 </IfModule>
