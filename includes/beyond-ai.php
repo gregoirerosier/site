@@ -5,6 +5,8 @@ function beyond_ai_config(string $key, $default = null)
 {
     $envMap = [
         'api_key' => 'OPENAI_API_KEY',
+        'google_image_key' => 'GEMINI_API_KEY',
+        'google_image_model' => 'BEYOND_GOOGLE_IMAGE_MODEL',
         'quick_model' => 'BEYOND_AI_QUICK_MODEL',
         'advanced_model' => 'BEYOND_AI_ADVANCED_MODEL',
     ];
@@ -14,6 +16,8 @@ function beyond_ai_config(string $key, $default = null)
     }
     $paths = [
         'api_key' => ['ai.openai.api_key', 'narration.openai.api_key'],
+        'google_image_key' => ['ai.google.imagen_api_key', 'ai.google.api_key', 'ai.gemini.api_key', 'google.imagen.api_key'],
+        'google_image_model' => ['ai.google.imagen_model', 'ai.google.image_model'],
         'quick_model' => ['ai.openai.quick_model'],
         'advanced_model' => ['ai.openai.advanced_model'],
         'quick_input_per_million' => ['ai.pricing.quick_input_per_million'],
