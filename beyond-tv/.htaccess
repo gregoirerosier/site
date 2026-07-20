@@ -1,0 +1,11 @@
+RewriteEngine On
+
+# The application is served both from /beyond-tv on the main domain and from
+# the document root of tv.beyondimagination.co.technology. Strip the legacy
+# mount prefix only on the TV subdomain so shared asset/API URLs resolve.
+RewriteCond %{HTTP_HOST} ^tv\.beyondimagination\.co\.technology$ [NC]
+RewriteRule ^beyond-tv/?(.*)$ $1 [L,QSA]
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+</IfModule>

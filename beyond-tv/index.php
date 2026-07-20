@@ -10,19 +10,30 @@ require_once __DIR__ . '/includes/eight-channel-guide.php';
 if (!empty($_SESSION['user_id'])) { beyond_track_app('Beyond TV'); }
 $signedIn = !empty($_SESSION['user_id']);
 $channels = json_decode((string)file_get_contents(__DIR__ . '/data/channels.json'), true) ?: [];
-$classic = null; $cartoons = null;
+$classic = null; $cartoons = null; $afterDark = null;
 foreach ($channels as $channel) {
     if (($channel['slug'] ?? '') === 'classic-cartoon-theater') $classic = $channel;
     if (($channel['slug'] ?? '') === 'beyond-cartoons') $cartoons = $channel;
+    if (($channel['slug'] ?? '') === 'beyond-after-dark') $afterDark = $channel;
 }
 $classic ??= ['slug'=>'classic-cartoon-theater','name'=>'Classic Cartoon Theater','stream_endpoint'=>'/beyond-tv/api/classic-live.php','icon'=>'🎞️'];
 $cartoons ??= ['slug'=>'beyond-cartoons','name'=>'Beyond Cartoons','icon'=>'📺'];
 $classicState = beyond_classic_schedule_state();
 $cartoonState = beyond_cartoons_schedule_state();
-$current = $classicState['current']; $next = $classicState['next'];
-$slots = [0,3,6,9,12,15,18,21];
+$slots = range(0, 23);
 $guideChannels = beyond_tv_eight_channel_guide($classicState, $cartoonState);
 $currentHour = (int)(new DateTimeImmutable('now', new DateTimeZone('America/Vancouver')))->format('G');
+$afterDarkGuide = null;
+foreach ($guideChannels as $guideChannel) {
+    if (($guideChannel['slug'] ?? '') === 'beyond-after-dark') { $afterDarkGuide = $guideChannel; break; }
+}
+$afterDarkRows = $afterDarkGuide['rows'] ?? [];
+$current = beyond_tv_guide_block($afterDarkRows, $currentHour);
+$currentIndex = 0;
+foreach ($afterDarkRows as $index => $row) {
+    if ($currentHour >= (int)($row['start'] ?? 0) && $currentHour < (int)($row['end'] ?? 0)) { $currentIndex = $index; break; }
+}
+$next = $afterDarkRows ? $afterDarkRows[($currentIndex + 1) % count($afterDarkRows)] : ['title'=>'Next supernatural story'];
 ?>
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#080812"><script>(function(){try{const t=localStorage.getItem('beyond-tv-theme');document.documentElement.dataset.tvTheme=['dark','light','sunset'].includes(t)?t:'sunset';}catch(e){document.documentElement.dataset.tvTheme='sunset';}})();</script><title>Beyond TV | 12 Live Channels</title><meta name="description" content="Explore twelve Beyond TV channels across cartoons, space, ancient history, movies, French and health."><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"><link rel="stylesheet" href="/beyond-tv/assets/css/app.css?v=2.6.1">
 <style>
@@ -35,12 +46,15 @@ html[data-tv-theme="light"]{color-scheme:light}html[data-tv-theme="light"] .btv{
 
 html[data-tv-theme="sunset"]{color-scheme:dark}html[data-tv-theme="sunset"] .btv,html[data-tv-theme="sunset"] .classic-home,html[data-tv-theme="sunset"] body.tv-app{color:#fff7f2;background:radial-gradient(circle at 50% -10%,#7b2d58 0,#32133f 34%,#151326 72%)}html[data-tv-theme="sunset"] .btv:before{background:linear-gradient(180deg,rgba(78,25,70,.38),rgba(28,15,42,.88) 45%,#111325 80%)}html[data-tv-theme="sunset"] .btv-nav,html[data-tv-theme="sunset"] .classic-nav{background:rgba(40,17,43,.90);border-color:rgba(255,198,166,.18)}html[data-tv-theme="sunset"] .btv-btn,html[data-tv-theme="sunset"] .btv-theme-toggle,html[data-tv-theme="sunset"] .classic-btn,html[data-tv-theme="sunset"] .channel-theme-toggle{background:rgba(106,43,76,.45);border-color:rgba(255,205,176,.25);color:#fff7f2}html[data-tv-theme="sunset"] .now-panel,html[data-tv-theme="sunset"] .next-panel,html[data-tv-theme="sunset"] .live-chip,html[data-tv-theme="sunset"] .channel-switch,html[data-tv-theme="sunset"] .classic-info,html[data-tv-theme="sunset"] .guide-block,html[data-tv-theme="sunset"] .channel-card,html[data-tv-theme="sunset"] .release-note,html[data-tv-theme="sunset"] .channel-detail,html[data-tv-theme="sunset"] .schedule-mini>div{background:rgba(54,23,52,.90)!important;border-color:rgba(255,195,160,.20)!important;color:#fff7f2}html[data-tv-theme="sunset"] .epg{background:#2a1733;border-color:rgba(255,194,158,.20)}html[data-tv-theme="sunset"] .epg-cell{background:#321b3e;border-color:#5d3556;color:#fff7f2}html[data-tv-theme="sunset"] .epg-time,html[data-tv-theme="sunset"] .epg-channel,html[data-tv-theme="sunset"] .epg-corner{background:#402047;color:#ffd9c6}html[data-tv-theme="sunset"] .epg-program.current{background:#6e345e;box-shadow:inset 0 0 0 3px #ffb36b}html[data-tv-theme="sunset"] .channel-detail p,html[data-tv-theme="sunset"] .schedule-mini small,html[data-tv-theme="sunset"] .provider-status,html[data-tv-theme="sunset"] .clock-line{color:#e5bdb5}
 .channel-featured-9{background:linear-gradient(135deg,#67295f,#c14c77)}.channel-featured-10{background:linear-gradient(135deg,#172d49,#47799b)}.channel-featured-11{background:linear-gradient(135deg,#171522,#563960)}.channel-featured-12{background:linear-gradient(135deg,#514019,#c08a35)}
+/* Twenty-four one-hour columns; the first channel column remains sticky. */
+.epg-grid{grid-template-columns:220px repeat(24,minmax(150px,1fr));min-width:3820px}
+@media(max-width:760px){.epg-grid{grid-template-columns:150px repeat(24,150px);min-width:3750px}}
 </style></head><body class="btv">
 <header class="btv-nav"><a class="btv-brand" href="/beyond-tv/">Beyond TV</a><nav class="btv-actions"><button class="btv-theme-toggle" type="button" data-tv-theme-toggle aria-label="Switch Beyond TV to light theme" aria-pressed="false">☀️ <span>Light</span></button><?php if($signedIn):?><a class="btv-btn secondary" href="/beyond-tv/browse.php">Browse</a><a class="btv-btn primary" href="/dashboard/">Beyond ID</a><?php else:?><a class="btv-btn secondary" href="/">Beyond OS</a><a class="btv-btn primary" href="/beyond-id/auth/login.php?return=/beyond-tv/">Sign in</a><?php endif;?></nav></header>
 <main>
-<section class="hero btv-shell"><div class="hero-title"><div><span class="eyebrow">FREE LIVE TV · VANCOUVER TIME</span><h1>Classic Cartoon Theater</h1></div><span class="live-chip">LIVE NOW</span></div>
-<div class="mega-player provider-player" data-stream-endpoint="<?=htmlspecialchars((string)$classic['stream_endpoint'])?>"><video class="beyond-video" controls playsinline autoplay muted preload="metadata" poster="/beyond-tv/assets/img/beyond-tv-promo.webp"></video><div class="player-loading">Tuning into Channel 1…</div><div class="player-fallback" hidden><div><p>Direct playback is unavailable.</p><button class="btv-btn" type="button" data-open-embed>Open backup player</button></div></div><iframe class="archive-embed" title="Classic Cartoon Theater backup player" allow="autoplay; fullscreen" allowfullscreen hidden></iframe><button class="unmute-hint" type="button" data-unmute>🔊 Tap for sound</button></div>
-<div class="now-strip"><div class="now-panel"><small>NOW PLAYING</small><strong data-classic-current><?=htmlspecialchars((string)$current['icon'].' '.$current['title'])?></strong><span><?=htmlspecialchars((string)$current['lineup'])?></span></div><div class="next-panel"><small>UP NEXT</small><strong data-classic-next><?=htmlspecialchars((string)$next['title'])?></strong><span data-classic-clock><?=htmlspecialchars((string)$classicState['time_label'])?></span> · Vancouver</div></div></section>
+<section class="hero btv-shell"><div class="hero-title"><div><span class="eyebrow">CHANNEL 1 · FREE LIVE TV · VANCOUVER TIME</span><h1>Beyond After Dark</h1></div><span class="live-chip">LIVE NOW</span></div>
+<div class="mega-player provider-player"><iframe src="/beyond-tv/embed-player.php?slug=beyond-after-dark" title="Beyond After Dark live on Beyond TV" allow="autoplay; fullscreen; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+<div class="now-strip"><div class="now-panel"><small>NOW PLAYING</small><strong data-guide-current><?=htmlspecialchars((string)(($current['icon'] ?? '🌙').' '.($current['title'] ?? 'Beyond After Dark')))?></strong><span><?=htmlspecialchars((string)($current['lineup'] ?? 'Supernatural stories and late-night mysteries'))?></span></div><div class="next-panel"><small>UP NEXT</small><strong data-guide-next><?=htmlspecialchars((string)($next['title'] ?? 'Next supernatural story'))?></strong><span data-guide-clock><?=htmlspecialchars((string)$classicState['time_label'])?></span> · Vancouver</div></div></section>
 <section class="channel-picker btv-shell"><div class="section-head"><div><span class="eyebrow">CHOOSE A CHANNEL</span><h2>12 channels across the ecosystem</h2></div></div><div class="channel-cards">
 <?php $featuredChannels=json_decode((string)@file_get_contents(__DIR__.'/data/featured-channels.json'),true)?:[]; foreach($featuredChannels as $featuredChannel): ?>
 <a class="channel-card-new channel-featured-<?=intval($featuredChannel['number'])?>" href="/beyond-tv/channel.php?slug=<?=urlencode((string)$featuredChannel['slug'])?>"><span class="channel-num">CHANNEL <?=intval($featuredChannel['number'])?></span><span class="channel-live">● LIVE LIBRARY</span><div><h3><?=htmlspecialchars((string)$featuredChannel['icon'].' '.$featuredChannel['name'])?></h3><p><?=htmlspecialchars((string)$featuredChannel['description'])?></p></div></a>
