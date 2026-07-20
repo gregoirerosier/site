@@ -38,7 +38,10 @@ function studio_narration_generate(string $text,string $locale): array {
     'azure'=>new AzureSpeechProvider((array)$cfg['providers']['azure']),
   ]);
   $primary=studio_narration_provider();
-  $queue=array_values(array_unique(array_merge([$primary],(array)($cfg['fallback_providers']??[]),['openai','azure'])));
+  // Only use the selected provider and explicitly configured fallbacks. OpenAI
+  // used to be appended unconditionally, which made an Azure export end with a
+  // misleading OpenAI quota error whenever Azure also needed attention.
+  $queue=array_values(array_unique(array_merge([$primary],(array)($cfg['fallback_providers']??[]))));
   $lastError=null;
   foreach($queue as $provider){
     $provider=strtolower(trim((string)$provider));
