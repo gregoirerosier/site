@@ -71,7 +71,10 @@ final class AzureSpeechProvider implements NarrationProvider
         }
 
         $text = htmlspecialchars((string)$request['text'], ENT_XML1 | ENT_QUOTES, 'UTF-8');
-        $safeLanguage = htmlspecialchars($language, ENT_XML1 | ENT_QUOTES, 'UTF-8');
+        // The voice prefix is the locale Azure expects in SSML. This also
+        // supports controlled fallbacks such as en-JM -> en-US and ht-HT -> fr-FR.
+        $speechLanguage = preg_match('/^([a-z]{2,3}-[A-Z]{2})-/', $requestedVoice, $match) ? $match[1] : $language;
+        $safeLanguage = htmlspecialchars($speechLanguage, ENT_XML1 | ENT_QUOTES, 'UTF-8');
         $safeVoice = htmlspecialchars($requestedVoice, ENT_XML1 | ENT_QUOTES, 'UTF-8');
         $speed = max(0.25, min(4.0, (float)($request['speed'] ?? 1.0)));
         $relativeRate = ($speed - 1.0) * 100;

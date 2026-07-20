@@ -24,7 +24,9 @@ function studio_elevenlabs_first_voice(array $providerConfig): string {
 function studio_narration_provider(): string { return strtolower((string)beyond_config('voice.provider','elevenlabs')); }
 function studio_narration_voice(string $provider,string $locale): string {
   if($provider==='openai') return (string)beyond_config('narration.openai.voices.'.$locale,beyond_config('voice.openai_voice','coral'));
-  $v=beyond_config('narration.'.$provider.'.voices.'.$locale,beyond_config('voice.voices.'.$locale,''));
+  $azureDefaults=['en-US'=>'en-US-JennyNeural','fr-FR'=>'fr-FR-DeniseNeural','fr-CA'=>'fr-CA-SylvieNeural','es-ES'=>'es-ES-ElviraNeural','en-JM'=>'en-US-JennyNeural','ht-HT'=>'fr-FR-DeniseNeural'];
+  $fallback=$provider==='azure'?($azureDefaults[$locale]??''):beyond_config('voice.voices.'.$locale,'');
+  $v=beyond_config('narration.'.$provider.'.voices.'.$locale,$fallback);
   if(is_array($v)) { foreach($v as $k=>$label){ return is_string($k)?$k:(string)$label; } return ''; }
   return (string)$v;
 }

@@ -5,9 +5,14 @@ require_once dirname(__DIR__) . '/includes/config.php';
 
 $elevenVoices = (array)beyond_config('narration.elevenlabs.voices', beyond_config('voice.voices', []));
 $azureVoices = (array)beyond_config('narration.azure.voices', [
+    'en-US' => ['en-US-JennyNeural' => 'Jenny - English'],
     'fr-CA' => ['fr-CA-SylvieNeural' => 'Sylvie - Canadian French', 'fr-CA-AntoineNeural' => 'Antoine - Canadian French'],
     'fr-FR' => ['fr-FR-DeniseNeural' => 'Denise - French', 'fr-FR-HenriNeural' => 'Henri - French'],
     'es-ES' => ['es-ES-ElviraNeural' => 'Elvira - Spanish', 'es-ES-AlvaroNeural' => 'Alvaro - Spanish'],
+    // Azure does not publish dedicated en-JM or ht-HT TTS voices. These
+    // controlled fallbacks keep batch exports narrated instead of failing.
+    'en-JM' => ['en-US-JennyNeural' => 'Jenny - Patois fallback'],
+    'ht-HT' => ['fr-FR-DeniseNeural' => 'Denise - Kreyòl fallback'],
 ]);
 
 return [
