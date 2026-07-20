@@ -155,7 +155,7 @@ function beyond_shell_markup(string $appName, array $wallet): string {
     $home = e(beyond_url());
     // The full Beyond OS asset is a wordmark, not a compact navbar icon.
     // Use the atom mark here so its text cannot be compressed beside the label.
-    $homeIcon = '<span class="bos-logo-mark" aria-hidden="true"><i></i><i></i><i></i><b></b></span>';
+    $homeIcon = '<span class="bos-logo-mark" aria-hidden="true"><svg viewBox="0 0 30 30" focusable="false"><ellipse cx="15" cy="15" rx="9" ry="3.25"/><ellipse cx="15" cy="15" rx="9" ry="3.25" transform="rotate(60 15 15)"/><ellipse cx="15" cy="15" rx="9" ry="3.25" transform="rotate(120 15 15)"/><circle cx="15" cy="15" r="2"/></svg></span>';
     $currentIconPath = beyond_app_icon($appName);
     $currentIcon = $currentIconPath ? '<img class="bos-current-icon" src="' . e($currentIconPath) . '" alt="">' : '';
     $appIdentity = strcasecmp(trim($appName), 'Beyond OS') === 0
@@ -186,10 +186,9 @@ function beyond_shell_markup(string $appName, array $wallet): string {
 #beyond-os-shell .bos-home{color:#a5b4fc;font-weight:900;letter-spacing:.04em;display:flex;align-items:center;gap:8px;flex:0 0 auto;white-space:nowrap}
 #beyond-os-shell .bos-home-label{display:none}
 #beyond-os-shell .bos-home img,#beyond-os-shell .bos-current-icon,#beyond-os-shell .bos-logo-mark{width:30px;height:30px;border-radius:9px;object-fit:cover;border:1px solid rgba(255,255,255,.18)}
-#beyond-os-shell .bos-logo-mark{position:relative;display:block;background:#0b0b1d;box-shadow:0 6px 18px rgba(88,108,255,.3)}
-#beyond-os-shell .bos-logo-mark i{position:absolute;left:5px;top:11px;width:18px;height:6px;border:1.5px solid #8d70ff;border-radius:50%}
-#beyond-os-shell .bos-logo-mark i:nth-child(2){transform:rotate(60deg)}#beyond-os-shell .bos-logo-mark i:nth-child(3){transform:rotate(120deg)}
-#beyond-os-shell .bos-logo-mark b{position:absolute;left:13px;top:13px;width:4px;height:4px;border-radius:50%;background:#f05ab8;box-shadow:0 0 7px #f05ab8}
+#beyond-os-shell .bos-logo-mark{position:relative;display:grid;place-items:center;flex:0 0 30px;min-width:30px;overflow:hidden;isolation:isolate;background:#0b0b1d;box-shadow:0 6px 18px rgba(88,108,255,.3)}
+#beyond-os-shell .bos-logo-mark svg{display:block;width:26px;height:26px;overflow:visible;fill:none;stroke:#9b82ff;stroke-width:1.5;vector-effect:non-scaling-stroke}
+#beyond-os-shell .bos-logo-mark circle{fill:#f05ab8;stroke:none;filter:drop-shadow(0 0 3px #f05ab8)}
 #beyond-os-shell .bos-app{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #beyond-os-shell .bos-actions{min-width:0;margin-left:auto;display:flex;align-items:center;gap:8px}
 #beyond-os-shell .bos-action{min-height:38px;display:flex;align-items:center;gap:6px;padding:8px 11px;border:1px solid rgba(255,255,255,.13);border-radius:999px;background:rgba(255,255,255,.06);color:#fff;font:inherit}
