@@ -1,7 +1,7 @@
 [
   {"number":1,"slug":"beyond-after-dark","name":"Beyond After Dark","icon":"🌙","description":"Goosebumps, Haunting Hour, and supernatural anthologies.","category":"Horror"},
   {"number":2,"slug":"beyond-cartoons","name":"Beyond Kartoons","icon":"📺","description":"Action cartoons, animated comedy, and weekend favorites.","category":"Cartoons"},
-  {"number":3,"slug":"yugioh-tv","name":"Beyond Anime","icon":"🃏","description":"Yu-Gi-Oh! Duel Monsters and the expanding anime library.","category":"Anime"},
+  {"number":3,"slug":"yugioh-tv","name":"Beyond Anime","icon":"🎴","description":"Pokémon, Digimon, Yu-Gi-Oh!, Zatch Bell!, and anime movies.","category":"Anime"},
   {"number":4,"slug":"classic-cinema","name":"Beyond Movies","icon":"🎬","description":"Features, double bills, and weekend marathons.","category":"Movies"},
   {"number":5,"slug":"beyond-comedy","name":"Beyond Comedy","icon":"😂","description":"Sitcoms, teen comedy, and feel-good movies.","category":"Comedy"},
   {"number":6,"slug":"beyond-family","name":"Beyond Family","icon":"✨","description":"Fantasy, storybook classics, and family adventures.","category":"Family"},

@@ -9,6 +9,8 @@ require_once __DIR__ . '/includes/beyond-cartoons-schedule.php';
 require_once __DIR__ . '/includes/eight-channel-guide.php';
 if (!empty($_SESSION['user_id'])) { beyond_track_app('Beyond TV'); }
 $signedIn = !empty($_SESSION['user_id']);
+$tvHost = strtolower((string)($_SERVER['HTTP_HOST'] ?? ''));
+$tvBase = str_starts_with($tvHost, 'tv.') ? '/' : '/beyond-tv/';
 $channels = json_decode((string)file_get_contents(__DIR__ . '/data/channels.json'), true) ?: [];
 $classic = null; $cartoons = null; $afterDark = null;
 foreach ($channels as $channel) {
@@ -53,7 +55,7 @@ html[data-tv-theme="sunset"]{color-scheme:dark}html[data-tv-theme="sunset"] .btv
 <header class="btv-nav"><a class="btv-brand" href="/beyond-tv/">Beyond TV</a><nav class="btv-actions"><button class="btv-theme-toggle" type="button" data-tv-theme-toggle aria-label="Switch Beyond TV to light theme" aria-pressed="false">☀️ <span>Light</span></button><?php if($signedIn):?><a class="btv-btn secondary" href="/beyond-tv/browse.php">Browse</a><a class="btv-btn primary" href="/dashboard/">Beyond ID</a><?php else:?><a class="btv-btn secondary" href="/">Beyond OS</a><a class="btv-btn primary" href="/beyond-id/auth/login.php?return=/beyond-tv/">Sign in</a><?php endif;?></nav></header>
 <main>
 <section class="hero btv-shell"><div class="hero-title"><div><span class="eyebrow">CHANNEL 1 · FREE LIVE TV · VANCOUVER TIME</span><h1>Beyond After Dark</h1></div><span class="live-chip">LIVE NOW</span></div>
-<div class="mega-player provider-player"><iframe src="/beyond-tv/embed-player.php?slug=beyond-after-dark" title="Beyond After Dark live on Beyond TV" allow="autoplay; fullscreen; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+<div class="mega-player provider-player"><iframe src="<?=htmlspecialchars($tvBase)?>embed-player.php?slug=beyond-after-dark" title="Beyond After Dark live on Beyond TV" allow="autoplay; fullscreen; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
 <div class="now-strip"><div class="now-panel"><small>NOW PLAYING</small><strong data-guide-current><?=htmlspecialchars((string)(($current['icon'] ?? '🌙').' '.($current['title'] ?? 'Beyond After Dark')))?></strong><span><?=htmlspecialchars((string)($current['lineup'] ?? 'Supernatural stories and late-night mysteries'))?></span></div><div class="next-panel"><small>UP NEXT</small><strong data-guide-next><?=htmlspecialchars((string)($next['title'] ?? 'Next supernatural story'))?></strong><span data-guide-clock><?=htmlspecialchars((string)$classicState['time_label'])?></span> · Vancouver</div></div></section>
 <section class="channel-picker btv-shell"><div class="section-head"><div><span class="eyebrow">CHOOSE A CHANNEL</span><h2>12 channels across the ecosystem</h2></div></div><div class="channel-cards">
 <?php $featuredChannels=json_decode((string)@file_get_contents(__DIR__.'/data/featured-channels.json'),true)?:[]; foreach($featuredChannels as $featuredChannel): ?>

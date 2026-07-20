@@ -18,7 +18,7 @@ $wallet = beyond_nav_bootstrap('Beyond App Store');
       <?=bos_app_card('Daily Breath','Daily verse, reflection and breathing practice.','dailybreath/bible.php?preview=1','☀','Live demo')?>
       <?=bos_app_card('Beyond Health','Health tools for mind, body and everyday care.','app-store/demo.php?app=health','♥','Try demo')?>
       <?=bos_app_card('Beyond Tattoo','AI-assisted tattoo ideas and daily stencils.','app-store/demo.php?app=tattoo','✦','Try demo')?>
-      <?=bos_app_card('Baby Names','Explore names, origins and meanings.','app-store/demo.php?app=baby-names','◉','Try demo')?>
+      <?=bos_app_card('Baby Names','Explore names, origins and meanings.','beyond-baby-names/','◉','Open app')?>
     </div>
   </section>
 
