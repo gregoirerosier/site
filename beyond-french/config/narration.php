@@ -19,7 +19,9 @@ return [
     'allowed_providers' => ['openai', 'elevenlabs', 'azure'],
     'allowed_formats' => ['mp3'],
     'allowed_languages' => ['en-US', 'fr-CA', 'fr-FR', 'es-ES', 'ht-HT', 'en-JM'],
-    'fallback_providers' => ['elevenlabs', 'azure'],
+    // Azure is the controlled server-side fallback for Studio exports.
+    // Do not automatically retry quota-limited OpenAI or ElevenLabs accounts.
+    'fallback_providers' => ['azure'],
     'max_text_length' => 2000,
     'max_instructions_length' => 800,
     'rate_limits' => [
