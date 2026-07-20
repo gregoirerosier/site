@@ -34,8 +34,9 @@
     <section class="group">
       <label>Template style</label>
       <div class="styles">
-        <label class="style-card"><input type="radio" name="style" value="forest" checked><strong>Forest Glass</strong><small>Modern Daily Breath look</small></label>
-        <label class="style-card"><input type="radio" name="style" value="botanical"><strong>Botanical Sketch</strong><small>Attached parchment style</small></label>
+        <label class="style-card"><input type="radio" name="style" value="advanced" checked><strong>Living Sanctuary</strong><small>Premium layered editorial artwork</small></label>
+        <label class="style-card"><input type="radio" name="style" value="forest"><strong>Modern Aurora</strong><small>Layered glass and forest light</small></label>
+        <label class="style-card"><input type="radio" name="style" value="botanical"><strong>Heritage Parchment</strong><small>Dimensional botanical editorial</small></label>
       </div>
     </section>
 
@@ -56,7 +57,8 @@
         <div class="field"><label for="verseNumber">Verse</label><select id="verseNumber"></select></div>
       </div>
       <button id="loadSelectedVerse" class="btn secondary" type="button" style="width:100%;margin:0 0 18px">Use selected verse</button>
-      <div class="field"><label for="heading">Heading</label><input id="heading" type="text" value="VERSE OF THE DAY"></div>
+      <div class="field"><label for="daypart">Verse edition</label><select id="daypart"><option value="auto">Automatic by local time</option><option value="morning">Morning</option><option value="day">Day</option><option value="night">Night</option></select></div>
+      <div class="field"><label for="heading">Localized heading</label><input id="heading" type="text" value="VERSE OF THE DAY"></div>
       <div class="field"><label for="verse">Verse text</label><textarea id="verse">Then God said, “Let there be light”; and there was light. God saw that the light was good, and He separated the light from the darkness.</textarea></div>
       <div class="field"><label for="reference">Reference</label><input id="reference" type="text" value="GENESIS 1:3–4"></div>
       <div class="field"><label for="translation">Translation</label><input id="translation" type="text" value="KJV"></div>
@@ -121,12 +123,15 @@
   const style = () => document.querySelector('input[name="style"]:checked').value;
   const verseLanguage = () => document.querySelector('input[name="verseLanguage"]:checked')?.value || 'en';
   const languageSettings = {
-    en:{narration:'en-US',locale:'en-US',heading:'VERSE OF THE DAY'},
-    fr:{narration:'fr-FR',locale:'fr-FR',heading:'VERSET DU JOUR'},
-    es:{narration:'es-ES',locale:'es-ES',heading:'VERSÍCULO DEL DÍA'},
-    jm:{narration:'en-JM',locale:'en-JM',heading:'VERSE FI DI DAY'},
-    ht:{narration:'ht-HT',locale:'ht-HT',heading:'VÈSÈ JODI A'}
+    en:{narration:'en-US',locale:'en-US',headings:{morning:'VERSE OF THE MORNING',day:'VERSE OF THE DAY',night:'VERSE OF THE NIGHT'}},
+    fr:{narration:'fr-FR',locale:'fr-FR',headings:{morning:'VERSET DU MATIN',day:'VERSET DU JOUR',night:'VERSET DE LA NUIT'}},
+    es:{narration:'es-ES',locale:'es-ES',headings:{morning:'VERSÍCULO DE LA MAÑANA',day:'VERSÍCULO DEL DÍA',night:'VERSÍCULO DE LA NOCHE'}},
+    jm:{narration:'en-JM',locale:'en-JM',headings:{morning:'VERSE FI DI MAWNIN',day:'VERSE FI DI DAY',night:'VERSE FI DI NIGHT'}},
+    ht:{narration:'ht-HT',locale:'ht-HT',headings:{morning:'VÈSÈ MATEN AN',day:'VÈSÈ JODI A',night:'VÈSÈ LANNWIT LA'}}
   };
+  const resolvedDaypart=()=>{const selected=value('daypart');if(selected!=='auto')return selected;const hour=new Date().getHours();return hour<11?'morning':(hour>=18?'night':'day')};
+  const localizedHeading=(language=verseLanguage())=>languageSettings[language].headings[resolvedDaypart()];
+  const syncHeading=()=>{$('heading').value=localizedHeading()};
   const status = (message, error=false) => { $('status').textContent = message; $('status').classList.toggle('error', error); };
   const safeName = () => `daily-breath-verse-${value('publishDate') || 'post'}`;
   const dateInfo = () => {
@@ -152,7 +157,8 @@
   function coverImage(img){if(!img.complete||!img.naturalWidth)return false;const s=Math.max(1080/img.naturalWidth,1350/img.naturalHeight);const w=img.naturalWidth*s,h=img.naturalHeight*s;ctx.drawImage(img,(1080-w)/2,(1350-h)/2,w,h);return true}
   function drawNarrationBadge(light=false,pulse=0){if(!$('showBadge').checked)return;const alpha=.92+.06*pulse;ctx.save();ctx.globalAlpha=alpha;roundedRect(748,45,287,92,22,light?'rgba(248,246,235,.96)':'rgba(4,17,36,.92)',light?'#76824b':'#4d8d72',3);ctx.fillStyle=light?'#1f251c':'#fff';ctx.font='800 21px Inter, Arial, sans-serif';ctx.textAlign='left';ctx.fillText('🔊',775,100);ctx.letterSpacing='2px';ctx.fillText('NARRATION',832,80);ctx.fillStyle=light?'#64743f':'#82d6a5';ctx.font='900 25px Inter, Arial, sans-serif';ctx.letterSpacing='1px';ctx.fillText('PLAYING NOW',832,113);ctx.letterSpacing='0px';ctx.restore()}
   function drawForest(pulse){
-    ctx.clearRect(0,0,1080,1350);if(!coverImage(forest)){ctx.fillStyle='#173d2b';ctx.fillRect(0,0,1080,1350)}
+    ctx.clearRect(0,0,1080,1350);if(!coverImage(forest)){const bg=ctx.createLinearGradient(0,0,1080,1350);bg.addColorStop(0,'#061a2b');bg.addColorStop(.38,'#164c55');bg.addColorStop(.72,'#27705b');bg.addColorStop(1,'#d2a45d');ctx.fillStyle=bg;ctx.fillRect(0,0,1080,1350);const sun=ctx.createRadialGradient(790,190,15,790,190,480);sun.addColorStop(0,'rgba(255,236,174,.9)');sun.addColorStop(.28,'rgba(255,203,121,.28)');sun.addColorStop(1,'rgba(255,203,121,0)');ctx.fillStyle=sun;ctx.fillRect(250,0,830,730);ctx.fillStyle='#153f39';ctx.beginPath();ctx.moveTo(0,830);ctx.bezierCurveTo(190,620,350,790,520,610);ctx.bezierCurveTo(710,430,850,690,1080,510);ctx.lineTo(1080,1350);ctx.lineTo(0,1350);ctx.closePath();ctx.fill();ctx.fillStyle='#092d2d';ctx.beginPath();ctx.moveTo(0,950);ctx.bezierCurveTo(210,750,410,920,630,720);ctx.bezierCurveTo(830,545,930,780,1080,690);ctx.lineTo(1080,1350);ctx.lineTo(0,1350);ctx.closePath();ctx.fill();ctx.save();ctx.globalAlpha=.18;ctx.strokeStyle='#e8f4d9';for(let i=0;i<14;i++){ctx.beginPath();ctx.moveTo(720+i*28,-20);ctx.lineTo(250+i*48,760);ctx.stroke()}ctx.restore()}
+    ctx.save();ctx.globalAlpha=.22;for(let i=0;i<70;i++){ctx.fillStyle=i%4?'#e7f2d6':'#f4d78e';ctx.beginPath();ctx.arc((i*167)%1080,(i*89)%1280,1+(i%3),0,Math.PI*2);ctx.fill()}ctx.restore();
     const grad=ctx.createLinearGradient(0,0,0,1350);grad.addColorStop(0,'rgba(1,14,9,.22)');grad.addColorStop(.5,'rgba(1,17,10,.38)');grad.addColorStop(1,'rgba(1,12,8,.74)');ctx.fillStyle=grad;ctx.fillRect(0,0,1080,1350);
     drawNarrationBadge(false,pulse);
     ctx.textAlign='center';ctx.fillStyle='#f7f0d7';ctx.font='700 28px Georgia';ctx.fillText('DAILY BREATH',540,110);ctx.fillStyle='#d8c071';ctx.font='700 17px Arial';ctx.fillText('FAITH • GROWTH • PEACE • PURPOSE',540,143);
@@ -163,8 +169,8 @@
     if($('showFooter').checked){const d=dateInfo();roundedRect(105,1100,870,150,26,'rgba(7,29,20,.84)','rgba(255,255,255,.18)',2);drawCalendarIcon(145,1142,62,'#e5c86e');ctx.fillStyle='#e5c86e';ctx.font='800 20px Inter, Arial, sans-serif';ctx.letterSpacing='2px';ctx.textAlign='left';ctx.fillText(`${d.weekday}  ·  ${d.month} ${d.day}`,235,1158);ctx.fillStyle='#f7f4e8';ctx.font='700 25px Georgia, serif';ctx.letterSpacing='.5px';wrapText(value('footer'),235,1203,690,31,2,'left');ctx.letterSpacing='0px'}
   }
   function drawBotanical(pulse){
-    ctx.clearRect(0,0,1080,1350);if(!coverImage(botanical)){ctx.fillStyle='#eee8da';ctx.fillRect(0,0,1080,1350)}
-    ctx.fillStyle='rgba(248,244,232,.2)';ctx.fillRect(0,0,1080,1350);drawNarrationBadge(true,pulse);
+    ctx.clearRect(0,0,1080,1350);if(!coverImage(botanical)){const paper=ctx.createLinearGradient(0,0,1080,1350);paper.addColorStop(0,'#f3ead5');paper.addColorStop(.48,'#e7dcc0');paper.addColorStop(1,'#cdbd96');ctx.fillStyle=paper;ctx.fillRect(0,0,1080,1350);const light=ctx.createRadialGradient(430,340,80,430,340,760);light.addColorStop(0,'rgba(255,255,245,.84)');light.addColorStop(1,'rgba(255,255,245,0)');ctx.fillStyle=light;ctx.fillRect(0,0,1080,1350);ctx.save();ctx.strokeStyle='rgba(73,93,55,.34)';ctx.fillStyle='rgba(105,126,70,.13)';ctx.lineWidth=3;for(const side of [-1,1]){ctx.beginPath();ctx.moveTo(side<0?75:1005,1260);ctx.bezierCurveTo(side<0?180:900,1040,side<0?65:1015,720,side<0?185:895,420);ctx.stroke();for(let i=0;i<7;i++){const y=1120-i*105,x=(side<0?115:965)+(i%2?(side<0?35:-35):0);ctx.save();ctx.translate(x,y);ctx.rotate(side*(i%2?.55:-.45));ctx.beginPath();ctx.ellipse(0,0,38,15,0,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.restore()}}ctx.restore();ctx.save();ctx.globalAlpha=.16;for(let i=0;i<110;i++){ctx.fillStyle=i%2?'#765f3d':'#fff';ctx.fillRect((i*137)%1080,(i*73)%1350,1+(i%2),1+(i%2))}ctx.restore()}
+    const edge=ctx.createLinearGradient(0,0,1080,0);edge.addColorStop(0,'rgba(79,58,31,.2)');edge.addColorStop(.12,'rgba(79,58,31,0)');edge.addColorStop(.88,'rgba(79,58,31,0)');edge.addColorStop(1,'rgba(79,58,31,.2)');ctx.fillStyle=edge;ctx.fillRect(0,0,1080,1350);ctx.fillStyle='rgba(248,244,232,.12)';ctx.fillRect(0,0,1080,1350);drawNarrationBadge(true,pulse);
     ctx.textAlign='center';ctx.fillStyle='#31352b';ctx.font='700 35px Georgia';ctx.fillText('DAILY',540,142);ctx.fillStyle='#738047';ctx.fillText('BREATH',660,142);ctx.font='700 15px Arial';ctx.letterSpacing='4px';ctx.fillText('FAITH. GROWTH. PEACE. PURPOSE.',540,174);ctx.letterSpacing='0px';
     ctx.strokeStyle='#8d9464';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(405,203);ctx.lineTo(675,203);ctx.stroke();
     ctx.fillStyle='#20261f';ctx.font='900 132px Arial Black, Impact, Arial';ctx.fillText('VERSE',540,380);ctx.font='900 41px Arial Black, Arial';ctx.fillText('OF THE',540,430);ctx.fillStyle='#768449';ctx.font='italic 900 142px Georgia, Times New Roman, serif';ctx.fillText('DAY',540,565);
@@ -173,10 +179,30 @@
     ctx.fillStyle='#78874d';ctx.font='800 27px Arial';ctx.fillText(value('reference'),540,1015);ctx.font='700 17px Arial';ctx.fillText(value('translation'),540,1043);
     if($('showFooter').checked){const d=dateInfo();roundedRect(95,1095,890,165,6,'rgba(112,128,68,.9)',null);drawCalendarIcon(145,1140,68,'#20271e');ctx.textAlign='left';ctx.fillStyle='#20271e';ctx.font='800 18px Inter, Arial, sans-serif';ctx.letterSpacing='2px';ctx.fillText(d.weekday,245,1149);ctx.font='900 36px Georgia, serif';ctx.letterSpacing='.5px';ctx.fillText(`${d.month} ${d.day}`,245,1197);ctx.strokeStyle='rgba(28,36,25,.55)';ctx.beginPath();ctx.moveTo(515,1125);ctx.lineTo(515,1220);ctx.stroke();ctx.font='700 24px Georgia, serif';ctx.letterSpacing='.5px';wrapText(value('footer'),570,1162,340,31,3,'left');ctx.letterSpacing='0px'}
   }
-  function draw(pulse=0){style()==='botanical'?drawBotanical(pulse):drawForest(pulse)}
+  function drawAdvanced(pulse){
+    ctx.clearRect(0,0,1080,1350);
+    const sky=ctx.createLinearGradient(0,0,1080,1350);sky.addColorStop(0,'#071f2c');sky.addColorStop(.42,'#174f4a');sky.addColorStop(.72,'#567454');sky.addColorStop(1,'#d0a765');ctx.fillStyle=sky;ctx.fillRect(0,0,1080,1350);
+    const glow=ctx.createRadialGradient(820,170,20,820,170,540);glow.addColorStop(0,'rgba(255,229,153,.72)');glow.addColorStop(.35,'rgba(242,190,103,.2)');glow.addColorStop(1,'rgba(242,190,103,0)');ctx.fillStyle=glow;ctx.fillRect(0,0,1080,800);
+    ctx.save();ctx.globalAlpha=.14;ctx.strokeStyle='#fff4cf';ctx.lineWidth=2;for(let i=0;i<18;i++){ctx.beginPath();ctx.moveTo(760+i*19,-30);ctx.lineTo(300+i*42,720);ctx.stroke()}ctx.restore();
+    ctx.fillStyle='#173c35';ctx.beginPath();ctx.moveTo(0,810);ctx.bezierCurveTo(180,650,315,760,470,650);ctx.bezierCurveTo(620,540,760,690,1080,535);ctx.lineTo(1080,1350);ctx.lineTo(0,1350);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#0b2927';ctx.beginPath();ctx.moveTo(0,920);ctx.bezierCurveTo(230,760,390,900,610,730);ctx.bezierCurveTo(810,590,925,760,1080,690);ctx.lineTo(1080,1350);ctx.lineTo(0,1350);ctx.closePath();ctx.fill();
+    ctx.save();ctx.globalAlpha=.34;for(let i=0;i<95;i++){const x=(i*173)%1080,y=(i*97)%1350,r=1+(i%4);ctx.fillStyle=i%3?'#f6e6b5':'#a7d0a8';ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill()}ctx.restore();
+    const vignette=ctx.createRadialGradient(540,590,260,540,650,820);vignette.addColorStop(0,'rgba(0,0,0,0)');vignette.addColorStop(1,'rgba(0,10,12,.68)');ctx.fillStyle=vignette;ctx.fillRect(0,0,1080,1350);
+    drawNarrationBadge(false,pulse);
+    ctx.textAlign='left';ctx.fillStyle='#f6e8b8';ctx.font='800 19px Inter, Arial';ctx.letterSpacing='5px';ctx.fillText('DAILY BREATH  /  SCRIPTURE SERIES',82,104);ctx.letterSpacing='0px';
+    ctx.strokeStyle='rgba(246,232,184,.5)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(82,130);ctx.lineTo(998,130);ctx.stroke();
+    ctx.fillStyle='#fffdf5';ctx.font='900 76px Georgia, serif';ctx.fillText(value('heading'),82,250);
+    ctx.fillStyle='#e8c878';ctx.font='italic 700 27px Georgia, serif';ctx.fillText('A quiet word for the road ahead',84,298);
+    if($('showFrame').checked){ctx.save();ctx.shadowColor='rgba(0,0,0,.42)';ctx.shadowBlur=42;roundedRect(70,350,940,615,34,'rgba(4,25,27,.76)','rgba(246,224,160,.48)',2);ctx.restore()}
+    ctx.textAlign='center';ctx.fillStyle='#eacb76';ctx.font='900 70px Georgia, serif';ctx.fillText('“',540,450);
+    const verse=value('verse'),estimated=Math.max(1,Math.ceil(ctx.measureText(verse).width/740)),fontSize=Math.max(34,55-(estimated-4)*3);ctx.fillStyle='#fff';ctx.font=`600 ${fontSize}px Georgia, serif`;wrapText(verse,540,525,800,fontSize*1.42,7);
+    ctx.strokeStyle='rgba(234,203,118,.64)';ctx.beginPath();ctx.moveTo(385,850);ctx.lineTo(695,850);ctx.stroke();ctx.fillStyle='#f0d486';ctx.font='900 31px Inter, Arial';ctx.fillText(value('reference'),540,906);ctx.fillStyle='rgba(255,255,255,.72)';ctx.font='700 17px Inter, Arial';ctx.letterSpacing='4px';ctx.fillText(value('translation'),540,942);ctx.letterSpacing='0px';
+    if($('showFooter').checked){const d=dateInfo();roundedRect(70,1040,940,205,30,'rgba(245,237,209,.94)','rgba(255,255,255,.5)',2);drawCalendarIcon(112,1095,72,'#31564a');ctx.textAlign='left';ctx.fillStyle='#31564a';ctx.font='900 19px Inter, Arial';ctx.letterSpacing='3px';ctx.fillText(`${d.weekday}  /  ${d.month} ${d.day}`,225,1110);ctx.fillStyle='#142d29';ctx.font='700 29px Georgia, serif';ctx.letterSpacing='.2px';wrapText(value('footer'),225,1162,700,36,2,'left');ctx.letterSpacing='0px'}
+  }
+  function draw(pulse=0){const selected=style();selected==='advanced'?drawAdvanced(pulse):(selected==='botanical'?drawBotanical(pulse):drawForest(pulse))}
 
   function applyVerseItem(item,preserveDate=false){
-    const settings=languageSettings[verseLanguage()];$('heading').value=item.heading||settings.heading;$('verse').value=item.verse;$('reference').value=item.reference;$('translation').value=item.translation||'KJV';$('footer').value=item.footer||'WALK IN FAITH TODAY.';
+    $('heading').value=localizedHeading();$('verse').value=item.verse;$('reference').value=item.reference;$('translation').value=item.translation||'KJV';$('footer').value=item.footer||'WALK IN FAITH TODAY.';
     if(!preserveDate){const now=new Date(),local=new Date(now.getTime()-now.getTimezoneOffset()*60000);$('publishDate').value=local.toISOString().slice(0,10)}draw();
   }
   async function loadManagedVerse(showMessage=false){
@@ -222,11 +248,11 @@
   const narrationLocale = () => document.querySelector('input[name="narrationLanguage"]:checked')?.value || 'en-US';
   function narrationText(){
     const locale=narrationLocale();
-    if(locale==='fr-FR')return `Bienvenue à Daily Breath. Verset du jour. ${value('verse')} ${value('reference')}. ${value('footer')}`;
-    if(locale==='es-ES')return `Bienvenido a Daily Breath. Versículo del día. ${value('verse')} ${value('reference')}. ${value('footer')}`;
-    if(locale==='en-JM')return `Welcome to Daily Breath. Verse fi di day. ${value('verse')} ${value('reference')}. ${value('footer')}`;
-    if(locale==='ht-HT')return `Byenveni nan Daily Breath. Vèsè jodi a. ${value('verse')} ${value('reference')}. ${value('footer')}`;
-    return `Welcome to Daily Breath. Verse of the Day. ${value('verse')} ${value('reference')}. ${value('footer')}`;
+    if(locale==='fr-FR')return `Bienvenue au Souffle du Jour. ${value('heading')}. ${value('verse')} ${value('reference')}. ${value('footer')}`;
+    if(locale==='es-ES')return `Bienvenido a Daily Breath. ${value('heading')}. ${value('verse')} ${value('reference')}. ${value('footer')}`;
+    if(locale==='en-JM')return `Welcome to Daily Breath. ${value('heading')}. ${value('verse')} ${value('reference')}. ${value('footer')}`;
+    if(locale==='ht-HT')return `Byenveni nan Daily Breath. ${value('heading')}. ${value('verse')} ${value('reference')}. ${value('footer')}`;
+    return `Welcome to Daily Breath. ${value('heading')}. ${value('verse')} ${value('reference')}. ${value('footer')}`;
   }
   async function narrationBlob(){
     const file=$('audioFile').files[0];if(file)return file;
@@ -258,13 +284,13 @@
     try{
       status('Preparing the five-language narrated video…');
       const stream=canvas.captureStream(30);audioContext=new (window.AudioContext||window.webkitAudioContext)();await audioContext.resume();const destination=audioContext.createMediaStreamDestination();destination.stream.getAudioTracks().forEach(track=>stream.addTrack(track));
-      const type=recorderType(),chunks=[];recorder=new MediaRecorder(stream,type?{mimeType:type,videobit$PerSecond:6500000}:undefined);recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};const done=new Promise((resolve,reject)=>{recorder.onstop=resolve;recorder.onerror=()=>reject(recorder.error||new Error('Batch video export failed.'))});
-      const started=performance.now();const animate=now=>{if(!running)return;draw((Math.sin((now-started)/420)+1)/2);requestAnimationFrame(animate)};requestAnimationFrame(animate);recorder.start(250);
+      const type=recorderType(),chunks=[];recorder=new MediaRecorder(stream,type?{mimeType:type,videoBitsPerSecond:6500000}:undefined);recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};const done=new Promise((resolve,reject)=>{recorder.onstop=resolve;recorder.onerror=()=>reject(recorder.error||new Error('Batch video export failed.'))});
+      const started=performance.now();const animate=now=>{if(!running)return;draw((Math.sin((now-started)/420)+1)/2);requestAnimationFrame(animate)};requestAnimationFrame(animate);recorder.start(250);recorder.pause();
       for(let index=0;index<languages.length;index++){
-        const [language,locale,label]=languages[index],textRadio=document.querySelector(`input[name="verseLanguage"][value="${language}"]`),voiceRadio=document.querySelector(`input[name="narrationLanguage"][value="${locale}"]`);if(textRadio)textRadio.checked=true;if(voiceRadio)voiceRadio.checked=true;$('locale').value=languageSettings[language].locale;$('heading').value=languageSettings[language].heading;
+        const [language,locale,label]=languages[index],textRadio=document.querySelector(`input[name="verseLanguage"][value="${language}"]`),voiceRadio=document.querySelector(`input[name="narrationLanguage"][value="${locale}"]`);if(textRadio)textRadio.checked=true;if(voiceRadio)voiceRadio.checked=true;$('locale').value=languageSettings[language].locale;$('heading').value=localizedHeading(language);
         if(referenceMatch){const query=new URLSearchParams({type:'bible',language,book:referenceMatch[1],chapter:referenceMatch[2],verse:referenceMatch[3]});const response=await fetch(`/server/admin/daily-studio/api/random-content.php?${query}`,{cache:'no-store'});const data=await response.json();if(response.ok&&data.item)applyVerseItem(data.item)}
         draw();status(`Recording ${label} narration (${index+1} of ${languages.length})…`);
-        const response=await fetch('/beyond-id/admin/api/verse-narration.php',{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-Token':csrf},body:JSON.stringify({text:narrationText(),locale})});if(!response.ok)throw new Error(`${label} narration could not be generated.`);const blob=await response.blob(),url=URL.createObjectURL(blob),audio=new Audio(url);audio.preload='auto';await new Promise((resolve,reject)=>{audio.onloadedmetadata=resolve;audio.onerror=()=>reject(new Error(`${label} audio could not be loaded.`))});const source=audioContext.createMediaElementSource(audio);source.connect(destination);await audio.play();await new Promise(resolve=>{const timeout=setTimeout(resolve,Math.min(91000,Math.max(5000,(Number.isFinite(audio.duration)?audio.duration*1000+700:10000))));audio.onended=()=>{clearTimeout(timeout);resolve()}});source.disconnect();URL.revokeObjectURL(url);await new Promise(resolve=>setTimeout(resolve,500));
+        const response=await fetch('/beyond-id/admin/api/verse-narration.php',{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-Token':csrf},body:JSON.stringify({text:narrationText(),locale})});if(!response.ok)throw new Error(`${label} narration could not be generated.`);const blob=await response.blob(),buffer=await audioContext.decodeAudioData(await blob.arrayBuffer()),source=audioContext.createBufferSource();source.buffer=buffer;source.connect(destination);recorder.resume();source.start(0);await new Promise(resolve=>{source.onended=resolve});recorder.pause();source.disconnect();
       }
       running=false;recorder.stop();await done;const mime=recorder.mimeType||type||'video/webm',mp4=mime.includes('mp4');downloadBlob(new Blob(chunks,{type:mime}),`${safeName()}-all-languages${mp4?'.mp4':'.webm'}`);status(mp4?'All narrated languages exported as one MP4.':'All narrated languages exported as one WebM because this browser cannot record MP4.');
     }catch(error){running=false;if(recorder&&recorder.state!=='inactive')recorder.stop();status(error.message||'Batch video export failed.',true)}finally{Object.entries(originalFields).forEach(([id,value])=>{$(id).value=value});const textRadio=document.querySelector(`input[name="verseLanguage"][value="${originalVerseLanguage}"]`),voiceRadio=document.querySelector(`input[name="narrationLanguage"][value="${originalNarration}"]`);if(textRadio)textRadio.checked=true;if(voiceRadio)voiceRadio.checked=true;if(audioContext)await audioContext.close().catch(()=>{});draw();button.disabled=false}
@@ -298,12 +324,13 @@
   }
   if('speechSynthesis' in window){window.speechSynthesis.onvoiceschanged=populateVoices;populateVoices()}
   document.querySelectorAll('input[name="narrationLanguage"]').forEach(input=>input.addEventListener('change',()=>{populateVoices();status(`${input.nextElementSibling.textContent.trim()} narrator selected.`);draw()}));
-  document.querySelectorAll('input[name="verseLanguage"]').forEach(input=>input.addEventListener('change',()=>{const settings=languageSettings[input.value];const narration=document.querySelector(`input[name="narrationLanguage"][value="${settings.narration}"]`);if(narration)narration.checked=true;$('locale').value=settings.locale;$('heading').value=settings.heading;populateVoices();loadVerseCatalog();loadManagedVerse();status(`${input.nextElementSibling.textContent.trim()} selected for verse text and audio.`);draw()}));
+  document.querySelectorAll('input[name="verseLanguage"]').forEach(input=>input.addEventListener('change',()=>{const settings=languageSettings[input.value];const narration=document.querySelector(`input[name="narrationLanguage"][value="${settings.narration}"]`);if(narration)narration.checked=true;$('locale').value=settings.locale;syncHeading();populateVoices();loadVerseCatalog();loadManagedVerse();status(`${input.nextElementSibling.textContent.trim()} selected for verse text and audio.`);draw()}));
+  $('daypart').addEventListener('change',()=>{syncHeading();status(`${$('daypart').selectedOptions[0].textContent} edition selected.`);draw()});
   $('verseBook').addEventListener('change',populateChapters);$('verseChapter').addEventListener('change',populateVerseNumbers);$('loadSelectedVerse').addEventListener('click',loadSelectedVerse);$('publishDate').addEventListener('change',()=>loadManagedVerse(true));
 
   controls.forEach(control=>{control.addEventListener(control.type==='file'?'change':'input',draw);control.addEventListener('change',draw)});
   $('downloadPng').addEventListener('click',downloadPng);$('saveDraft').addEventListener('click',saveDraft);$('previewAudio').addEventListener('click',previewNarration);$('stopAudio').addEventListener('click',()=>{stopNarration();status('Narration stopped.')});$('exportVideo').addEventListener('click',exportVideo);$('exportAllVideo').addEventListener('click',exportAllLanguagesVideo);$('exportMp3').addEventListener('click',exportMp3);$('generateTodayVerse').addEventListener('click',generateTodayVerse);
-  forest.onload=draw;botanical.onload=draw;loadVerseCatalog();loadManagedVerse();draw();
+  forest.onload=draw;botanical.onload=draw;syncHeading();loadVerseCatalog();loadManagedVerse();draw();
 })();
 </script>
 </body>

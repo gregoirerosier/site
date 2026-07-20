@@ -54,6 +54,11 @@ $channels = [
         ],
         'embed' => 'https://archive.org/embed/The_General_Buster_Keaton',
     ],
+    'beyond-after-dark' => [
+        'name' => 'Beyond After Dark',
+        'episode_map' => dirname(__DIR__) . '/data/haunting-hour-library.json',
+        'embed' => 'https://archive.org/embed/rl-stines-the-haunting-hour-full-series',
+    ],
 
     'kreyol-lakay' => [
         'name' => 'Kreyòl Lakay',
@@ -131,6 +136,37 @@ $channels = [
     ],
 
 ];
+
+// Any curated catalog channel can become a synchronized live channel without
+// duplicating its approved sources in this endpoint.
+if (!isset($channels[$slug])) {
+    $catalog = json_decode((string)@file_get_contents(dirname(__DIR__) . '/data/catalog.json'), true);
+    $catalogItems = array_values(array_filter(is_array($catalog) ? $catalog : [], static fn($item): bool => is_array($item) && ($item['channel_slug'] ?? '') === $slug));
+    if ($catalogItems) {
+        $items = []; $episodeMap = '';
+        foreach ($catalogItems as $item) {
+            if (($item['source_type'] ?? '') === 'archive_episode_map' && !empty($item['archive_episode_map'])) {
+                $episodeMap = dirname(__DIR__) . '/data/' . basename((string)$item['archive_episode_map']);
+                continue;
+            }
+            $videoUrl = trim((string)($item['video_url'] ?? ''));
+            $archiveId = trim((string)($item['archive_id'] ?? ''));
+            if ($videoUrl === '' && $archiveId === '') continue;
+            $items[] = [
+                'url' => $videoUrl ?: null,
+                'archive' => $archiveId ?: null,
+                'title' => (string)($item['title'] ?? 'Beyond TV feature'),
+                'duration' => max(300, (int)($item['runtime_seconds'] ?? 5400)),
+            ];
+        }
+        $channels[$slug] = [
+            'name' => (string)($catalogItems[0]['channel_name'] ?? ucwords(str_replace('-', ' ', $slug))),
+            'items' => $items,
+            'episode_map' => $episodeMap,
+            'embed' => !empty($catalogItems[0]['archive_id']) ? 'https://archive.org/embed/' . rawurlencode((string)$catalogItems[0]['archive_id']) : '',
+        ];
+    }
+}
 if (!isset($channels[$slug])) { http_response_code(404); echo json_encode(['ok'=>false,'error'=>'Unknown channel']); exit; }
 
 function fetch_json(string $url): ?array {
@@ -156,7 +192,28 @@ function resolve_archive(string $id): ?string {
         $score=(int)($f['size']??0); if(preg_match('/\.mp4$/i',$n))$score+=2000000000; $c[]=['n'=>$n,'s'=>$score]; }
     usort($c,fn($a,$b)=>$b['s']<=>$a['s']); return $c?archive_url($id,$c[0]['n']):null;
 }
-$config=$channels[$slug]; $resolved=[];
+$config=$channels[$slug];
+if (!empty($config['episode_map'])) {
+    $episodeRows = json_decode((string)@file_get_contents((string)$config['episode_map']), true);
+    $preferred = [];
+    foreach (is_array($episodeRows) ? $episodeRows : [] as $episode) {
+        if (!is_array($episode) || empty($episode['video_url'])) continue;
+        $number = (int)($episode['episode'] ?? 0);
+        $extension = strtolower(pathinfo((string)($episode['video_url'] ?? ''), PATHINFO_EXTENSION));
+        if (!isset($preferred[$number]) || $extension === 'mp4') $preferred[$number] = $episode;
+    }
+    ksort($preferred);
+    $mappedItems = array_map(static fn(array $episode): array => [
+        'url' => (string)$episode['video_url'],
+        'title' => 'S1 E' . (int)($episode['episode'] ?? 0) . ' · ' . (string)($episode['title'] ?? 'Haunting Hour'),
+        'duration' => max(60, (int)($episode['runtime_seconds'] ?? 1380)),
+        'creator' => 'R. L. Stine’s The Haunting Hour',
+        'license' => 'Owner-verified archive source',
+        'rights_url' => 'https://archive.org/details/rl-stines-the-haunting-hour-full-series',
+    ], array_values($preferred));
+    $config['items'] = array_merge((array)($config['items'] ?? []), $mappedItems);
+}
+$resolved=[];
 foreach($config['items'] as $item){ $url=$item['url']??null; if(!$url&&!empty($item['archive']))$url=resolve_archive($item['archive']); if(!$url)continue;
     $resolved[]=['provider'=>!empty($item['archive'])?'Internet Archive':'Wikimedia Commons','title'=>$item['title'],'url'=>$url,'duration'=>(int)$item['duration'],'type'=>str_contains($url,'.webm')?'video/webm':'video/mp4','creator'=>(string)($item['creator']??''),'license'=>(string)($item['license']??''),'rights_url'=>(string)($item['rights_url']??'')]; }
 $total=array_sum(array_column($resolved,'duration')); $position=$total>0?time()%$total:0; $current=0; $offset=0;

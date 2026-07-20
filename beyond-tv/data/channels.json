@@ -386,6 +386,9 @@
     "access": "guest",
     "category": "Kids",
     "live": true,
+    "source_type": "archive_library_live",
+    "stream_endpoint": "/beyond-tv/api/bluey-live.php",
+    "source_label": "Curated preschool live library",
     "featured": false
   },
   {
@@ -401,6 +404,9 @@
     "access": "guest",
     "category": "Education",
     "live": true,
+    "source_type": "scheduled_space_youtube",
+    "youtube_id": "Yla5i5tzXKE",
+    "source_label": "Scheduled YouTube space rotation",
     "featured": false
   },
   {
@@ -441,6 +447,8 @@
     "access": "guest",
     "category": "Movies",
     "live": true,
+    "source_type": "scheduled_movies",
+    "source_label": "Beyond Movies weekly schedule",
     "featured": false
   },
   {
@@ -511,7 +519,9 @@
     "featured": true,
     "release_status": "released",
     "live": true,
-    "source_label": "Curated Beyond TV library"
+    "source_type": "archive_library_live",
+    "stream_endpoint": "/beyond-tv/api/channel-stream.php?slug=beyond-comedy",
+    "source_label": "Curated Beyond TV comedy library"
   },
   {
     "slug": "beyond-mystery",
@@ -527,7 +537,9 @@
     "featured": true,
     "release_status": "released",
     "live": true,
-    "source_label": "Curated Beyond TV library"
+    "source_type": "archive_library_live",
+    "stream_endpoint": "/beyond-tv/api/channel-stream.php?slug=beyond-mystery",
+    "source_label": "Curated Beyond TV mystery library"
   },
   {
     "slug": "beyond-after-dark",
@@ -543,7 +555,11 @@
     "featured": true,
     "release_status": "released",
     "live": true,
-    "source_label": "Curated Beyond TV library"
+    "source_type": "archive_library_live",
+    "stream_endpoint": "/beyond-tv/api/channel-stream.php?slug=beyond-after-dark",
+    "thumbnail": "https://archive.org/services/img/rl-stines-the-haunting-hour-full-series",
+    "rating": "TV-PG",
+    "source_label": "Internet Archive · Owner-verified Haunting Hour library"
   },
   {
     "slug": "beyond-family",
@@ -559,6 +575,8 @@
     "featured": true,
     "release_status": "released",
     "live": true,
-    "source_label": "Curated Beyond TV library"
+    "source_type": "archive_library_live",
+    "stream_endpoint": "/beyond-tv/api/channel-stream.php?slug=beyond-family",
+    "source_label": "Curated Beyond TV family library"
   }
 ]
