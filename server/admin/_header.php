@@ -12,7 +12,6 @@ $studioGroups = [
         ['/server/admin/daily-studio/french-options.php', 'Lesson options', '⚙️'],
     ],
     'Beyond Tattoo' => [
-        ['/server/admin/daily-studio/tattoo-generator.php', 'Stencil library', '✒️'],
         ['/server/admin/daily-studio/stencil-packs.php', 'Stencil packs', '🎨'],
         ['/server/admin/daily-studio/stencil-library.php', 'Generate & publish', '📤'],
     ],

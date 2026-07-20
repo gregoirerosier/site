@@ -51,6 +51,7 @@ $wallet = beyond_nav_bootstrap('Beyond App Store');
       <?=bos_app_card('Beyond Audio','Listen across the Beyond universe.','app-store/demo.php?app=audio','♫','Try demo')?>
       <?=bos_app_card('Beyond Canvas','Create visual work and share ideas.','app-store/demo.php?app=canvas','◫','Try demo')?>
       <?=bos_app_card('Beyond Skate','Skate culture, media and community.','app-store/demo.php?app=skate','◢','Try demo')?>
+      <?=bos_app_card('Beyond Casino — Social Play','Demo bit$ games for entertainment only. No purchase necessary and no cash value.','beyond-casino/','♠','Play demo')?>
     </div>
   </section>
 </main>

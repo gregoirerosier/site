@@ -198,41 +198,41 @@ $cartoonSchedule = beyond_cartoons_schedule_state();
 $cartoonCurrent = $cartoonSchedule['current'];
 $cartoonNext = $cartoonSchedule['next'];
 ?>
-<section class="home-live-stage" data-channel-theme="cartoons" aria-labelledby="homeLiveHeading">
+<section class="home-live-stage" data-channel-theme="after-dark" aria-labelledby="homeLiveHeading">
   <div class="home-live-stage__background" aria-hidden="true"></div>
   <div class="home-live-stage__inner">
     <header class="home-live-stage__top">
       <div>
-        <span class="home-live-kicker" id="homeLiveKicker"><i></i> Beyond TV · Channel 2 live</span>
-        <h2 id="homeLiveHeading">Beyond Cartoons is playing now.</h2>
-        <p id="homeLiveDescription"><strong><?= e((string)$cartoonCurrent['icon'] . ' ' . (string)$cartoonCurrent['title']) ?></strong> · <?= e((string)$cartoonCurrent['lineup']) ?> · Up next: <?= e((string)$cartoonNext['title']) ?> · Vancouver time</p>
+        <span class="home-live-kicker" id="homeLiveKicker"><i></i> Beyond TV · Channel 1 live</span>
+        <h2 id="homeLiveHeading">Beyond After Dark is playing now.</h2>
+        <p id="homeLiveDescription"><strong>🌙 Beyond After Dark demo</strong> · Supernatural channel preview · Vancouver time</p>
       </div>
       <div class="home-live-actions">
         <a class="home-live-button secondary" href="/beyond-tv/#guide">TV Guide</a>
-        <a class="home-live-button" href="/beyond-tv/channel.php?slug=beyond-cartoons" id="homeLiveOpen">Watch full channel →</a>
+        <a class="home-live-button" href="/beyond-tv/channel.php?slug=beyond-after-dark" id="homeLiveOpen">Watch full channel →</a>
       </div>
     </header>
 
     <div class="home-live-player">
-      <iframe id="homeBeyondTvPlayer" src="<?= e((string)$cartoonSchedule['embed_url']) ?>" title="Beyond Cartoons live on Beyond TV" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      <iframe id="homeBeyondTvPlayer" src="/beyond-tv/intermission.php?channel=1&amp;name=Beyond%20After%20Dark" title="Beyond After Dark live on Beyond TV" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
 
     <div class="home-live-meta">
-      <div><span class="live-dot"></span><b id="homeLiveChannelName">Beyond Cartoons</b><span id="homeLiveNow"><?= e((string)$cartoonCurrent['title']) ?></span></div>
+      <div><span class="live-dot"></span><b id="homeLiveChannelName">Beyond After Dark</b><span id="homeLiveNow">Beyond After Dark demo</span></div>
       <span class="home-live-clock">Live schedule · America/Vancouver</span>
     </div>
 
     <div class="home-live-switch" role="group" aria-label="Choose a Beyond TV channel">
-      <button type="button" data-home-channel="classic" data-channel-number="1" data-channel-name="Classic Cartoon Theater" data-endpoint="/beyond-tv/api/classic-live.php" data-open="/beyond-tv/channel.php?slug=classic-cartoon-theater">🎞️ <span>Classic</span></button>
-      <button type="button" class="active" data-home-channel="cartoons" data-channel-number="2" data-channel-name="Beyond Kartoons" data-endpoint="/beyond-tv/api/beyond-cartoons-live.php" data-open="/beyond-tv/channel.php?slug=beyond-cartoons">📺 <span>Kartoons</span></button>
-      <button type="button" data-home-channel="preschool" data-channel-number="3" data-channel-name="Preschool TV EN | FR" data-embed="https://www.youtube-nocookie.com/embed/61fSXCbzF1M?autoplay=1&amp;mute=1&amp;playsinline=1&amp;rel=0&amp;enablejsapi=1" data-now="Preschool TV demo" data-next="English and French programming" data-icon="🐾" data-open="/beyond-tv/channel.php?slug=bubble-guppies">🐾 <span>EN | FR</span></button>
-      <button type="button" data-home-channel="space" data-channel-number="4" data-channel-name="Beyond Space" data-endpoint="/beyond-tv/api/space-live.php" data-now="The Sun &amp; The Milky Way" data-next="Weekly space rotation" data-icon="🛰️" data-open="/beyond-tv/channel.php?slug=space-tv">🛰️ <span>Space</span></button>
-      <button type="button" data-home-channel="ancient" data-channel-number="5" data-channel-name="Beyond Ancient" data-embed="https://www.youtube-nocookie.com/embed/BR2ZMj3o5EU?autoplay=1&amp;mute=1&amp;playsinline=1&amp;rel=0&amp;enablejsapi=1" data-now="Ancient Egypt Documentary" data-next="Pyramids, pharaohs and archaeology" data-icon="𓂀" data-open="/beyond-ancient/">𓂀 <span>Ancient</span></button>
-      <button type="button" data-home-channel="cinema" data-channel-number="6" data-channel-name="Beyond Movies" data-embed="https://www.youtube-nocookie.com/embed/QrnXZgFYMbk?autoplay=1&amp;mute=1&amp;playsinline=1&amp;rel=0&amp;modestbranding=1&amp;enablejsapi=1" data-now="Cats" data-next="More family movie features" data-icon="🎬" data-open="/beyond-tv/channel.php?slug=classic-cinema">🎬 <span>Movies</span></button>
-      <button type="button" data-home-channel="comedy" data-channel-number="9" data-channel-name="Beyond Comedy" data-embed="/beyond-tv/intermission.php?channel=9&amp;name=Beyond%20Comedy" data-now="Beyond Comedy demo" data-next="Comedy channel preview" data-icon="😂" data-open="/beyond-tv/channel.php?slug=beyond-comedy">😂 <span>Comedy</span></button>
-      <button type="button" data-home-channel="anime" data-channel-number="10" data-channel-name="Beyond Anime" data-endpoint="/beyond-tv/api/yugioh-live.php" data-now="Beyond Anime demo" data-next="Next anime episode" data-icon="⚡" data-open="/beyond-tv/channel.php?slug=yugioh-tv">⚡ <span>Anime</span></button>
-      <button type="button" data-home-channel="after-dark" data-channel-number="11" data-channel-name="Beyond After Dark" data-embed="/beyond-tv/intermission.php?channel=11&amp;name=Beyond%20After%20Dark" data-now="Beyond After Dark demo" data-next="Supernatural channel preview" data-icon="🌙" data-open="/beyond-tv/channel.php?slug=beyond-after-dark">🌙 <span>After Dark</span></button>
-      <button type="button" data-home-channel="family" data-channel-number="12" data-channel-name="Beyond Family" data-embed="/beyond-tv/intermission.php?channel=12&amp;name=Beyond%20Family" data-now="Beyond Family demo" data-next="Family channel preview" data-icon="✨" data-open="/beyond-tv/channel.php?slug=beyond-family">✨ <span>Family</span></button>
+      <button type="button" class="active" data-home-channel="after-dark" data-channel-number="1" data-channel-name="Beyond After Dark" data-endpoint="/beyond-tv/api/schedule-live.php?slug=beyond-after-dark" data-embed="/beyond-tv/intermission.php?channel=1&amp;name=Beyond%20After%20Dark" data-now="Beyond After Dark demo" data-next="Supernatural channel preview" data-icon="🌙" data-open="/beyond-tv/channel.php?slug=beyond-after-dark">🌙 <span>After Dark</span></button>
+      <button type="button" data-home-channel="cartoons" data-channel-number="2" data-channel-name="Beyond Kartoons" data-endpoint="/beyond-tv/api/beyond-cartoons-live.php" data-open="/beyond-tv/channel.php?slug=beyond-cartoons">📺 <span>Kartoons</span></button>
+      <button type="button" data-home-channel="anime" data-channel-number="3" data-channel-name="Beyond Anime" data-endpoint="/beyond-tv/api/yugioh-live.php" data-now="Beyond Anime demo" data-next="Next anime episode" data-icon="⚡" data-open="/beyond-tv/channel.php?slug=yugioh-tv">⚡ <span>Anime</span></button>
+      <button type="button" data-home-channel="cinema" data-channel-number="4" data-channel-name="Beyond Movies" data-endpoint="/beyond-tv/api/schedule-live.php?slug=classic-cinema" data-embed="https://www.youtube-nocookie.com/embed/QrnXZgFYMbk?autoplay=1&amp;mute=1&amp;playsinline=1&amp;rel=0&amp;modestbranding=1&amp;enablejsapi=1" data-now="Cats" data-next="More family movie features" data-icon="🎬" data-open="/beyond-tv/channel.php?slug=classic-cinema">🎬 <span>Movies</span></button>
+      <button type="button" data-home-channel="classic" data-channel-number="5" data-channel-name="Classic Cartoon Theater" data-endpoint="/beyond-tv/api/classic-live.php" data-open="/beyond-tv/channel.php?slug=classic-cartoon-theater">🎞️ <span>Classic</span></button>
+      <button type="button" data-home-channel="preschool" data-channel-number="6" data-channel-name="Preschool TV EN | FR" data-endpoint="/beyond-tv/api/bluey-live.php" data-embed="https://www.youtube-nocookie.com/embed/61fSXCbzF1M?autoplay=1&amp;mute=1&amp;playsinline=1&amp;rel=0&amp;enablejsapi=1" data-now="Preschool TV demo" data-next="English and French programming" data-icon="🐾" data-open="/beyond-tv/channel.php?slug=bubble-guppies">🐾 <span>EN | FR</span></button>
+      <button type="button" data-home-channel="space" data-channel-number="7" data-channel-name="Beyond Space" data-endpoint="/beyond-tv/api/space-live.php" data-now="The Sun &amp; The Milky Way" data-next="Weekly space rotation" data-icon="🛰️" data-open="/beyond-tv/channel.php?slug=space-tv">🛰️ <span>Space</span></button>
+      <button type="button" data-home-channel="ancient" data-channel-number="8" data-channel-name="Beyond Ancient" data-endpoint="/beyond-tv/api/schedule-live.php?slug=beyond-ancient" data-embed="https://www.youtube-nocookie.com/embed/BR2ZMj3o5EU?autoplay=1&amp;mute=1&amp;playsinline=1&amp;rel=0&amp;enablejsapi=1" data-now="Ancient Egypt Documentary" data-next="Pyramids, pharaohs and archaeology" data-icon="𓂀" data-open="/beyond-ancient/">𓂀 <span>Ancient</span></button>
+      <button type="button" data-home-channel="comedy" data-channel-number="9" data-channel-name="Beyond Comedy" data-endpoint="/beyond-tv/api/schedule-live.php?slug=beyond-comedy" data-embed="/beyond-tv/intermission.php?channel=9&amp;name=Beyond%20Comedy" data-now="Beyond Comedy demo" data-next="Comedy channel preview" data-icon="😂" data-open="/beyond-tv/channel.php?slug=beyond-comedy">😂 <span>Comedy</span></button>
+      <button type="button" data-home-channel="family" data-channel-number="10" data-channel-name="Beyond Family" data-endpoint="/beyond-tv/api/schedule-live.php?slug=beyond-family" data-embed="/beyond-tv/intermission.php?channel=10&amp;name=Beyond%20Family" data-now="Beyond Family demo" data-next="Family channel preview" data-icon="✨" data-open="/beyond-tv/channel.php?slug=beyond-family">✨ <span>Family</span></button>
     </div>
   </div>
 </section>
@@ -265,6 +265,15 @@ $cartoonNext = $cartoonSchedule['next'];
         <a href="/beyond-french/challenge.php?id=<?= max(1, (int)($homeFrench['id'] ?? 1)) ?>">Practice lesson</a>
       </div>
     </article>
+
+    <article class="live-app-card casino-card">
+      <div class="live-app-card__art" aria-hidden="true">&#9824;</div>
+      <span class="live-app-label">BEYOND CASINO &middot; SOCIAL PLAY</span>
+      <h3>Play for fun.</h3>
+      <p class="translation">1,000 demo bit$ to explore the social casino.</p>
+      <p class="pronunciation">Entertainment only &middot; No purchase necessary &middot; No cash value</p>
+      <div class="live-app-actions"><a href="/beyond-casino/">Open casino demo</a></div>
+    </article>
   </div>
 </section>
 
@@ -284,6 +293,8 @@ $cartoonNext = $cartoonSchedule['next'];
 .home-shortcuts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:45px}.home-shortcuts a{display:grid;grid-template-columns:auto 1fr;column-gap:12px;align-items:center;padding:18px;border:1px solid rgba(255,255,255,.14);border-radius:18px;background:rgba(10,14,29,.72);text-decoration:none}.home-shortcuts span{grid-row:1/3;font-size:29px}.home-shortcuts strong{font-size:15px}.home-shortcuts small{margin-top:3px;color:#aeb5c9}
 @media(max-width:1100px){.home-live-player{min-height:0;aspect-ratio:16/9}.home-live-switch{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:800px){.home-live-stage{width:calc(100vw - 12px);border-radius:23px;margin-bottom:32px}.home-live-stage__inner{padding:14px}.home-live-stage__top{align-items:flex-start;flex-direction:column;margin-bottom:14px}.home-live-actions{width:100%}.home-live-button{flex:1}.home-live-player{aspect-ratio:16/9;border-radius:16px}.home-live-meta{align-items:flex-start;flex-direction:column}.home-live-switch{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:4px}.home-live-switch button{min-width:93px;scroll-snap-align:start}.live-apps-heading{align-items:flex-start;flex-direction:column}.live-app-grid{grid-template-columns:1fr}.live-app-card{min-height:340px}.home-shortcuts{grid-template-columns:1fr}}
+.casino-card:before{background:radial-gradient(circle at 77% 17%,rgba(255,216,109,.3),transparent 23%),linear-gradient(135deg,#160b25,#54205c 55%,#a42e65)}.casino-card .live-app-label{color:#ffd86d}.casino-card h3{font-size:clamp(34px,5vw,64px)}
+@media(min-width:1051px){.live-app-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:480px){.home-live-stage h2{font-size:34px}.home-live-stage__top p{font-size:13px}.home-live-actions{display:grid;grid-template-columns:1fr 1fr}.home-live-button{padding:0 10px}.home-live-player{aspect-ratio:16/10}.home-live-clock{display:none}.live-app-card{min-height:315px;padding:23px}.live-app-card blockquote,.live-app-card h3{font-size:36px}}
 html[data-theme="light"] .home-live-stage,html[data-theme="light"] .live-app-card{color:#fff}html[data-theme="light"] .home-shortcuts a{background:rgba(255,255,255,.82);border-color:rgba(26,31,54,.14)}html[data-theme="light"] .home-shortcuts small{color:#5e667a}
 </style>
@@ -335,6 +346,8 @@ html[data-theme="light"] .home-live-stage,html[data-theme="light"] .live-app-car
    }catch(error){console.warn('Beyond TV channel refresh unavailable',error);}
  }
  buttons.forEach(button=>button.addEventListener('click',()=>tune(button)));
+ const initial=stage.querySelector('[data-home-channel].active');
+ if(initial)tune(initial);
  setInterval(()=>{const active=stage.querySelector('[data-home-channel].active');if(active&&active.dataset.endpoint)tune(active);},60000);
 })();
 (function(){
