@@ -96,6 +96,31 @@ function beyond_wallet(): array {
     return $wallet;
 }
 
+/** Credit a completion reward to the shared Beyond Wallet exactly once. */
+function beyond_award_reward(int $userId,string $appSlug,string $activityType,string $activityId,int $amount,string $description): array {
+    $result=['ok'=>false,'awarded'=>false,'amount'=>$amount,'balance'=>null,'message'=>''];
+    if($userId<1||$amount<1||trim($activityId)==='')return $result;
+    $appSlug=strtolower(trim((string)preg_replace('/[^a-z0-9-]+/i','-',$appSlug),'-'))?:'beyond-os';
+    $activityType=strtolower(trim((string)preg_replace('/[^a-z0-9-]+/i','-',$activityType),'-'))?:'completion';
+    $idempotency=sprintf('reward:v1:u%d:%s:%s:%s',$userId,substr($appSlug,0,28),substr($activityType,0,20),substr(hash('sha256',$activityId),0,24));
+    try{
+        $pdo=beyond_db();$driver=$pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+        $insertIgnore=static fn(string $sql): string=>$driver==='sqlite'?preg_replace('/^INSERT\s+INTO/i','INSERT OR IGNORE INTO',$sql,1):preg_replace('/^INSERT\s+INTO/i','INSERT IGNORE INTO',$sql,1);
+        $pdo->beginTransaction();
+        $pdo->prepare($insertIgnore("INSERT INTO beyond_wallets(user_id,balance,currency,status) VALUES(?,0,'BITS','active')"))->execute([$userId]);
+        $walletSql='SELECT id,balance,status FROM beyond_wallets WHERE user_id=? LIMIT 1'.($driver==='sqlite'?'':' FOR UPDATE');
+        $walletStmt=$pdo->prepare($walletSql);$walletStmt->execute([$userId]);$wallet=$walletStmt->fetch(PDO::FETCH_ASSOC);
+        if(!$wallet||($wallet['status']??'active')!=='active')throw new RuntimeException('Wallet is unavailable or not active.');
+        $transaction=$pdo->prepare($insertIgnore("INSERT INTO beyond_wallet_transactions(wallet_id,amount,type,app_slug,description,idempotency_key) VALUES (?,?,'credit',?,?,?)"));
+        $transaction->execute([(int)$wallet['id'],$amount,$appSlug,substr($description,0,255),$idempotency]);
+        if($transaction->rowCount()===1){$pdo->prepare('UPDATE beyond_wallets SET balance=balance+? WHERE id=?')->execute([$amount,(int)$wallet['id']]);$result['awarded']=true;$result['balance']=(float)$wallet['balance']+$amount;$result['message']='+'.$amount.' bit$ earned.';}
+        else{$result['balance']=(float)$wallet['balance'];$result['message']='Reward already collected.';}
+        $pdo->commit();$result['ok']=true;
+        $GLOBALS['beyond_wallet_override']=['balance'=>$result['balance'],'currency'=>'BITS','status'=>'active'];
+    }catch(Throwable $exception){if(isset($pdo)&&$pdo instanceof PDO&&$pdo->inTransaction())$pdo->rollBack();error_log('Beyond reward unavailable: '.$exception->getMessage());$result['message']='Learning progress saved; wallet reward will be available to retry.';}
+    return $result;
+}
+
 function beyond_notification_count(): int {
     if (empty($_SESSION['user_id'])) return 0;
     try { return unread_notification_count(beyond_db(), (int)$_SESSION['user_id']); } catch (Throwable $exception) { return 0; }
@@ -123,6 +148,7 @@ function beyond_nav_bootstrap(string $appName, ?array $wallet = null): array {
         $GLOBALS['beyond_nav_started'] = true;
         ob_start(static function (string $html) use ($appName, $wallet): string {
             if (stripos($html, '<body') === false || str_contains($html, 'id="beyond-os-shell"')) return $html;
+            $wallet = $GLOBALS['beyond_wallet_override'] ?? $wallet;
             $icon = beyond_app_icon($appName) ?: beyond_app_icon('Beyond OS');
             if ($icon && stripos($html, 'rel="icon"') === false) {
                 $tag = '<link rel="icon" type="image/webp" href="' . e($icon) . '">';

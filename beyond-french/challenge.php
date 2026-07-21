@@ -1,14 +1,15 @@
 <?php
 require __DIR__ . '/includes/functions.php';
+require_once __DIR__ . '/../includes/ecosystem.php';
 $id = (int)($_GET['id'] ?? 0);
 $lesson = $id ? lesson_by_id($id) : todays_lesson();
 if (!$lesson) {
     exit('No challenge found.');
 }
-$result='';$nextLesson=null;
+$result='';$nextLesson=null;$reward=null;
 if($_SERVER['REQUEST_METHOD']==='POST'){
     if(!french_verify_csrf()){$result='Your session expired. Refresh and try again.';}
-    else{$given=mb_strtolower(trim((string)($_POST['answer']??'')));$expected=mb_strtolower(trim((string)$lesson['answer']));if($given===$expected){$nextLesson=french_mark_completed((int)($_SESSION['user_id']??0),(int)$lesson['id']);$result='Correct — lesson complete!';}else{$result='Not quite. Listen once more and try again.';}}
+    else{$given=mb_strtolower(trim((string)($_POST['answer']??'')));$expected=mb_strtolower(trim((string)$lesson['answer']));if($given===$expected){$userId=(int)($_SESSION['user_id']??0);$nextLesson=french_mark_completed($userId,(int)$lesson['id']);$reward=beyond_award_reward($userId,'beyond-french','daily-lesson',(string)$lesson['id'],10,'Beyond French daily lesson completed — '.$lesson['english']);$result='Correct — lesson complete!'.(!empty($reward['awarded'])?' +10 bit$ earned.':'');}else{$result='Not quite. Listen once more and try again.';}}
 }
 $pageTitle = 'Conversation Challenge | Beyond French';
 require __DIR__ . '/includes/header.php';

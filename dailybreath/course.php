@@ -59,7 +59,7 @@ function commandment_quiz(int $lessonNo,array $commandments): array {
   ];
 }
 $quiz=commandment_quiz((int)$current['lesson_number'],$commandments);
-$message='';$score=null;$passed=false;
+$message='';$score=null;$passed=false;$reward=null;
 if($_SERVER['REQUEST_METHOD']==='POST'&&($_POST['action']??'')==='quiz'){
   if(!verify_csrf_token($_POST['csrf']??null)){$message='Your session expired. Reload the lesson and try again.';}
   else{
@@ -70,7 +70,8 @@ if($_SERVER['REQUEST_METHOD']==='POST'&&($_POST['action']??'')==='quiz'){
       $driver=$pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
       if($driver==='sqlite')$pdo->prepare('INSERT INTO academy_progress(user_id,lesson_id,progress_seconds,completed_at,updated_at) VALUES(?,?,?,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP) ON CONFLICT(user_id,lesson_id) DO UPDATE SET completed_at=CURRENT_TIMESTAMP,updated_at=CURRENT_TIMESTAMP')->execute([$userId,$current['id'],(int)($current['duration_seconds']??0)]);
       else $pdo->prepare('INSERT INTO academy_progress(user_id,lesson_id,progress_seconds,completed_at) VALUES(?,?,?,CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE completed_at=CURRENT_TIMESTAMP,updated_at=CURRENT_TIMESTAMP')->execute([$userId,$current['id'],(int)($current['duration_seconds']??0)]);
-      $message='Passed with '.$score.'/10. The next lesson is unlocked.';
+      $reward=beyond_award_reward($userId,'dailybreath','lesson',(string)$current['id'],10,'Bible Academy lesson completed — '.$current['title']);
+      $message='Passed with '.$score.'/10. The next lesson is unlocked.'.(!empty($reward['awarded'])?' +10 bit$ earned.':'');
     }else{$message='You scored '.$score.'/10. Review the lesson and try again; 8/10 is required.';}
   }
 }

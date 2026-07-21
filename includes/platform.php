@@ -28,6 +28,13 @@ function bos_feature_enabled(string $key, bool $fallback=true): bool {
 function bos_log(string $event, array $details=[]): void {
     try { $s=beyond_db()->prepare('INSERT INTO platform_events(user_id,event_name,details_json,created_at) VALUES(?,?,?,NOW())'); $s->execute([bos_current_user_id() ?: null,$event,json_encode($details)]); } catch(Throwable $e) {}
 }
-function bos_app_card(string $title,string $copy,string $href,string $icon='✦',string $status='Open'): string {
-    return '<a class="bos-card" href="'.e(beyond_url($href)).'"><span class="bos-card-icon">'.e($icon).'</span><div><strong>'.e($title).'</strong><p>'.e($copy).'</p></div><span class="bos-card-status">'.e($status).'</span></a>';
+function bos_app_card(string $title,string $copy,string $href,string $icon='✦',string $status='Open',?string $brandIcon=null): string {
+    if ($brandIcon === '@atom') {
+        $iconMarkup = '<span class="bos-card-icon bos-card-brand-tile"><img src="'.e(beyond_url('assets/images/bos-logo-mark.svg')).'" alt=""><small>'.e($icon).'</small></span>';
+    } elseif (is_string($brandIcon) && $brandIcon !== '') {
+        $iconMarkup = '<span class="bos-card-icon bos-card-brand-icon"><img src="'.e(beyond_url($brandIcon)).'" alt="'.e($title).' icon"></span>';
+    } else {
+        $iconMarkup = '<span class="bos-card-icon">'.e($icon).'</span>';
+    }
+    return '<a class="bos-card" href="'.e(beyond_url($href)).'">'.$iconMarkup.'<div><strong>'.e($title).'</strong><p>'.e($copy).'</p></div><span class="bos-card-status">'.e($status).'</span></a>';
 }
