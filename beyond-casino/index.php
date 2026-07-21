@@ -3,13 +3,82 @@ declare(strict_types=1);
 require_once __DIR__ . '/../includes/ecosystem.php';
 beyond_nav_bootstrap('Beyond Casino');
 ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#160b25">
-<title>Beyond Casino — Social Play | Beyond OS</title><meta name="description" content="A free social-play casino demo using temporary demo bit$. No purchase necessary and no cash value.">
-<style>
-:root{--gold:#ffd86d;--pink:#ff4fa3;--line:rgba(255,255,255,.14);--muted:#d3c5da}*{box-sizing:border-box}body{margin:0;min-height:100vh;color:#fff;font-family:Inter,system-ui,sans-serif;background:radial-gradient(circle at 80% 5%,#812b6a99,transparent 33%),radial-gradient(circle at 8% 35%,#4b237599,transparent 35%),#100817}button,a{font:inherit}.wrap{width:min(1060px,calc(100% - 28px));margin:auto}.top{min-height:80px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{color:#fff;text-decoration:none;font-weight:950;letter-spacing:.05em}.brand span{color:var(--pink)}.back{color:#fff;text-decoration:none;font-size:13px;font-weight:850}.hero{padding:58px 0 24px;text-align:center}.eyebrow{color:var(--gold);font-size:11px;font-weight:950;letter-spacing:.17em}.hero h1{margin:14px 0 12px;font-size:clamp(48px,9vw,92px);line-height:.92;letter-spacing:-.065em}.hero p{max-width:700px;margin:0 auto;color:var(--muted);font-size:18px;line-height:1.55}.notice{margin:28px auto 0;padding:14px 18px;border:1px solid rgba(255,216,109,.48);border-radius:14px;background:rgba(255,216,109,.1);color:#fff4c8;font-weight:900}.game{margin:28px 0 70px;padding:clamp(20px,5vw,46px);border:1px solid var(--line);border-radius:28px;background:linear-gradient(145deg,rgba(74,29,84,.9),rgba(29,13,43,.94));box-shadow:0 30px 90px rgba(0,0,0,.42)}.game-top{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:24px}.game-top h2{margin:0;font-size:26px}.balance{padding:11px 15px;border:1px solid rgba(255,216,109,.3);border-radius:999px;background:rgba(255,216,109,.09);color:var(--gold);font-weight:950}.reels{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.reel{min-height:170px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.18);border-radius:22px;background:linear-gradient(#fff,#eee7f1);color:#35123f;font-size:clamp(64px,11vw,110px);box-shadow:inset 0 -12px 20px rgba(61,20,68,.12)}.status{min-height:28px;margin:22px 0 14px;text-align:center;color:#f5eafa;font-weight:850}.spin{width:100%;min-height:58px;border:0;border-radius:16px;background:linear-gradient(110deg,var(--gold),#ff9d62 48%,var(--pink));color:#2b0e2a;font-weight:950;font-size:17px;cursor:pointer;box-shadow:0 14px 32px rgba(255,79,163,.2)}.spin:disabled{opacity:.55;cursor:not-allowed}.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}.rule{padding:15px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.045);text-align:center}.rule strong{display:block;color:var(--gold);font-size:18px}.fine{margin:18px 0 0;color:var(--muted);font-size:12px;line-height:1.6;text-align:center}@media(max-width:650px){.top{min-height:68px}.hero{padding-top:35px}.game-top{align-items:flex-start;flex-direction:column}.reel{min-height:112px}.rules{grid-template-columns:1fr}.game{border-radius:22px}}
-</style></head><body>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#160b25">
+  <title>Beyond Casino — Social Play | Beyond OS</title>
+  <meta name="description" content="Free social-play slots, roulette, blackjack, and Texas Hold'em using temporary demo bit$. No purchase necessary and no cash value.">
+  <link rel="stylesheet" href="assets/casino.css?v=20260721-1">
+</head>
+<body>
 <header class="top wrap"><a class="brand" href="/">BEYOND <span>OS</span></a><a class="back" href="/app-store/">App Store &rarr;</a></header>
-<main class="wrap"><section class="hero"><span class="eyebrow">BEYOND CASINO — SOCIAL PLAY</span><h1>Play the vibe.<br>Not the stakes.</h1><p>A lightweight social casino demo powered only by temporary demo bit$. Your Beyond Wallet is never charged or changed.</p><div class="notice">Entertainment only &middot; No purchase necessary &middot; No cash value</div></section>
-<section class="game" aria-labelledby="gameTitle"><div class="game-top"><h2 id="gameTitle">Neon Lucky Spin</h2><div class="balance" aria-live="polite"><span id="balance">1,000</span> demo bit$</div></div><div class="reels" aria-label="Slot reels"><div class="reel" id="r1">🍒</div><div class="reel" id="r2">⭐</div><div class="reel" id="r3">7</div></div><div class="status" id="status" aria-live="polite">Each spin uses 10 demo bit$.</div><button class="spin" id="spin" type="button">Spin for 10 demo bit$</button><div class="rules"><div class="rule"><strong>50 bit$</strong>Any three matching</div><div class="rule"><strong>100 bit$</strong>Three stars</div><div class="rule"><strong>250 bit$</strong>Triple sevens</div></div><p class="fine">Demo bit$ exist only on this page and reset when you reload. There are no deposits, purchases, withdrawals, prizes, transfers, or redemption for money or anything of value.</p></section></main>
-<script>(()=>{const symbols=['🍒','⭐','7','♦️','🍋'];const reels=['r1','r2','r3'].map(id=>document.getElementById(id));const balanceEl=document.getElementById('balance');const status=document.getElementById('status');const spin=document.getElementById('spin');let balance=1000;const draw=()=>symbols[Math.floor(Math.random()*symbols.length)];spin.addEventListener('click',()=>{if(balance<10){status.textContent='Demo balance empty. Reload the page to start again.';spin.disabled=true;return}balance-=10;balanceEl.textContent=balance.toLocaleString();spin.disabled=true;status.textContent='Spinning…';let ticks=0;const timer=setInterval(()=>{reels.forEach(reel=>reel.textContent=draw());if(++ticks<10)return;clearInterval(timer);const result=reels.map(reel=>reel.textContent);let prize=0;if(result.every(value=>value==='7'))prize=250;else if(result.every(value=>value==='⭐'))prize=100;else if(result.every(value=>value===result[0]))prize=50;balance+=prize;balanceEl.textContent=balance.toLocaleString();status.textContent=prize?`You won ${prize} demo bit$!`:'No match — try another social spin.';spin.disabled=balance<10;if(balance<10)status.textContent+=' Reload to reset the demo.'},70)})})();</script>
-</body></html>
+<main class="wrap">
+  <section class="hero">
+    <span class="eyebrow">BEYOND CASINO — SOCIAL PLAY</span>
+    <h1>Play the vibe.<br>Not the stakes.</h1>
+    <p>Four familiar casino games powered only by temporary demo bit$. Your Beyond Wallet is never charged or changed.</p>
+    <div class="notice">Entertainment only &middot; No purchase necessary &middot; No cash value</div>
+  </section>
+
+  <section class="lounge" aria-label="Beyond Casino games">
+    <div class="lounge-bar">
+      <div><span class="eyebrow">SOCIAL-PLAY LOUNGE</span><h2>Choose a table</h2></div>
+      <div class="balance" aria-live="polite"><span data-balance>1,000</span> demo bit$</div>
+    </div>
+    <div class="game-tabs" role="tablist" aria-label="Casino games">
+      <button class="game-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="slots-panel" data-game-tab="slots">🎰 Lucky Spin</button>
+      <button class="game-tab" type="button" role="tab" aria-selected="false" aria-controls="roulette-panel" data-game-tab="roulette">🎯 Roulette</button>
+      <button class="game-tab" type="button" role="tab" aria-selected="false" aria-controls="blackjack-panel" data-game-tab="blackjack">♠ Blackjack</button>
+      <button class="game-tab" type="button" role="tab" aria-selected="false" aria-controls="holdem-panel" data-game-tab="holdem">♣ Texas Hold’em</button>
+    </div>
+
+    <section class="game-panel is-active" id="slots-panel" role="tabpanel" data-game-panel="slots" aria-labelledby="slots-title">
+      <div class="game-heading"><div><span class="game-kicker">INSTANT PLAY</span><h2 id="slots-title">Neon Lucky Spin</h2></div><span class="wager">10 demo bit$</span></div>
+      <div class="reels" aria-label="Slot reels"><div class="reel" id="r1">🍒</div><div class="reel" id="r2">⭐</div><div class="reel" id="r3">7</div></div>
+      <div class="status" id="slots-status" aria-live="polite">Match three symbols to win.</div>
+      <button class="play-button" id="slots-spin" type="button">Spin for 10 demo bit$</button>
+      <div class="rules"><div class="rule"><strong>50 bit$</strong>Any three matching</div><div class="rule"><strong>100 bit$</strong>Three stars</div><div class="rule"><strong>250 bit$</strong>Triple sevens</div></div>
+    </section>
+
+    <section class="game-panel" id="roulette-panel" role="tabpanel" data-game-panel="roulette" aria-labelledby="roulette-title" hidden>
+      <div class="game-heading"><div><span class="game-kicker">EUROPEAN WHEEL</span><h2 id="roulette-title">Beyond Roulette</h2></div><span class="wager">10 demo bit$</span></div>
+      <div class="roulette-layout">
+        <div class="roulette-wheel" aria-label="Roulette result"><div class="roulette-result is-green" id="roulette-result">0</div><span>EUROPEAN</span></div>
+        <div class="table-controls"><label for="roulette-bet">Choose an even-money bet</label><select id="roulette-bet"><option value="red">Red</option><option value="black">Black</option><option value="odd">Odd</option><option value="even">Even</option><option value="low">1–18</option><option value="high">19–36</option></select><div class="chip-row"><span class="chip red-chip">Red</span><span class="chip black-chip">Black</span><span class="chip green-chip">0</span></div></div>
+      </div>
+      <div class="status" id="roulette-status" aria-live="polite">Zero is green and loses all even-money bets.</div>
+      <button class="play-button" id="roulette-spin" type="button">Spin for 10 demo bit$</button>
+    </section>
+
+    <section class="game-panel" id="blackjack-panel" role="tabpanel" data-game-panel="blackjack" aria-labelledby="blackjack-title" hidden>
+      <div class="game-heading"><div><span class="game-kicker">DEALER STANDS ON 17</span><h2 id="blackjack-title">Beyond Blackjack</h2></div><span class="wager">20 demo bit$</span></div>
+      <div class="card-table">
+        <div class="hand"><div class="hand-label"><span>Dealer</span><strong id="dealer-score">—</strong></div><div class="playing-cards" id="dealer-cards"><span class="empty-hand">Start a round to deal.</span></div></div>
+        <div class="table-line"></div>
+        <div class="hand"><div class="hand-label"><span>Your hand</span><strong id="player-score">—</strong></div><div class="playing-cards" id="player-cards"><span class="empty-hand">Blackjack pays 3:2.</span></div></div>
+      </div>
+      <div class="status" id="blackjack-status" aria-live="polite">Start a 20 demo bit$ round.</div>
+      <div class="action-row"><button class="secondary-button" id="blackjack-hit" type="button" disabled>Hit</button><button class="secondary-button" id="blackjack-stand" type="button" disabled>Stand</button><button class="play-button" id="blackjack-deal" type="button">Deal for 20 demo bit$</button></div>
+    </section>
+
+    <section class="game-panel" id="holdem-panel" role="tabpanel" data-game-panel="holdem" aria-labelledby="holdem-title" hidden>
+      <div class="game-heading"><div><span class="game-kicker">HEADS-UP SHOWDOWN</span><h2 id="holdem-title">Texas Hold’em</h2></div><span class="wager">25 demo bit$</span></div>
+      <div class="poker-table">
+        <div class="hand compact"><div class="hand-label"><span>House hand</span><strong id="holdem-house-label">Waiting</strong></div><div class="playing-cards" id="holdem-house"><span class="empty-hand">Two hidden cards</span></div></div>
+        <div class="community"><span class="community-label">Community cards</span><div class="playing-cards" id="holdem-community"><span class="empty-hand">Deal to begin.</span></div></div>
+        <div class="hand compact"><div class="hand-label"><span>Your hand</span><strong id="holdem-player-label">Waiting</strong></div><div class="playing-cards" id="holdem-player"><span class="empty-hand">Best five-card hand wins.</span></div></div>
+      </div>
+      <div class="status" id="holdem-status" aria-live="polite">Deal, then reveal the flop, turn, and river.</div>
+      <button class="play-button" id="holdem-action" type="button">Deal for 25 demo bit$</button>
+      <div class="rules poker-rules"><div class="rule"><strong>Flop</strong>Three community cards</div><div class="rule"><strong>Turn</strong>Fourth community card</div><div class="rule"><strong>River</strong>Final card and showdown</div></div>
+    </section>
+  </section>
+  <p class="fine">Demo bit$ exist only on this page and reset when you reload. There are no deposits, purchases, withdrawals, prizes, transfers, or redemption for money or anything of value. Outcomes are generated locally for entertainment.</p>
+</main>
+<script src="assets/casino.js?v=20260721-1" defer></script>
+</body>
+</html>
+
