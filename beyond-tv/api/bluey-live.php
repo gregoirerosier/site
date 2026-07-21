@@ -78,7 +78,7 @@ echo json_encode([
     'ok' => true,
     'channel' => [
         'slug' => 'bubble-guppies',
-        'name' => 'Preschool TV',
+        'name' => 'Preschool English',
         'mode' => 'pseudo-live',
         'programme' => sprintf('%s · S%02dE%02d · %s', $current['show'], $current['season'], $current['episode'], $current['title']),
         'up_next' => sprintf('%s · S%02dE%02d · %s', $next['show'], $next['season'], $next['episode'], $next['title']),

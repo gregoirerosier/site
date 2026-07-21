@@ -30,7 +30,7 @@ function bos_log(string $event, array $details=[]): void {
 }
 function bos_app_card(string $title,string $copy,string $href,string $icon='✦',string $status='Open',?string $brandIcon=null): string {
     if ($brandIcon === '@atom') {
-        $iconMarkup = '<span class="bos-card-icon bos-card-brand-tile"><img src="'.e(beyond_url('assets/images/bos-logo-mark.svg')).'" alt=""><small>'.e($icon).'</small></span>';
+        $iconMarkup = '<span class="bos-card-icon bos-card-brand-tile"><img src="'.e(beyond_url('assets/icons/app-store/beyond-imagination.jpg')).'" alt=""><small>'.e($icon).'</small></span>';
     } elseif (is_string($brandIcon) && $brandIcon !== '') {
         $iconMarkup = '<span class="bos-card-icon bos-card-brand-icon"><img src="'.e(beyond_url($brandIcon)).'" alt="'.e($title).' icon"></span>';
     } else {

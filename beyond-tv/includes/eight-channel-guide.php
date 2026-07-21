@@ -58,25 +58,34 @@ function beyond_tv_confirmed_presentation_rows(string $slug, array $fallbackRows
 }
 
 function beyond_tv_after_dark_hourly_rows(): array {
-    $episodes = json_decode((string)@file_get_contents(__DIR__ . '/../data/haunting-hour-library.json'), true) ?: [];
+    $hauntingEpisodes = json_decode((string)@file_get_contents(__DIR__ . '/../data/haunting-hour-library.json'), true) ?: [];
     $preferred = [];
-    foreach ($episodes as $episode) {
+    foreach ($hauntingEpisodes as $episode) {
         if (!is_array($episode) || empty($episode['video_url'])) continue;
         $number = (int)($episode['episode'] ?? 0);
         $extension = strtolower(pathinfo((string)$episode['video_url'], PATHINFO_EXTENSION));
+        $episode['series'] = 'The Haunting Hour';
         if (!isset($preferred[$number]) || $extension === 'mp4') $preferred[$number] = $episode;
     }
     ksort($preferred); $playlist = array_values($preferred);
+    $goosebumps = json_decode((string)@file_get_contents(__DIR__ . '/../data/goosebumps-library.json'), true) ?: [];
+    foreach ($goosebumps as $episode) { if (is_array($episode) && !empty($episode['video_url'])) $playlist[] = $episode; }
     $durations = array_map(static fn(array $episode): int => max(60, (int)($episode['runtime_seconds'] ?? 1380)), $playlist);
     $total = array_sum($durations);
     if (!$playlist || $total < 1) return [];
     $day = new DateTimeImmutable('today', new DateTimeZone('America/Vancouver'));
     $rows = [];
     for ($hour = 0; $hour < 24; $hour++) {
+        if ($hour >= 22 || in_array($hour, [4, 10, 16], true)) {
+            $episode = (($hour + (int)$day->format('z')) % 13) + 1;
+            $rows[] = ['start'=>$hour,'end'=>$hour+1,'icon'=>'🐶','title'=>'Courage the Cowardly Dog','lineup'=>'Season 1 · Episode '.$episode];
+            continue;
+        }
         $position = $day->setTime($hour, 0)->getTimestamp() % $total; $index = 0;
         foreach ($durations as $candidate => $duration) { if ($position < $duration) { $index = $candidate; break; } $position -= $duration; }
         $episode = $playlist[$index];
-        $rows[] = ['start'=>$hour,'end'=>$hour+1,'icon'=>'🌙','title'=>(string)($episode['title'] ?? 'The Haunting Hour'),'lineup'=>'The Haunting Hour · S1 E'.(int)($episode['episode'] ?? ($index+1))];
+        $series = (string)($episode['series'] ?? 'The Haunting Hour');
+        $rows[] = ['start'=>$hour,'end'=>$hour+1,'icon'=>$series === 'Goosebumps' ? '👻' : '🌙','title'=>$series,'lineup'=>'S1 E'.(int)($episode['episode'] ?? ($index+1)).' · '.(string)($episode['title'] ?? 'Episode')];
     }
     return $rows;
 }
@@ -85,9 +94,16 @@ function beyond_tv_yugioh_hourly_rows(): array {
     $day = new DateTimeImmutable('today', new DateTimeZone('America/Vancouver')); $rows = [];
     $digimon = json_decode((string)@file_get_contents(__DIR__ . '/../data/digimon-library.json'), true) ?: [];
     $pokemon = json_decode((string)@file_get_contents(__DIR__ . '/../data/pokemon-library.json'), true) ?: [];
+    $dragonBall = json_decode((string)@file_get_contents(__DIR__ . '/../data/dragon-ball-library.json'), true) ?: [];
     for ($hour = 0; $hour < 24; $hour++) {
         $state = beyond_yugioh_live_state($day->setTime($hour, 0)->getTimestamp());
-        if (($hour >= 6 && $hour < 12) || ($hour >= 18 && $hour < 21)) {
+        if ((($hour >= 0 && $hour < 3) || ($hour >= 18 && $hour < 21)) && $dragonBall) {
+            $episode = $dragonBall[(($hour * 2) + (int)$day->format('z')) % count($dragonBall)];
+            $rows[] = ['start'=>$hour,'end'=>$hour+1,'icon'=>'🐉','title'=>'Dragon Ball','lineup'=>'S1 E'.(int)$episode['episode'].' · '.$episode['title']];
+        } elseif (($hour >= 3 && $hour < 6) || $hour >= 21) {
+            $episode = (($hour * 2 + (int)$day->format('z')) % 167) + 1;
+            $rows[] = ['start'=>$hour,'end'=>$hour+1,'icon'=>'🐲','title'=>'Dragon Ball Kai','lineup'=>'Episode '.$episode];
+        } elseif ($hour >= 6 && $hour < 9) {
             $episode = (($hour * 2 + (int)$day->format('z')) % 50) + 1;
             $rows[] = ['start'=>$hour,'end'=>$hour+1,'icon'=>'⚡','title'=>'Zatch Bell!','lineup'=>'Season 1 · Episodes '.$episode.'–'.min(50,$episode+1)];
         } elseif ($hour >= 12 && $hour < 15 && $digimon) {
@@ -96,9 +112,6 @@ function beyond_tv_yugioh_hourly_rows(): array {
         } elseif ($hour >= 15 && $hour < 18 && $pokemon) {
             $episode = $pokemon[(($hour - 15) * 2 + (int)$day->format('z')) % count($pokemon)];
             $rows[] = ['start'=>$hour,'end'=>$hour+1,'icon'=>'⚡','title'=>'Pokémon: Indigo League','lineup'=>'S1 E'.(int)$episode['episode'].' · '.$episode['title']];
-        } elseif ($hour >= 21) {
-            $movie = (($hour + (int)$day->format('z')) % 2) + 1;
-            $rows[] = ['start'=>$hour,'end'=>$hour+1,'icon'=>'🎬','title'=>'Zatch Bell! Movie Night','lineup'=>$movie === 1 ? '101st Devil' : 'Attack of the Mechavulcan'];
         } else {
             $rows[] = ['start'=>$hour,'end'=>$hour+1,'icon'=>'🃏','title'=>'Yu-Gi-Oh! Duel Monsters','lineup'=>'Season 1 · Episode '.(int)$state['episode_number']];
         }
@@ -120,7 +133,7 @@ function beyond_tv_eight_channel_guide(array $classicState, array $cartoonState)
         if ($slug === 'yugioh-tv') { $rows = beyond_tv_yugioh_hourly_rows(); }
         if ($slug === 'beyond-cartoons') { $rows = beyond_tv_cartoon_hourly_rows(); }
         if ($slug === 'classic-cinema') { $rows = beyond_tv_movie_hourly_rows(); }
-        if (in_array($slug, ['bubble-guppies','beyond-comedy','beyond-family'], true)) { $catalogRows=beyond_tv_catalog_hourly_rows($slug); if($catalogRows)$rows=$catalogRows; }
+        if (in_array($slug, ['bubble-guppies','preschool-francais','beyond-comedy','beyond-family'], true)) { $catalogRows=beyond_tv_catalog_hourly_rows($slug); if($catalogRows)$rows=$catalogRows; }
         if (in_array($slug, ['space-tv','beyond-ancient','beyond-french','beyond-health'], true)) { $rows=beyond_tv_confirmed_presentation_rows($slug,$rows); }
         if (!$rows) { continue; }
         $guide[] = [

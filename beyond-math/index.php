@@ -75,12 +75,11 @@ $userName = $_SESSION['user_name'] ?? $_SESSION['name'] ?? 'Learner';
   <section id="paths" class="section-pad path-section">
     <div class="section-title left"><p class="eyebrow">One academy for everyone</p><h2>Choose a level, not an age label.</h2><p class="muted">Beyond Math is part of Beyond Academy and organizes learning by skill progression.</p></div>
     <div class="level-grid">
-      <a href="/beyond-math/academy.php?track=early"><b>Early Learning</b><span>Numbers, shapes, patterns and time</span></a>
-      <a href="/beyond-math/academy.php?track=foundations"><b>Foundations</b><span>Operations, fractions and measurement</span></a>
-      <a href="/beyond-math/academy.php?track=intermediate"><b>Intermediate</b><span>Pre-algebra, ratios and geometry</span></a>
-      <a href="/beyond-math/academy.php?track=advanced"><b>Advanced</b><span>Algebra, functions, statistics and calculus</span></a>
-      <a href="/beyond-math/academy.php?track=career"><b>College & Career</b><span>Financial, workplace and college-prep math</span></a>
-      <a href="/beyond-math/academy.php?track=adult"><b>Adult Learning</b><span>Refresh skills at your own pace</span></a>
+      <a href="/beyond-math/academy.php?age=preschool"><b>Early Learning</b><span>Numbers, shapes, patterns and time</span></a>
+      <a href="/beyond-math/academy.php?age=kids"><b>Foundations</b><span>Operations, fractions and measurement</span></a>
+      <a href="/beyond-math/academy.php?age=preteen"><b>Intermediate</b><span>Pre-algebra, ratios and geometry</span></a>
+      <a href="/beyond-math/academy.php?age=teen"><b>Advanced</b><span>Algebra, functions, statistics and precalculus</span></a>
+      <a href="/beyond-math/academy.php?age=adult"><b>Adult & Career</b><span>Everyday, financial and workplace math</span></a>
     </div>
   </section>
 </main>

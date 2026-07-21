@@ -205,13 +205,27 @@ if (!empty($config['episode_map'])) {
     ksort($preferred);
     $mappedItems = array_map(static fn(array $episode): array => [
         'url' => (string)$episode['video_url'],
-        'title' => 'S1 E' . (int)($episode['episode'] ?? 0) . ' · ' . (string)($episode['title'] ?? 'Haunting Hour'),
+        'title' => 'The Haunting Hour · S1 E' . (int)($episode['episode'] ?? 0) . ' · ' . (string)($episode['title'] ?? 'Haunting Hour'),
         'duration' => max(60, (int)($episode['runtime_seconds'] ?? 1380)),
         'creator' => 'R. L. Stine’s The Haunting Hour',
         'license' => 'Owner-verified archive source',
         'rights_url' => 'https://archive.org/details/rl-stines-the-haunting-hour-full-series',
     ], array_values($preferred));
     $config['items'] = array_merge((array)($config['items'] ?? []), $mappedItems);
+}
+if ($slug === 'beyond-after-dark') {
+    $goosebumpsRows = json_decode((string)@file_get_contents(dirname(__DIR__) . '/data/goosebumps-library.json'), true) ?: [];
+    foreach ($goosebumpsRows as $episode) {
+        if (!is_array($episode) || empty($episode['video_url'])) continue;
+        $config['items'][] = [
+            'url' => (string)$episode['video_url'],
+            'title' => 'Goosebumps · S1 E' . (int)($episode['episode'] ?? 0) . ' · ' . (string)($episode['title'] ?? 'Episode'),
+            'duration' => max(60, (int)($episode['runtime_seconds'] ?? 1320)),
+            'creator' => 'Goosebumps',
+            'license' => 'Owner-verified archive source',
+            'rights_url' => 'https://archive.org/details/goosebumps-s01',
+        ];
+    }
 }
 $resolved=[];
 foreach($config['items'] as $item){ $url=$item['url']??null; if(!$url&&!empty($item['archive']))$url=resolve_archive($item['archive']); if(!$url)continue;

@@ -110,7 +110,7 @@ html[data-theme="light"] .world.wallet{background:linear-gradient(130deg,#eef5ff
 <header class="top wrap">
     <a class="brand" href="./"><b class="brand-atom" aria-hidden="true"><i></i><i></i><i></i><u></u></b>BEYOND <span>OS</span><small>THE CONNECTED IMAGINATION ECOSYSTEM</small></a>
     <nav class="nav" aria-label="Primary navigation">
-        <a href="/app-store/">App Store</a><a href="/beyond-finance/">Wallet</a><a href="/beyond-investing/">Investing</a><a href="/beyond-tv/">TV</a>
+          <a href="/app-store/">App Store</a><a href="/beyond-id/dashboard/wallet.php">Wallet</a><a href="/academy/">Learn</a><a href="/beyond-tv/">TV</a>
     </nav>
 </header>
 <main>
@@ -186,7 +186,7 @@ html[data-theme="light"] .world.wallet{background:linear-gradient(130deg,#eef5ff
         </svg>
         <a class="planet ph" href="app-store/#featured"><span><i>♥</i>HEALTH</span></a>
         <a class="planet pe" href="app-store/"><span><i>🏫</i>EDUCATION</span></a>
-        <a class="planet pf" href="beyond-finance/"><span><i>👛</i>WALLET</span></a>
+            <a class="planet pf" href="beyond-id/dashboard/wallet.php"><span><i>👛</i>WALLET</span></a>
         <a class="planet px" href="beyond-tv/"><span class="label"><i>▶</i>ENTERTAIN<br>MENT</span></a>
     </div>
 </section>
@@ -228,11 +228,12 @@ $cartoonNext = $cartoonSchedule['next'];
       <button type="button" data-home-channel="anime" data-channel-number="3" data-channel-name="Beyond Anime" data-endpoint="/beyond-tv/api/yugioh-live.php" data-now="Beyond Anime demo" data-next="Next anime episode" data-icon="⚡" data-open="/beyond-tv/channel.php?slug=yugioh-tv">⚡ <span>Anime</span></button>
       <button type="button" data-home-channel="cinema" data-channel-number="4" data-channel-name="Beyond Movies" data-endpoint="/beyond-tv/api/schedule-live.php?slug=classic-cinema" data-embed="https://www.youtube-nocookie.com/embed/QrnXZgFYMbk?autoplay=1&amp;mute=1&amp;playsinline=1&amp;rel=0&amp;modestbranding=1&amp;enablejsapi=1" data-now="Cats" data-next="More family movie features" data-icon="🎬" data-open="/beyond-tv/channel.php?slug=classic-cinema">🎬 <span>Movies</span></button>
       <button type="button" data-home-channel="classic" data-channel-number="5" data-channel-name="Classic Cartoon Theater" data-endpoint="/beyond-tv/api/classic-live.php" data-open="/beyond-tv/channel.php?slug=classic-cartoon-theater">🎞️ <span>Classic</span></button>
-      <button type="button" data-home-channel="preschool" data-channel-number="6" data-channel-name="Preschool TV EN | FR" data-endpoint="/beyond-tv/api/bluey-live.php" data-embed="https://www.youtube-nocookie.com/embed/61fSXCbzF1M?autoplay=1&amp;mute=1&amp;playsinline=1&amp;rel=0&amp;enablejsapi=1" data-now="Preschool TV demo" data-next="English and French programming" data-icon="🐾" data-open="/beyond-tv/channel.php?slug=bubble-guppies">🐾 <span>EN | FR</span></button>
-      <button type="button" data-home-channel="space" data-channel-number="7" data-channel-name="Beyond Space" data-endpoint="/beyond-tv/api/space-live.php" data-now="The Sun &amp; The Milky Way" data-next="Weekly space rotation" data-icon="🛰️" data-open="/beyond-tv/channel.php?slug=space-tv">🛰️ <span>Space</span></button>
-      <button type="button" data-home-channel="ancient" data-channel-number="8" data-channel-name="Beyond Ancient" data-endpoint="/beyond-tv/api/schedule-live.php?slug=beyond-ancient" data-embed="https://www.youtube-nocookie.com/embed/BR2ZMj3o5EU?autoplay=1&amp;mute=1&amp;playsinline=1&amp;rel=0&amp;enablejsapi=1" data-now="Ancient Egypt Documentary" data-next="Pyramids, pharaohs and archaeology" data-icon="𓂀" data-open="/beyond-ancient/">𓂀 <span>Ancient</span></button>
-      <button type="button" data-home-channel="comedy" data-channel-number="9" data-channel-name="Beyond Comedy" data-endpoint="/beyond-tv/api/schedule-live.php?slug=beyond-comedy" data-embed="/beyond-tv/embed-player.php?slug=beyond-comedy" data-now="Comedy live library" data-next="Next comedy feature" data-icon="😂" data-open="/beyond-tv/channel.php?slug=beyond-comedy">😂 <span>Comedy</span></button>
-      <button type="button" data-home-channel="family" data-channel-number="10" data-channel-name="Beyond Family" data-endpoint="/beyond-tv/api/schedule-live.php?slug=beyond-family" data-embed="/beyond-tv/embed-player.php?slug=beyond-family" data-now="Family live library" data-next="Next family feature" data-icon="✨" data-open="/beyond-tv/channel.php?slug=beyond-family">✨ <span>Family</span></button>
+      <button type="button" data-home-channel="preschool" data-channel-number="6" data-channel-name="Preschool English" data-endpoint="/beyond-tv/api/bluey-live.php" data-embed="https://www.youtube-nocookie.com/embed/61fSXCbzF1M?autoplay=1&amp;mute=1&amp;playsinline=1&amp;rel=0&amp;enablejsapi=1" data-now="English preschool demo" data-next="Bluey, Blue's Clues and more" data-icon="🐾" data-open="/beyond-tv/channel.php?slug=bubble-guppies">🐾 <span>Preschool EN</span></button>
+      <button type="button" data-home-channel="preschool-fr" data-channel-number="7" data-channel-name="Préscolaire Français" data-endpoint="/beyond-tv/api/channel-stream.php?slug=preschool-francais" data-embed="/beyond-tv/embed-player.php?slug=preschool-francais" data-now="Caillou en français" data-next="Histoires éducatives en français" data-icon="🇫🇷" data-open="/beyond-tv/channel.php?slug=preschool-francais">🇫🇷 <span>Préscolaire FR</span></button>
+      <button type="button" data-home-channel="space" data-channel-number="8" data-channel-name="Beyond Space" data-endpoint="/beyond-tv/api/space-live.php" data-now="The Sun &amp; The Milky Way" data-next="Weekly space rotation" data-icon="🛰️" data-open="/beyond-tv/channel.php?slug=space-tv">🛰️ <span>Space</span></button>
+      <button type="button" data-home-channel="ancient" data-channel-number="9" data-channel-name="Beyond Ancient" data-endpoint="/beyond-tv/api/schedule-live.php?slug=beyond-ancient" data-embed="https://www.youtube-nocookie.com/embed/BR2ZMj3o5EU?autoplay=1&amp;mute=1&amp;playsinline=1&amp;rel=0&amp;enablejsapi=1" data-now="Ancient Egypt Documentary" data-next="Pyramids, pharaohs and archaeology" data-icon="𓂀" data-open="/beyond-tv/channel.php?slug=beyond-ancient">𓂀 <span>Ancient</span></button>
+      <button type="button" data-home-channel="comedy" data-channel-number="10" data-channel-name="Beyond Comedy" data-endpoint="/beyond-tv/api/schedule-live.php?slug=beyond-comedy" data-embed="/beyond-tv/embed-player.php?slug=beyond-comedy" data-now="Comedy live library" data-next="Next comedy feature" data-icon="😂" data-open="/beyond-tv/channel.php?slug=beyond-comedy">😂 <span>Comedy</span></button>
+      <button type="button" data-home-channel="family" data-channel-number="11" data-channel-name="Beyond Family" data-endpoint="/beyond-tv/api/schedule-live.php?slug=beyond-family" data-embed="/beyond-tv/embed-player.php?slug=beyond-family" data-now="Family live library" data-next="Next family feature" data-icon="✨" data-open="/beyond-tv/channel.php?slug=beyond-family">✨ <span>Family</span></button>
     </div>
   </div>
 </section>
@@ -274,12 +275,48 @@ $cartoonNext = $cartoonSchedule['next'];
       <p class="pronunciation">Entertainment only &middot; No purchase necessary &middot; No cash value</p>
       <div class="live-app-actions"><a href="/beyond-casino/">Open casino demo</a></div>
     </article>
+
+    <article class="live-app-card math-card">
+      <div class="live-app-card__art" aria-hidden="true">∑</div>
+      <span class="live-app-label">BEYOND MATH ACADEMY &middot; INTERACTIVE LEARNING</span>
+      <h3>Build math skills.</h3>
+      <p class="translation">5 modules &middot; 10 lessons each &middot; interactive lessons</p>
+      <p class="pronunciation">Guided practice, lesson tests and module exams for every learning path.</p>
+      <div class="live-app-actions"><a href="/beyond-math/academy.php">Try a math lesson</a><a href="/beyond-math/tools.php">Open math tools</a></div>
+    </article>
+
+    <article class="live-app-card coding-card">
+      <div class="live-app-card__art" aria-hidden="true">&lt;/&gt;</div>
+      <span class="live-app-label">BEYOND CODING SCHOOL &middot; CAREER PATHWAYS</span>
+      <h3>Learn by building.</h3>
+      <p class="translation">Web, iOS, Android, SVG, games and full-stack development</p>
+      <p class="pronunciation">Six pathways with guided lessons, tests, module exams and saved progress.</p>
+      <div class="live-app-actions"><a href="/coding-school/">Explore coding pathways</a></div>
+    </article>
+
+    <article class="live-app-card jobs-card">
+      <div class="live-app-card__art" aria-hidden="true">↗</div>
+      <span class="live-app-label">BEYOND JOBS &middot; CAREER BUILDER</span>
+      <h3>Turn learning into work.</h3>
+      <p class="translation">Career-path job matching, résumé and cover-letter drafts</p>
+      <p class="pronunciation">Free training plans, project guidance and a practical certificate checklist.</p>
+      <div class="live-app-actions"><a href="/beyond-jobs/">Open Beyond Jobs</a><a href="/coding-school/">Start free training</a></div>
+    </article>
+
+    <article class="live-app-card media-card">
+      <div class="live-app-card__art" aria-hidden="true">▶♫</div>
+      <span class="live-app-label">BEYOND MEDIA &middot; VIDEO + AUDIO</span>
+      <h3>Watch, listen and discover.</h3>
+      <p class="translation">Beyond TV and Beyond Audio in one connected media hub</p>
+      <p class="pronunciation">Official YouTube previews, private local playback and licensed open-media downloads.</p>
+      <div class="live-app-actions"><a href="/beyond-media/">Open Beyond Media</a></div>
+    </article>
   </div>
 </section>
 
 <nav class="home-shortcuts wrap" aria-label="Beyond OS quick destinations">
   <a href="/app-store/"><span>🛍</span><strong>App Store</strong><small>Discover every Beyond app</small></a>
-  <a href="/beyond-finance/"><span>👛</span><strong>Wallet</strong><small>bit$, purchases and earnings</small></a>
+  <a href="/beyond-id/dashboard/wallet.php"><span>👛</span><strong>Wallet</strong><small>bit$, purchases and earnings</small></a>
   <a href="/beyond-market/"><span>🌐</span><strong>Marketplace</strong><small>Explore creators and products</small></a>
 </nav>
 
@@ -294,6 +331,7 @@ $cartoonNext = $cartoonSchedule['next'];
 @media(max-width:1100px){.home-live-player{min-height:0;aspect-ratio:16/9}.home-live-switch{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:800px){.home-live-stage{width:calc(100vw - 12px);border-radius:23px;margin-bottom:32px}.home-live-stage__inner{padding:14px}.home-live-stage__top{align-items:flex-start;flex-direction:column;margin-bottom:14px}.home-live-actions{width:100%}.home-live-button{flex:1}.home-live-player{aspect-ratio:16/9;border-radius:16px}.home-live-meta{align-items:flex-start;flex-direction:column}.home-live-switch{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:4px}.home-live-switch button{min-width:93px;scroll-snap-align:start}.live-apps-heading{align-items:flex-start;flex-direction:column}.live-app-grid{grid-template-columns:1fr}.live-app-card{min-height:340px}.home-shortcuts{grid-template-columns:1fr}}
 .casino-card:before{background:radial-gradient(circle at 77% 17%,rgba(255,216,109,.3),transparent 23%),linear-gradient(135deg,#160b25,#54205c 55%,#a42e65)}.casino-card .live-app-label{color:#ffd86d}.casino-card h3{font-size:clamp(34px,5vw,64px)}
+.math-card:before{background:radial-gradient(circle at 78% 18%,rgba(91,219,69,.3),transparent 24%),linear-gradient(135deg,#06172d,#0a4c82 58%,#178b73)}.math-card .live-app-label{color:#8ff0b3}.coding-card:before{background:radial-gradient(circle at 78% 18%,rgba(53,214,255,.28),transparent 24%),linear-gradient(135deg,#16092c,#51269a 56%,#087f9b)}.coding-card .live-app-label{color:#95eaff}.coding-card .live-app-card__art{font-size:clamp(60px,9vw,124px);font-weight:950;letter-spacing:-.12em}
 @media(min-width:1051px){.live-app-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:480px){.home-live-stage h2{font-size:34px}.home-live-stage__top p{font-size:13px}.home-live-actions{display:grid;grid-template-columns:1fr 1fr}.home-live-button{padding:0 10px}.home-live-player{aspect-ratio:16/10}.home-live-clock{display:none}.live-app-card{min-height:315px;padding:23px}.live-app-card blockquote,.live-app-card h3{font-size:36px}}
 html[data-theme="light"] .home-live-stage,html[data-theme="light"] .live-app-card{color:#fff}html[data-theme="light"] .home-shortcuts a{background:rgba(255,255,255,.82);border-color:rgba(26,31,54,.14)}html[data-theme="light"] .home-shortcuts small{color:#5e667a}
@@ -366,8 +404,8 @@ html[data-theme="light"] .home-live-stage,html[data-theme="light"] .live-app-car
 </main>
 <footer class="footer wrap">
     <div><a class="brand" href="./">BEYOND <span>OS</span></a><p>The connected imagination ecosystem.</p><p class="copyright">© 2026 Beyond Imagination Corp.</p></div>
-    <div><h4>DISCOVER</h4><a href="app-store/">App Store</a><a href="beyond-finance/">Wallet</a><a href="beyond-investing/">Investing</a><a href="beyond-tv/">Beyond TV</a></div>
-    <div><h4>COMPANY</h4><a href="about.php">About</a><a href="blog.php">Blog</a><a href="beyond-careers/">Careers</a><a href="contact.php">Contact</a></div>
+    <div><h4>DISCOVER</h4><a href="app-store/">App Store</a><a href="beyond-id/dashboard/wallet.php">Wallet</a><a href="academy/">Learn</a><a href="beyond-tv/">Beyond TV</a></div>
+    <div><h4>COMPANY</h4><a href="about.php">About</a><a href="blog.php">Blog</a><a href="coding-school/">Career Pathways</a><a href="contact.php">Contact</a></div>
     <div><h4>SUPPORT</h4><a href="help-center.php">Help Center</a><a href="beyond-id/auth/privacy.php">Privacy Policy</a><a href="beyond-id/auth/terms.php">Terms of Service</a></div>
     <div><h4>FOLLOW US</h4><a href="https://www.instagram.com/beyondimaginationtech/" target="_blank" rel="noopener noreferrer">Instagram @beyondimaginationtech</a></div>
 </footer>
