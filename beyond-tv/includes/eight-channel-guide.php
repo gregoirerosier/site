@@ -95,22 +95,26 @@ function beyond_tv_yugioh_hourly_rows(): array {
     $digimon = json_decode((string)@file_get_contents(__DIR__ . '/../data/digimon-library.json'), true) ?: [];
     $pokemon = json_decode((string)@file_get_contents(__DIR__ . '/../data/pokemon-library.json'), true) ?: [];
     $dragonBall = json_decode((string)@file_get_contents(__DIR__ . '/../data/dragon-ball-library.json'), true) ?: [];
+    $dragonBallZ = json_decode((string)@file_get_contents(__DIR__ . '/../data/dbz-westwood-sd-library.json'), true) ?: [];
     for ($hour = 0; $hour < 24; $hour++) {
         $state = beyond_yugioh_live_state($day->setTime($hour, 0)->getTimestamp());
-        if ((($hour >= 0 && $hour < 3) || ($hour >= 18 && $hour < 21)) && $dragonBall) {
+        if ($hour >= 0 && $hour < 3 && $dragonBall) {
             $episode = $dragonBall[(($hour * 2) + (int)$day->format('z')) % count($dragonBall)];
             $rows[] = ['start'=>$hour,'end'=>$hour+1,'icon'=>'🐉','title'=>'Dragon Ball','lineup'=>'S1 E'.(int)$episode['episode'].' · '.$episode['title']];
-        } elseif (($hour >= 3 && $hour < 6) || $hour >= 21) {
+        } elseif ($hour >= 3 && $hour < 6) {
             $episode = (($hour * 2 + (int)$day->format('z')) % 167) + 1;
             $rows[] = ['start'=>$hour,'end'=>$hour+1,'icon'=>'🐲','title'=>'Dragon Ball Kai','lineup'=>'Episode '.$episode];
-        } elseif ($hour >= 6 && $hour < 9) {
+        } elseif ((($hour >= 6 && $hour < 9) || $hour >= 21) && $dragonBallZ) {
+            $episode = $dragonBallZ[(($hour * 2) + (int)$day->format('z')) % count($dragonBallZ)];
+            $rows[] = ['start'=>$hour,'end'=>$hour+1,'icon'=>'🔥','title'=>'Dragon Ball Z','lineup'=>'SD · Episode '.(int)$episode['episode'].' · '.$episode['title']];
+        } elseif ($hour >= 12 && $hour < 15) {
             $episode = (($hour * 2 + (int)$day->format('z')) % 50) + 1;
             $rows[] = ['start'=>$hour,'end'=>$hour+1,'icon'=>'⚡','title'=>'Zatch Bell!','lineup'=>'Season 1 · Episodes '.$episode.'–'.min(50,$episode+1)];
-        } elseif ($hour >= 12 && $hour < 15 && $digimon) {
-            $episode = $digimon[(($hour - 12) * 2 + (int)$day->format('z')) % count($digimon)];
+        } elseif ($hour >= 15 && $hour < 18 && $digimon) {
+            $episode = $digimon[(($hour - 15) * 2 + (int)$day->format('z')) % count($digimon)];
             $rows[] = ['start'=>$hour,'end'=>$hour+1,'icon'=>'🔷','title'=>'Digimon: Digital Monsters','lineup'=>'S'.(int)$episode['season'].' E'.(int)$episode['episode'].' · '.$episode['title']];
-        } elseif ($hour >= 15 && $hour < 18 && $pokemon) {
-            $episode = $pokemon[(($hour - 15) * 2 + (int)$day->format('z')) % count($pokemon)];
+        } elseif ($hour >= 18 && $hour < 21 && $pokemon) {
+            $episode = $pokemon[(($hour - 18) * 2 + (int)$day->format('z')) % count($pokemon)];
             $rows[] = ['start'=>$hour,'end'=>$hour+1,'icon'=>'⚡','title'=>'Pokémon: Indigo League','lineup'=>'S1 E'.(int)$episode['episode'].' · '.$episode['title']];
         } else {
             $rows[] = ['start'=>$hour,'end'=>$hour+1,'icon'=>'🃏','title'=>'Yu-Gi-Oh! Duel Monsters','lineup'=>'Season 1 · Episode '.(int)$state['episode_number']];

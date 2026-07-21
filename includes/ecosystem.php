@@ -28,7 +28,24 @@ if (!function_exists('e')) {
 
 function beyond_base_path(): string {
     $script = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '');
-    $known = ['/app-store/','/beyond-id/','/beyond-math/','/beyond-french/','/dailybreath/','/beyond-health/','/beyond-tv/','/beyond-catering/','/beyond-baby-names/','/beyond-tattoo/','/beyond-space/','/beyond-ancient/','/beyond-preschool/','/beyond-careers/','/beyond-sell/','/beyond-market/','/beyond-finance/','/beyond-investing/','/dashboard/','/admin/','/api-hub/'];
+
+    // Resolve the installation root from the filesystem first. This keeps every
+    // app folder (including future ones) anchored to the shared site assets.
+    $documentRoot = realpath((string) ($_SERVER['DOCUMENT_ROOT'] ?? ''));
+    $projectRoot = realpath(__DIR__ . '/..');
+    if (is_string($documentRoot) && is_string($projectRoot)) {
+        $documentRoot = rtrim(str_replace('\\', '/', $documentRoot), '/');
+        $projectRoot = rtrim(str_replace('\\', '/', $projectRoot), '/');
+        $documentRootLower = strtolower($documentRoot);
+        $projectRootLower = strtolower($projectRoot);
+        if ($projectRootLower === $documentRootLower || str_starts_with($projectRootLower, $documentRootLower . '/')) {
+            $relativeRoot = trim(substr($projectRoot, strlen($documentRoot)), '/');
+            return $relativeRoot === '' ? '' : '/' . $relativeRoot;
+        }
+    }
+
+    // Fallback for hosts that do not expose a usable DOCUMENT_ROOT.
+    $known = ['/app-store/','/academy/','/coding-school/','/beyond-id/','/beyond-math/','/beyond-french/','/dailybreath/','/beyond-health/','/beyond-tv/','/beyond-media/','/beyond-games/','/beyond-jobs/','/beyond-radio/','/beyond-casino/','/beyond-skate/','/beyond-catering/','/beyond-baby-names/','/beyond-tattoo/','/beyond-space/','/beyond-ancient/','/beyond-preschool/','/beyond-careers/','/beyond-sell/','/beyond-market/','/beyond-finance/','/beyond-investing/','/dashboard/','/admin/','/api-hub/'];
     foreach ($known as $marker) {
         $position = strpos($script, $marker);
         if ($position !== false) return substr($script, 0, $position);
@@ -40,6 +57,7 @@ function beyond_url(string $path = ''): string { return rtrim(beyond_base_path()
 function beyond_return_url(): string { $uri = $_SERVER['REQUEST_URI'] ?? beyond_url(); return str_starts_with($uri, '/') ? $uri : beyond_url(); }
 
 function beyond_app_icon(string $appName): string {
+    $fallback = 'assets/icons/app-store/beyond-imagination.jpg';
     $key = strtolower(trim(preg_replace('/[^a-z0-9]+/i', '-', $appName), '-'));
     $aliases = [
         'dailybreath' => 'daily-breath',
@@ -55,14 +73,18 @@ function beyond_app_icon(string $appName): string {
     ];
     $slug = $aliases[$key] ?? $key;
     $supported = ['beyond-os','beyond-id','daily-breath','beyond-health','beyond-tv','beyond-french','beyond-ancient','beyond-space','beyond-baby-names','beyond-tattoo'];
-    if (!in_array($slug, $supported, true)) return '';
+    if (!in_array($slug, $supported, true)) {
+        return is_file(__DIR__ . '/../' . $fallback) ? beyond_url($fallback) : '';
+    }
     $versioned = [
         'beyond-baby-names' => 'beyond-baby-names-v2-192.webp?v=20260717-3',
         'beyond-tattoo' => 'beyond-tattoo-v2-192.webp?v=20260717-3',
     ];
     $file = $versioned[$slug] ?? ($slug . '-192.webp');
     $diskFile = preg_replace('/\?.*$/', '', $file);
-    if (!is_file(__DIR__ . '/../assets/icons/' . $diskFile)) return '';
+    if (!is_file(__DIR__ . '/../assets/icons/' . $diskFile)) {
+        return is_file(__DIR__ . '/../' . $fallback) ? beyond_url($fallback) : '';
+    }
     return beyond_url('assets/icons/' . $file);
 }
 function require_beyond_id(): void { if (empty($_SESSION['user_id'])) { $_SESSION['beyond_return_to'] = beyond_return_url(); header('Location: ' . beyond_url('beyond-id/auth/login.php?required=1')); exit; } }

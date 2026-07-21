@@ -1,7 +1,7 @@
 [
   {"number":1,"slug":"beyond-after-dark","name":"Beyond After Dark","icon":"🌙","description":"Goosebumps, Courage the Cowardly Dog, Haunting Hour, and supernatural anthologies.","category":"Horror"},
   {"number":2,"slug":"beyond-cartoons","name":"Beyond Kartoons","icon":"📺","description":"Action cartoons, animated comedy, and weekend favorites.","category":"Cartoons"},
-  {"number":3,"slug":"yugioh-tv","name":"Beyond Anime","icon":"🎴","description":"Dragon Ball, Dragon Ball Kai, Pokémon, Digimon, Yu-Gi-Oh!, and Zatch Bell!","category":"Anime"},
+  {"number":3,"slug":"yugioh-tv","name":"Beyond Anime","icon":"🎴","description":"Dragon Ball, Dragon Ball Z SD, Dragon Ball Kai, Pokémon, Digimon, Yu-Gi-Oh!, and Zatch Bell!","category":"Anime"},
   {"number":4,"slug":"classic-cinema","name":"Beyond Movies","icon":"🎬","description":"Features, double bills, and weekend marathons.","category":"Movies"},
   {"number":5,"slug":"beyond-comedy","name":"Beyond Comedy","icon":"😂","description":"Sitcoms, teen comedy, and feel-good movies.","category":"Comedy"},
   {"number":6,"slug":"beyond-family","name":"Beyond Family","icon":"✨","description":"Fantasy, storybook classics, and family adventures.","category":"Family"},

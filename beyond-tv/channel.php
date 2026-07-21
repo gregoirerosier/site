@@ -19,11 +19,12 @@ $isMoviesScheduled=(($channel['source_type']??'')==='scheduled_movies'); $movies
 $isAnimeChannel = $slug === 'yugioh-tv';
 $animeHour = (int)(new DateTimeImmutable('now', new DateTimeZone('America/Vancouver')))->format('G');
 $animeDay = (int)(new DateTimeImmutable('now', new DateTimeZone('America/Vancouver')))->format('z');
-$isDragonBallBlock = $isAnimeChannel && (($animeHour >= 0 && $animeHour < 3) || ($animeHour >= 18 && $animeHour < 21));
-$isDragonBallKaiBlock = $isAnimeChannel && (($animeHour >= 3 && $animeHour < 6) || $animeHour >= 21);
-$isZatchBlock = $isAnimeChannel && $animeHour >= 6 && $animeHour < 9;
-$isDigimonBlock = $isAnimeChannel && $animeHour >= 12 && $animeHour < 15;
-$isPokemonBlock = $isAnimeChannel && $animeHour >= 15 && $animeHour < 18;
+$isDragonBallBlock = $isAnimeChannel && $animeHour >= 0 && $animeHour < 3;
+$isDragonBallKaiBlock = $isAnimeChannel && $animeHour >= 3 && $animeHour < 6;
+$isDragonBallZBlock = $isAnimeChannel && (($animeHour >= 6 && $animeHour < 9) || $animeHour >= 21);
+$isZatchBlock = $isAnimeChannel && $animeHour >= 12 && $animeHour < 15;
+$isDigimonBlock = $isAnimeChannel && $animeHour >= 15 && $animeHour < 18;
+$isPokemonBlock = $isAnimeChannel && $animeHour >= 18 && $animeHour < 21;
 $zatchEpisode = (($animeHour * 2 + $animeDay) % 50) + 1;
 $zatchEpisodeUrl = 'https://archive.org/download/zatch-bell-collection/Zatch%20Bell/Season%201/Zatch%20Bell%20S01E' . str_pad((string)$zatchEpisode, 2, '0', STR_PAD_LEFT) . '.mp4';
 $animeMovieNumber = (($animeHour + $animeDay) % 2) + 1;
@@ -32,9 +33,11 @@ $animeMovieUrl = $animeMovieNumber === 1 ? 'https://archive.org/download/zatch-b
 $digimonLibrary = json_decode((string)@file_get_contents(__DIR__.'/data/digimon-library.json'), true) ?: [];
 $pokemonLibrary = json_decode((string)@file_get_contents(__DIR__.'/data/pokemon-library.json'), true) ?: [];
 $dragonBallLibrary = json_decode((string)@file_get_contents(__DIR__.'/data/dragon-ball-library.json'), true) ?: [];
-$digimonEpisode = $digimonLibrary ? $digimonLibrary[((($animeHour-12)*2)+$animeDay)%count($digimonLibrary)] : [];
-$pokemonEpisode = $pokemonLibrary ? $pokemonLibrary[((($animeHour-15)*2)+$animeDay)%count($pokemonLibrary)] : [];
+$dragonBallZLibrary = json_decode((string)@file_get_contents(__DIR__.'/data/dbz-westwood-sd-library.json'), true) ?: [];
+$digimonEpisode = $digimonLibrary ? $digimonLibrary[((($animeHour-15)*2)+$animeDay)%count($digimonLibrary)] : [];
+$pokemonEpisode = $pokemonLibrary ? $pokemonLibrary[((($animeHour-18)*2)+$animeDay)%count($pokemonLibrary)] : [];
 $dragonBallEpisode = $dragonBallLibrary ? $dragonBallLibrary[(($animeHour*2)+$animeDay)%count($dragonBallLibrary)] : [];
+$dragonBallZEpisode = $dragonBallZLibrary ? $dragonBallZLibrary[(($animeHour*2)+$animeDay)%count($dragonBallZLibrary)] : [];
 $dragonBallKaiEpisodeNumber = (($animeHour * 2 + $animeDay) % 167) + 1;
 $dragonBallKaiUrl = 'https://archive.org/download/dbkai/Dragon%20Ball%20Kai%20-%20' . str_pad((string)$dragonBallKaiEpisodeNumber, 2, '0', STR_PAD_LEFT) . '.mp4';
 $digimonUrl = $digimonEpisode ? 'https://archive.org/download/digimon-digital-monsters-the-complete-collection-saban-entertainment-edited-version/'.rawurlencode((string)$digimonEpisode['file']) : '';
@@ -56,6 +59,7 @@ html[data-tv-theme="sunset"]{color-scheme:dark}html[data-tv-theme="sunset"] .btv
 <?php elseif($isMoviesScheduled && $moviesState): ?><div class="youtube-player-wrap"><iframe class="youtube-player" src="<?=htmlspecialchars((string)$moviesState['embed_url'])?>" title="Beyond Movies scheduled feature" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="playlist-actions"><span class="source-pill"><?=htmlspecialchars((string)$moviesState['label'])?></span><span><?=htmlspecialchars((string)$moviesState['current']['title'])?> · <?=htmlspecialchars((string)$moviesState['current']['genre'])?></span></div>
 <?php elseif($isDragonBallBlock && $dragonBallEpisode): ?><div class="youtube-player-wrap"><video class="youtube-player" src="<?=htmlspecialchars((string)$dragonBallEpisode['video_url'])?>" controls autoplay muted playsinline></video></div><div class="playlist-actions"><span class="source-pill">BEYOND ANIME · LIVE</span><span>Dragon Ball · S1 E<?=intval($dragonBallEpisode['episode'])?> · <?=htmlspecialchars((string)$dragonBallEpisode['title'])?></span></div>
 <?php elseif($isDragonBallKaiBlock): ?><div class="youtube-player-wrap"><video class="youtube-player" src="<?=htmlspecialchars($dragonBallKaiUrl)?>" controls autoplay muted playsinline></video></div><div class="playlist-actions"><span class="source-pill">BEYOND ANIME · LIVE</span><span>Dragon Ball Kai · Episode <?=$dragonBallKaiEpisodeNumber?></span></div>
+<?php elseif($isDragonBallZBlock && $dragonBallZEpisode): ?><div class="youtube-player-wrap"><video class="youtube-player" src="<?=htmlspecialchars((string)$dragonBallZEpisode['video_url'])?>" controls autoplay muted playsinline></video></div><div class="playlist-actions"><span class="source-pill">BEYOND ANIME · SD LIVE</span><span>Dragon Ball Z · Episode <?=intval($dragonBallZEpisode['episode'])?> · <?=htmlspecialchars((string)$dragonBallZEpisode['title'])?></span></div>
 <?php elseif($isZatchBlock): ?><div class="youtube-player-wrap"><video class="youtube-player" src="<?=htmlspecialchars($zatchEpisodeUrl)?>" controls autoplay muted playsinline></video></div><div class="playlist-actions"><span class="source-pill">BEYOND ANIME · LIVE</span><span>Zatch Bell! · Season 1 Episode <?=$zatchEpisode?></span></div>
 <?php elseif($isDigimonBlock && $digimonEpisode): ?><div class="youtube-player-wrap"><video class="youtube-player" src="<?=htmlspecialchars($digimonUrl)?>" controls autoplay muted playsinline></video></div><div class="playlist-actions"><span class="source-pill">BEYOND ANIME · LIVE</span><span>Digimon · S<?=intval($digimonEpisode['season'])?> E<?=intval($digimonEpisode['episode'])?> · <?=htmlspecialchars((string)$digimonEpisode['title'])?></span></div>
 <?php elseif($isPokemonBlock && $pokemonEpisode): ?><div class="youtube-player-wrap"><video class="youtube-player" src="<?=htmlspecialchars($pokemonUrl)?>" controls autoplay muted playsinline></video></div><div class="playlist-actions"><span class="source-pill">BEYOND ANIME · LIVE</span><span>Pokémon: Indigo League · S1 E<?=intval($pokemonEpisode['episode'])?> · <?=htmlspecialchars((string)$pokemonEpisode['title'])?></span></div>
