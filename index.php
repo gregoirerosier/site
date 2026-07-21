@@ -311,6 +311,15 @@ $cartoonNext = $cartoonSchedule['next'];
       <p class="pronunciation">Official YouTube previews, private local playback and licensed open-media downloads.</p>
       <div class="live-app-actions"><a href="/beyond-media/">Open Beyond Media</a></div>
     </article>
+
+    <article class="live-app-card games-card">
+      <div class="live-app-card__art" aria-hidden="true">⚡</div>
+      <span class="live-app-label">BEYOND GAMES &middot; ORIGINAL INSTANT PLAY</span>
+      <h3>Bit Runner is online.</h3>
+      <p class="translation">Run, jump and recover bit$ across a neon Beyond OS</p>
+      <p class="pronunciation">Playable now on mobile and PC with local achievements and capped demo rewards.</p>
+      <div class="live-app-actions"><a href="/beyond-games/bit-runner.php">Play Bit Runner</a><a href="/beyond-games/">Explore Beyond Games</a></div>
+    </article>
   </div>
 </section>
 
