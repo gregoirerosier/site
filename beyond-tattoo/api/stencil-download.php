@@ -1,19 +1,37 @@
 <?php
 declare(strict_types=1);
+require_once __DIR__ . '/../../includes/ecosystem.php';
+require_once __DIR__ . '/../../config/bootstrap.php';
 require_once __DIR__ . '/../../includes/stencil-tracking.php';
 require_once __DIR__ . '/../includes/stencil-content.php';
+require_once __DIR__ . '/../includes/stencil-package.php';
 $stencil = bt_stencil_content();
 $type = strtolower((string)($_GET['type'] ?? 'package'));
-$map = [
-  'package' => [$stencil['package_url'], 'application/zip', 'beyond-tattoo-stencil-of-the-day.zip'],
-  'preview' => [$stencil['preview_url'], 'image/png', 'beyond-tattoo-stencil-preview.png'],
-  'png' => [$stencil['transfer_png_url'] ?? $stencil['preview_url'], 'image/png', 'beyond-tattoo-studio-transfer.png'],
-  'editable' => [$stencil['editable_url'] ?? $stencil['preview_url'], 'image/svg+xml; charset=UTF-8', 'beyond-tattoo-editable-master.svg'],
-  'ig' => [$stencil['ig_post_url'], 'image/png', 'beyond-tattoo-instagram-post.png'],
-];
-[$relative,$mime,$name] = $map[$type] ?? $map['package'];
-$file = dirname(__DIR__) . '/' . ltrim($relative, '/');
-if (!is_file($file)) { http_response_code(404); exit('Generated stencil asset unavailable. Publish the current design again in Beyond Studio.'); }
+$slug = preg_replace('/[^a-z0-9-]+/i', '-', (string)($stencil['slug'] ?? 'stencil-of-the-day'));
+
+try {
+    if ($type === 'package') {
+        $file = bt_stencil_package($stencil);
+        $mime = 'application/zip'; $name = 'beyond-tattoo-' . trim((string)$slug, '-') . '.zip';
+    } else {
+        $map = [
+            'preview' => ['preview_url', 'image/webp', 'preview.webp'],
+            'png' => ['transfer_png_url', 'image/png', 'studio-transfer.png'],
+            'pdf' => ['transfer_pdf_url', 'application/pdf', 'studio-transfer.pdf'],
+            'editable' => ['editable_url', 'image/svg+xml; charset=UTF-8', 'editable-master.svg'],
+            'placement' => ['placement_guide_url', 'application/pdf', 'placement-guide.pdf'],
+            'ig' => ['ig_post_url', 'image/webp', 'social-preview.webp'],
+        ];
+        if (!isset($map[$type])) { http_response_code(400); exit('Unknown stencil asset type.'); }
+        [$field,$mime,$suffix] = $map[$type];
+        $relative = (string)($stencil[$field] ?? '');
+        $file = bt_stencil_asset_path($relative);
+        $name = 'beyond-tattoo-' . trim((string)$slug, '-') . '-' . $suffix;
+    }
+} catch (Throwable $e) {
+    error_log('Stencil download unavailable: ' . $e->getMessage());
+    http_response_code(404); exit('The current stencil asset is unavailable. Please try again shortly.');
+}
 track_stencil_download('stencil-of-day.' . $type);
 header('Content-Type: ' . $mime);
 header('Content-Disposition: attachment; filename="' . $name . '"');

@@ -1,6 +1,5 @@
 <?php
+declare(strict_types=1);
 require __DIR__ . '/includes/config.php';
-session_unset();
-session_destroy();
-header('Location: index.php');
-exit;
+redirect(beyond_url('beyond-id/auth/logout.php'));
+

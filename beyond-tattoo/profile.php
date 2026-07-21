@@ -1,9 +1,6 @@
 <?php
-require __DIR__ . '/includes/config.php';
-require_login();
-$pageTitle='Profile — Beyond Tattoo';
-require __DIR__ . '/includes/header.php';
+declare(strict_types=1);
+require __DIR__ . '/includes/config.php';require_login();$current=bt_current_user();$tattoos=bt_list_tattoos(bt_current_user_id());$entries=bt_list_healing_entries(bt_current_user_id());$pageTitle='Profile — Beyond Tattoo';require __DIR__.'/includes/header.php';
 ?>
-<div class="app-shell"><header class="app-header"><div class="container app-header-inner"><a class="brand" href="dashboard.php"><span class="brand-badge">B</span><span>Profile</span></a></div></header>
-<main class="container dashboard"><div class="panel"><h2><?= e($_SESSION['user_name'] ?? 'Alex') ?></h2><p class="meta"><?= e(current_user_email()) ?></p><div class="cards"><div class="card"><h3>2 Tattoos</h3><p>Your personal tattoo vault.</p></div><div class="card"><h3>9 Healing Days</h3><p>Keep the streak going.</p></div><div class="card"><h3>3 Saved Studios</h3><p>Ready for your next piece.</p></div></div></div></main></div>
-<?php require __DIR__ . '/includes/footer.php'; ?>
+<div class="app-shell"><header class="app-header"><div class="container app-header-inner"><a class="brand" href="dashboard.php"><span class="brand-badge">B</span><span>Profile</span></a><a class="btn btn-secondary" href="onboarding.php">Edit Tattoo profile</a></div></header><main class="container dashboard"><div class="panel"><h1><?=e($current['name']??'Beyond member')?></h1><p class="meta"><?=e($current['email']??'')?> • <?=e(ucfirst((string)($current['account_type']??'client')))?></p><div class="cards"><div class="card"><h3><?=count($tattoos)?> Tattoos</h3><p>Your private tattoo vault.</p></div><div class="card"><h3><?=count($entries)?> Healing entries</h3><p>Your private photo journal.</p></div><div class="card"><h3><?=count(bt_list_studios())?> Listed studios</h3><p>Real studios in the directory.</p></div></div><div class="artist-actions" style="margin-top:18px"><a class="btn btn-primary" href="../beyond-id/dashboard/profile.php">Manage Beyond ID</a><a class="btn btn-secondary" href="logout.php">Sign out</a></div></div></main></div>
+<?php require __DIR__.'/includes/footer.php'; ?>

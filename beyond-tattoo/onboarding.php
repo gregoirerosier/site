@@ -1,60 +1,55 @@
 <?php
+declare(strict_types=1);
 require __DIR__ . '/includes/config.php';
 require_login();
-$usersFile = DATA_DIR . '/users.json';
-$users = json_read($usersFile);
-$userIndex = null;
-$user = null;
-foreach ($users as $i => $candidate) {
-    if (($candidate['email'] ?? '') === current_user_email()) { $userIndex = $i; $user = $candidate; break; }
-}
-$role = (string)($user['role'] ?? $_SESSION['user_role'] ?? 'client');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $userIndex !== null) {
-    bt_require_csrf();
-    $profile = [
-        'city' => trim((string)($_POST['city'] ?? '')),
-        'bio' => trim((string)($_POST['bio'] ?? '')),
-        'styles' => trim((string)($_POST['styles'] ?? '')),
-        'experience' => trim((string)($_POST['experience'] ?? '')),
-        'studio_name' => trim((string)($_POST['studio_name'] ?? '')),
-        'budget' => trim((string)($_POST['budget'] ?? '')),
-        'availability' => trim((string)($_POST['availability'] ?? '')),
-    ];
-    $users[$userIndex]['profile'] = $profile;
-    $users[$userIndex]['onboarding_complete'] = true;
-    json_write($usersFile, $users);
-    flash('success', 'Your Beyond Tattoo profile is ready.');
-    redirect('dashboard.php');
+$user = bt_current_user();
+$allowedRoles = ['client', 'artist', 'owner'];
+$role = (string)(($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' ? ($_POST['account_type'] ?? 'client') : ($user['account_type'] ?? 'client'));
+if (!in_array($role, $allowedRoles, true)) $role = 'client';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $city = trim((string)($_POST['city'] ?? ''));
+    if ($city === '') {
+        $error = 'Add your city or service area to continue.';
+    } else {
+        bt_save_profile(bt_current_user_id(), [
+            'account_type' => $role,
+            'city' => $city,
+            'bio' => $_POST['bio'] ?? '',
+            'styles' => $_POST['styles'] ?? '',
+            'experience' => $_POST['experience'] ?? '',
+            'studio_name' => $_POST['studio_name'] ?? '',
+            'budget' => $_POST['budget'] ?? '',
+            'availability' => $_POST['availability'] ?? '',
+        ]);
+        flash('success', 'Your Beyond Tattoo profile is ready.');
+        redirect('dashboard.php');
+    }
 }
 $pageTitle = 'Set up profile — Beyond Tattoo';
 require __DIR__ . '/includes/header.php';
 ?>
-<div class="auth-wrap onboarding-wrap">
-  <div class="auth-card role-card-wide">
-    <span class="eyebrow">Step 2 of 3 • <?= e(($role === 'client' ? 'Canvas' : ucfirst($role))) ?> setup</span>
-    <h1>Make your profile useful from day one.</h1>
-    <p class="small">These details power recommendations, studio matches and hiring.</p>
-    <form class="form-grid" method="post">
-      <input type="hidden" name="_csrf" value="<?= e(bt_csrf_token()) ?>">
-      <input class="input" name="city" placeholder="City or service area" required>
-      <?php if ($role === 'artist'): ?>
-        <input class="input" name="styles" placeholder="Styles — realism, fine line, blackwork…" required>
-        <input class="input" name="experience" placeholder="Years of experience">
-        <input class="input" name="availability" placeholder="Availability — guest spots, full-time, weekends…">
-        <textarea class="input" name="bio" rows="4" placeholder="Artist bio and what makes your work distinct"></textarea>
-      <?php elseif ($role === 'owner'): ?>
-        <input class="input" name="studio_name" placeholder="Studio name" required>
-        <input class="input" name="styles" placeholder="Styles your studio is known for">
-        <input class="input" name="availability" placeholder="Hiring needs — resident, guest, apprentice…">
-        <textarea class="input" name="bio" rows="4" placeholder="Tell artists about the studio, culture and opportunities"></textarea>
-      <?php else: ?>
-        <input class="input" name="styles" placeholder="Tattoo styles you like">
-        <input class="input" name="budget" placeholder="Typical project budget (optional)">
-        <textarea class="input" name="bio" rows="4" placeholder="Ideas, placements or goals for your next tattoo"></textarea>
-      <?php endif; ?>
-      <button class="btn btn-primary" type="submit">Finish setup →</button>
-    </form>
-  </div>
-</div>
+<div class="auth-wrap onboarding-wrap"><div class="auth-card role-card-wide">
+  <span class="eyebrow">Beyond ID connected • Tattoo profile</span>
+  <h1>How will you use Beyond Tattoo?</h1>
+  <p class="small">Choose a workspace and add the details that should power your Tattoo experience.</p>
+  <?php if (isset($error)): ?><div class="notice error-notice"><?= e($error) ?></div><?php endif; ?>
+  <form class="form-grid" method="post">
+    <input type="hidden" name="_csrf" value="<?= e(bt_csrf_token()) ?>">
+    <div class="role-picker">
+      <label class="role-option <?= $role === 'client' ? 'selected' : '' ?>"><input type="radio" name="account_type" value="client" <?= $role === 'client' ? 'checked' : '' ?>><span class="role-symbol">🖼️</span><strong>Canvas</strong><small>Find artists, plan tattoos, and track healing.</small></label>
+      <label class="role-option <?= $role === 'artist' ? 'selected' : '' ?>"><input type="radio" name="account_type" value="artist" <?= $role === 'artist' ? 'checked' : '' ?>><span class="role-symbol">🎨</span><strong>Artist</strong><small>Build a portfolio and connect with studios.</small></label>
+      <label class="role-option <?= $role === 'owner' ? 'selected' : '' ?>"><input type="radio" name="account_type" value="owner" <?= $role === 'owner' ? 'checked' : '' ?>><span class="role-symbol">🏪</span><strong>Studio owner</strong><small>Manage a studio and artist opportunities.</small></label>
+    </div>
+    <input class="input" name="city" placeholder="City or service area" required value="<?= e($user['city'] ?? '') ?>">
+    <input class="input" name="styles" placeholder="Styles or interests" value="<?= e($user['styles'] ?? '') ?>">
+    <input class="input" name="experience" placeholder="Experience (artists)" value="<?= e($user['experience'] ?? '') ?>">
+    <input class="input" name="studio_name" placeholder="Studio name (owners)" value="<?= e($user['studio_name'] ?? '') ?>">
+    <input class="input" name="availability" placeholder="Availability or hiring needs" value="<?= e($user['availability'] ?? '') ?>">
+    <input class="input" name="budget" placeholder="Typical project budget (optional)" value="<?= e($user['budget'] ?? '') ?>">
+    <textarea class="input" name="bio" rows="4" placeholder="Tell the community a little about you"><?= e($user['bio'] ?? '') ?></textarea>
+    <button class="btn btn-primary" type="submit">Save Tattoo profile →</button>
+  </form>
+</div></div>
 <?php require __DIR__ . '/includes/footer.php'; ?>

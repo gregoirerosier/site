@@ -48,6 +48,7 @@ if (!empty($stencilDay['iso_date'])) {
         <a class="is-active" href="#top">Home</a>
         <a href="stencils.php">Stencils</a>
         <a href="collections.php">Collections</a>
+        <a href="studios.php">Studios</a>
         <a href="about.php">About</a>
       </nav>
 
@@ -59,6 +60,7 @@ if (!empty($stencilDay['iso_date'])) {
           <div>
             <a href="stencils.php">Stencils</a>
             <a href="collections.php">Collections</a>
+            <a href="studios.php">Studios</a>
             <a href="about.php">About</a>
             <a href="login.php">Artist login</a>
           </div>

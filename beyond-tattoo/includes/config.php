@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+require_once dirname(__DIR__, 2) . '/includes/ecosystem.php';
 require_once dirname(__DIR__, 2) . '/config/bootstrap.php';
 
 ini_set('display_errors', '0');
@@ -10,7 +11,7 @@ define('APP_NAME', 'Beyond Tattoo');
 define('APP_ROOT', dirname(__DIR__));
 define('DATA_DIR', APP_ROOT . '/data');
 define('UPLOAD_DIR', beyond_private_root() . '/uploads/beyond-tattoo/healing');
-define('HEALING_DATA_FILE', beyond_private_root() . '/data/beyond-tattoo-healing.json');
+require_once __DIR__ . '/repository.php';
 
 if (!function_exists('e')) {
     function e($value): string {
@@ -46,14 +47,13 @@ if (!function_exists('redirect')) {
 }
 
 if (!function_exists('is_logged_in')) {
-    function is_logged_in(): bool {
-        return !empty($_SESSION['user_id']) || isset($_SESSION['user_email']);
-    }
+    function is_logged_in(): bool { return bt_current_user_id() > 0; }
 }
 
 function require_login(): void {
     if (!is_logged_in()) {
-        redirect('login.php');
+        $_SESSION['beyond_return_to'] = beyond_return_url();
+        redirect(beyond_url('beyond-id/auth/login.php?required=1&app=beyond-tattoo&return=' . rawurlencode(beyond_return_url())));
     }
     if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         bt_require_csrf();
@@ -64,7 +64,7 @@ function bt_csrf_token(): string { return beyond_csrf_token(); }
 function bt_require_csrf(): void { beyond_require_csrf(); }
 
 function current_user_email(): string {
-    return (string)($_SESSION['user_email'] ?? '');
+    return (string)($_SESSION['email'] ?? '');
 }
 
 function flash(string $key, ?string $value = null): ?string {

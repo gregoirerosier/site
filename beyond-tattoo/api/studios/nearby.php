@@ -1,37 +1,21 @@
 <?php
 declare(strict_types=1);
+require __DIR__ . '/../../includes/config.php';
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: public, max-age=300');
-
-$lat = filter_input(INPUT_GET, 'lat', FILTER_VALIDATE_FLOAT);
-$lng = filter_input(INPUT_GET, 'lng', FILTER_VALIDATE_FLOAT);
-$radius = filter_input(INPUT_GET, 'radius', FILTER_VALIDATE_INT) ?: 25;
-
-echo json_encode([
-  'provider' => 'sample',
-  'query' => ['lat' => $lat, 'lng' => $lng, 'radius_km' => $radius],
-  'studios' => [
-    [
-      'id' => 'studio_101',
-      'name' => 'Ink District Studio',
-      'rating' => 4.9,
-      'review_count' => 128,
-      'distance_km' => 0.8,
-      'open_now' => true,
-      'address' => '123 Example Street',
-      'phone' => '250-555-0101',
-      'website' => 'https://example.com'
-    ],
-    [
-      'id' => 'studio_102',
-      'name' => 'Black Lotus Tattoo',
-      'rating' => 4.8,
-      'review_count' => 96,
-      'distance_km' => 1.3,
-      'open_now' => true,
-      'address' => '456 Sample Avenue',
-      'phone' => '250-555-0102',
-      'website' => 'https://example.com'
-    ]
-  ]
-], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+$query = mb_substr(trim((string)($_GET['q'] ?? '')), 0, 120);
+$studios = array_map(static function(array $studio): array {
+    return [
+        'slug' => $studio['slug'],
+        'name' => $studio['name'],
+        'city' => $studio['city'],
+        'province' => $studio['province'],
+        'address' => trim($studio['address_line1'] . ', ' . $studio['city'] . ', ' . $studio['province'] . ' ' . $studio['postal_code']),
+        'phone' => $studio['phone'],
+        'walk_ins' => (bool)$studio['walk_ins'],
+        'artist_count' => (int)$studio['artist_count'],
+        'profile_url' => beyond_url('beyond-tattoo/studio-profile.php?slug=' . rawurlencode($studio['slug'])),
+        'instagram_url' => $studio['instagram_url'],
+    ];
+}, bt_list_studios($query));
+echo json_encode(['provider'=>'beyond-tattoo-directory','query'=>$query,'studios'=>$studios], JSON_UNESCAPED_SLASHES);
