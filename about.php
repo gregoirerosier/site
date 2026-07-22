@@ -63,5 +63,5 @@ beyond_nav_bootstrap('About Beyond');
     </section>
 </main>
 <footer class="footer wrap"><span>&copy; 2026 Beyond Imagination Corp.</span><a href="./">Beyond OS</a></footer>
-</body>
+<script src="/assets/js/visitor-analytics.js" defer></script></body>
 </html>

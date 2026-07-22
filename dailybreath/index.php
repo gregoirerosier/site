@@ -56,4 +56,4 @@ $name = trim((string)($_SESSION['name'] ?? '')) ?: 'Friend';
   <a href="practices.php?section=breathing"><svg viewBox="0 0 24 24"><path d="M12 4v7M12 11c-1.2-2.5-3.1-4.5-5-5.5C4.8 7.5 3.5 10.2 3.5 13c0 4 2.5 7 6.5 7 1.2 0 2-.7 2-2v-7ZM12 11c1.2-2.5 3.1-4.5 5-5.5 2.2 2 3.5 4.7 3.5 7.5 0 4-2.5 7-6.5 7-1.2 0-2-.7-2-2v-7Z"/></svg><span>Breathe</span></a>
 </nav>
 <script>const splash=document.getElementById('splash');if(sessionStorage.getItem('dailybreath-entered')==='1')splash.classList.add('hidden');document.getElementById('enter').onclick=()=>{sessionStorage.setItem('dailybreath-entered','1');splash.classList.add('hidden')};</script>
-</body></html>
+<script src="/assets/js/visitor-analytics.js" defer></script></body></html>

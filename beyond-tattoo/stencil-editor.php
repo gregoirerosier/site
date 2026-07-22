@@ -142,5 +142,5 @@ zoomIn.onclick=()=>{state.zoom=Math.min(1.5,state.zoom+.1);paper.style.transform
 savePng.onclick=()=>{render();const a=document.createElement('a');a.download='beyond-tattoo-celestial-rose-edited.png';a.href=canvas.toDataURL('image/png',1);a.click();setStatus('High-resolution PNG saved.')};
 window.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='z'){e.preventDefault();e.shiftKey?redo.click():undo.click()}});
 </script>
-</body>
+<script src="/assets/js/visitor-analytics.js" defer></script></body>
 </html>

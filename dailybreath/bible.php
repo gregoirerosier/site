@@ -139,5 +139,5 @@ const bookSelect=document.getElementById('book-select'),chapterSelectTop=documen
 const chapterSelect=document.getElementById('chapter-select');chapterSelect.addEventListener('change',()=>{location.href='?book=<?= rawurlencode($book) ?>&chapter='+chapterSelect.value+'#reader-top'});
 const activeChapter=document.querySelector('.chapter-nav a.active');if(activeChapter){requestAnimationFrame(()=>activeChapter.scrollIntoView({behavior:'instant',block:'nearest',inline:'center'}));}
 </script>
-</body>
+<script src="/assets/js/visitor-analytics.js" defer></script></body>
 </html>

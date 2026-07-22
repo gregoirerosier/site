@@ -79,6 +79,6 @@ beyond_nav_bootstrap('Beyond Casino');
   <p class="fine">Demo bit$ exist only on this page and reset when you reload. There are no deposits, purchases, withdrawals, prizes, transfers, or redemption for money or anything of value. Outcomes are generated locally for entertainment.</p>
 </main>
 <script src="assets/casino.js?v=20260721-1" defer></script>
-</body>
+<script src="/assets/js/visitor-analytics.js" defer></script></body>
 </html>
 

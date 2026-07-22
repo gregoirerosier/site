@@ -2,6 +2,7 @@
 require __DIR__ . '/../includes/admin-check.php';
 require_once __DIR__ . '/../includes/functions.php';
 require __DIR__ . '/../includes/db.php';
+require_once dirname(__DIR__, 2) . '/includes/visitor-analytics.php';
 
 $title = 'Admin Overview';
 
@@ -17,6 +18,12 @@ $countRows = static function (PDO $pdo, string $sql): int {
 $totalUsers = $countRows($pdo, 'SELECT COUNT(*) FROM users');
 $adminUsers = $countRows($pdo, "SELECT COUNT(*) FROM users WHERE role IN ('admin','super_admin')");
 $connectedApps = 6;
+$todayVisitors = 0;
+try {
+    $todayVisitors = (int)(beyond_analytics_summary($pdo, 1)['today_visitors'] ?? 0);
+} catch (Throwable $error) {
+    error_log('Visitor metric unavailable: ' . $error->getMessage());
+}
 
 $adminName = trim((string)($_SESSION['first_name'] ?? ''));
 if ($adminName === '') {
@@ -70,6 +77,15 @@ require __DIR__ . '/../includes/admin-sidebar.php';
 
     <article class="tile">
       <div class="tile-head">
+        <span class="stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-7"/></svg></span>
+        <span class="metric-trend">Today</span>
+      </div>
+      <div class="metric-value"><?= number_format($todayVisitors) ?></div>
+      <p>Unique visitors</p>
+    </article>
+
+    <article class="tile">
+      <div class="tile-head">
         <span class="stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 12h4l2-5 4 10 2-5h6"/><circle cx="12" cy="12" r="9"/></svg></span>
         <span class="metric-trend">Healthy</span>
       </div>
@@ -112,6 +128,7 @@ require __DIR__ . '/../includes/admin-sidebar.php';
         <a class="tool-link" href="verse-generator.php"><span>Verse of the Day Generator</span><span aria-hidden="true">&rarr;</span></a>
         <a class="tool-link" href="french-generator.php"><span>Francais du Jour Generator</span><span aria-hidden="true">&rarr;</span></a>
         <a class="tool-link" href="users.php"><span>User Manager</span><span aria-hidden="true">&rarr;</span></a>
+        <a class="tool-link" href="analytics.php"><span>Visitor Analytics</span><span aria-hidden="true">&rarr;</span></a>
         <a class="tool-link" href="database.php"><span>Database Explorer</span><span aria-hidden="true">&rarr;</span></a>
         <a class="tool-link" href="settings.php"><span>Themes and Appearance</span><span aria-hidden="true">&rarr;</span></a>
       </div>

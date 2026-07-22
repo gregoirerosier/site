@@ -141,4 +141,4 @@ $signs = [
 <div class="modal" id="videoModal" aria-hidden="true"><div class="modal-card video-card"><button class="close" aria-label="Close">×</button><div class="cinema"><div class="cinema-earth"></div><div class="cinema-moon"></div><div class="cinema-rocket">🚀</div></div><h2>Welcome to Beyond Space</h2><p>A lightweight animated launch sequence ready to be replaced by an MP4 or WebM cinematic.</p></div></div>
 <script>window.BS_STORIES = <?= json_encode($featured, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES) ?>; window.BS_SIGNS = <?= json_encode($signs, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES) ?>;</script>
 <script src="/beyond-space/beyond-space-v1/assets/js/app.js?v=1.0.0"></script>
-</body></html>
+<script src="/assets/js/visitor-analytics.js" defer></script></body></html>

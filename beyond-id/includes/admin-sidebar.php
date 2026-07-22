@@ -12,6 +12,7 @@ $adminNavGroups = [
         ['sql.php', 'SQL Console', 'terminal'],
     ],
     'Operations' => [
+        ['analytics.php', 'Visitor Analytics', 'analytics'],
         ['logs.php', 'Audit Logs', 'logs'],
         ['system.php', 'System Health', 'health'],
         ['settings.php', 'Appearance', 'settings'],
@@ -30,6 +31,7 @@ $adminIconPaths = [
     'apps' => '<rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/>',
     'database' => '<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/>',
     'terminal' => '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 9 3 3-3 3"/><path d="M13 15h4"/>',
+    'analytics' => '<path d="M4 19V9M10 19V5M16 19v-7M22 19V2"/><path d="M2 19h22"/>',
     'logs' => '<path d="M6 3h12v18H6z"/><path d="M9 7h6M9 11h6M9 15h4"/>',
     'health' => '<path d="M3 12h4l2-5 4 10 2-5h6"/><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/>',
     'magic' => '<path d="M12 2l2.4 5.6L20 10l-5.6 2.4L12 18l-2.4-5.6L4 10l5.6-2.4z"/>',

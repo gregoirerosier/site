@@ -84,5 +84,5 @@ $userName = $_SESSION['user_name'] ?? $_SESSION['name'] ?? 'Learner';
   </section>
 </main>
 <footer class="footer"><span>© <?= date('Y') ?> Beyond Imagination Technology</span><a href="/academy/">Beyond Academy</a></footer>
-</body>
+<script src="/assets/js/visitor-analytics.js" defer></script></body>
 </html>

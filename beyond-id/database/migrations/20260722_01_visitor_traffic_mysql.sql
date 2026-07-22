@@ -1,0 +1,23 @@
+CREATE TABLE IF NOT EXISTS visitor_traffic (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    event_type VARCHAR(32) NOT NULL DEFAULT 'page_view',
+    path VARCHAR(500) NOT NULL,
+    page_title VARCHAR(255) DEFAULT NULL,
+    app_slug VARCHAR(80) NOT NULL DEFAULT 'beyond-os',
+    visitor_hash CHAR(64) NOT NULL,
+    session_hash CHAR(64) NOT NULL,
+    user_id BIGINT DEFAULT NULL,
+    referrer_host VARCHAR(190) DEFAULT NULL,
+    referrer_path VARCHAR(500) DEFAULT NULL,
+    device_type VARCHAR(20) NOT NULL DEFAULT 'desktop',
+    browser VARCHAR(40) NOT NULL DEFAULT 'Other',
+    operating_system VARCHAR(40) NOT NULL DEFAULT 'Other',
+    country_code CHAR(2) DEFAULT NULL,
+    occurred_at DATETIME NOT NULL,
+    PRIMARY KEY (id),
+    KEY idx_visitor_traffic_occurred (occurred_at),
+    KEY idx_visitor_traffic_visitor (visitor_hash, occurred_at),
+    KEY idx_visitor_traffic_session (session_hash, occurred_at),
+    KEY idx_visitor_traffic_app (app_slug, occurred_at),
+    KEY idx_visitor_traffic_path (path(190), occurred_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

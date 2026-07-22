@@ -435,5 +435,5 @@ const panel=document.querySelector('.world.'+id+' .world-icon');if(panel)panel.i
 const orbit=document.querySelector('.orbit');if(orbit){const copy=document.createElement('div');copy.className='orbit-copy';copy.innerHTML='<strong>Live &bull; Learn &bull; Earn &bull; Explore</strong><span>Every Possibility</span>';orbit.appendChild(copy);}
 })();
 </script>
-<script src="assets/js/pwa-install.js" defer></script></body>
+<script src="assets/js/pwa-install.js" defer></script><script src="/assets/js/visitor-analytics.js" defer></script></body>
 </html>

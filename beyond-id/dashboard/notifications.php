@@ -95,5 +95,5 @@ function notification_time(string $value): string {
         <?php endforeach; ?>
     </section>
 </main>
-</body>
+<script src="/assets/js/visitor-analytics.js" defer></script></body>
 </html>

@@ -11,4 +11,4 @@ function bos_page_start(string $app,string $title,string $description=''): array
     echo '</head><body class="bos-page'.($isAdmin ? ' bos-admin-light' : '').'">';
     return $wallet;
 }
-function bos_page_end(): void { echo '<script src="'.e(beyond_url('assets/js/pwa-install.js')).'" defer></script></body></html>'; }
+function bos_page_end(): void { echo '<script src="'.e(beyond_url('assets/js/pwa-install.js')).'" defer></script><script src="'.e(beyond_url('assets/js/visitor-analytics.js')).'" defer></script></body></html>'; }

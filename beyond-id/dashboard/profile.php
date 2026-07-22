@@ -123,5 +123,5 @@ $completion = (int)round(count(array_filter($completionValues, static fn($value)
         </form>
     </section>
 </main>
-</body>
+<script src="/assets/js/visitor-analytics.js" defer></script></body>
 </html>

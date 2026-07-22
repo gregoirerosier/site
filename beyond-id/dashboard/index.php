@@ -78,5 +78,5 @@ body{background:radial-gradient(circle at 90% 0,#e9e3ff,transparent 30%),#f7f8fc
     </section>
 
 </main>
-</body>
+<script src="/assets/js/visitor-analytics.js" defer></script></body>
 </html>
