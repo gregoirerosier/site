@@ -1,68 +1,202 @@
 <?php
 declare(strict_types=1);
 require_once __DIR__ . '/require-member.php';
+require_once __DIR__ . '/includes/episode-library.php';
 
 $catalog = json_decode((string) file_get_contents(__DIR__ . '/data/catalog.json'), true) ?: [];
 $episodes = json_decode((string) @file_get_contents(__DIR__ . '/data/episodes.json'), true) ?: [];
-$slug = preg_replace('/[^a-z0-9-]/', '', strtolower((string)($_GET['slug'] ?? '')));
-$title = null; foreach ($catalog as $candidate) { if (($candidate['slug'] ?? '') === $slug) { $title = $candidate; break; } }
-if (!$title) { http_response_code(404); $title = ['title'=>'Title unavailable','description'=>'This title could not be found.','type'=>'show','icon'=>'📺','gradient'=>'linear-gradient(135deg,#111,#444)','source_type'=>'none']; }
-$sourceType = (string)($title['source_type'] ?? 'none');
-$youtubeId = preg_replace('/[^A-Za-z0-9_-]/', '', (string)($title['youtube_id'] ?? ''));
-$youtubeStart = max(0, (int)($title['youtube_start'] ?? 0));
-$params = http_build_query(['autoplay'=>!empty($title['autoplay'])?1:0,'mute'=>!empty($title['muted'])?1:0,'playsinline'=>1,'rel'=>0,'start'=>$youtubeStart]);
-$youtubePlaylistId = preg_replace('/[^A-Za-z0-9_-]/', '', (string)($title['youtube_playlist_id'] ?? ''));
-$playlistEpisodeCount=max(0,(int)($title['playlist_episode_count']??0));
-$selectedEpisode=max(1,min($playlistEpisodeCount?:1,(int)($_GET['episode']??1)));
-$archiveId = preg_replace('/[^A-Za-z0-9_.-]/', '', (string)($title['archive_id'] ?? ''));
-$archiveFileTemplate = (string)($title['archive_file_template'] ?? '');
-$archiveEpisodeCount = max(0, (int)($title['archive_episode_count'] ?? 0));
-$archiveSelectedEpisode = max(1, min($archiveEpisodeCount ?: 1, (int)($_GET['episode'] ?? 1)));
-$archiveEpisodeFile = $archiveFileTemplate !== '' ? sprintf($archiveFileTemplate, $archiveSelectedEpisode) : '';
-$archiveEpisodeUrl = ($archiveId !== '' && $archiveEpisodeFile !== '') ? 'https://archive.org/download/' . rawurlencode($archiveId) . '/' . str_replace('%2F', '/', rawurlencode($archiveEpisodeFile)) : '';
-if ($sourceType === 'archive_collection') { $playlistEpisodeCount = $archiveEpisodeCount; $selectedEpisode = $archiveSelectedEpisode; }
-$archiveMappedEpisodes = [];
-$archiveMappedSeasons = [];
-$archiveMappedSelected = null;
-if ($sourceType === 'archive_episode_map') {
-    $mapFile = basename((string)($title['archive_episode_map'] ?? ''));
-    $archiveMappedEpisodes = $mapFile !== '' ? (json_decode((string) @file_get_contents(__DIR__ . '/data/' . $mapFile), true) ?: []) : [];
-    foreach ($archiveMappedEpisodes as $mappedEpisode) { $archiveMappedSeasons[(int)($mappedEpisode['season'] ?? 0)][] = $mappedEpisode; }
-    $requestedSeason = max(1, (int)($_GET['season'] ?? 1));
-    $requestedMappedEpisode = max(1, (int)($_GET['episode'] ?? 1));
-    foreach ($archiveMappedEpisodes as $mappedEpisode) {
-        if ((int)$mappedEpisode['season'] === $requestedSeason && (int)$mappedEpisode['episode'] === $requestedMappedEpisode) { $archiveMappedSelected = $mappedEpisode; break; }
+$slug = preg_replace('/[^a-z0-9-]/', '', strtolower((string) ($_GET['slug'] ?? '')));
+$title = null;
+foreach ($catalog as $candidate) {
+    if (($candidate['slug'] ?? '') === $slug) {
+        $title = $candidate;
+        break;
     }
-    if (!$archiveMappedSelected && $archiveMappedEpisodes) { $archiveMappedSelected = $archiveMappedEpisodes[0]; }
-    $archiveEpisodeUrl = (string)($archiveMappedSelected['video_url'] ?? '');
 }
-$showEpisodes = array_values(array_filter($episodes, static fn(array $e): bool => ($e['show_slug'] ?? '') === $slug));
-usort($showEpisodes, static fn(array $a,array $b): int => [(int)$a['season'],(int)$a['episode']] <=> [(int)$b['season'],(int)$b['episode']]);
-$seasons=[]; foreach($showEpisodes as $episode){$seasons[(int)$episode['season']][]=$episode;}
-$statusLabels=['Full Episode'=>'Full Episode','Clip'=>'Clip','Compilation'=>'Compilation','Trailer'=>'Trailer','Unavailable'=>'Unavailable'];
+if (!$title) {
+    http_response_code(404);
+    $title = [
+        'title' => 'Title unavailable',
+        'description' => 'This title could not be found.',
+        'type' => 'show',
+        'icon' => '📺',
+        'gradient' => 'linear-gradient(135deg,#111,#444)',
+        'source_type' => 'none',
+    ];
+}
+
+$sourceType = (string) ($title['source_type'] ?? 'none');
+$archiveId = preg_replace('/[^A-Za-z0-9_.-]/', '', (string) ($title['archive_id'] ?? ''));
+$youtubeId = preg_replace('/[^A-Za-z0-9_-]/', '', (string) ($title['youtube_id'] ?? ''));
+$youtubeStart = max(0, (int) ($title['youtube_start'] ?? 0));
+$youtubePlaylistId = preg_replace('/[^A-Za-z0-9_-]/', '', (string) ($title['youtube_playlist_id'] ?? ''));
+$showEpisodes = array_values(array_filter(
+    $episodes,
+    static fn(array $episode): bool => ($episode['show_slug'] ?? '') === $slug
+));
+$episodeLibrary = beyond_tv_build_episode_library($title, $showEpisodes, __DIR__ . '/data');
+$requestedSeason = max(1, (int) ($_GET['season'] ?? (beyond_tv_forced_season($title) ?: 1)));
+$requestedEpisode = max(1, (int) ($_GET['episode'] ?? 1));
+$hasExplicitEpisode = isset($_GET['season']) || isset($_GET['episode']);
+$currentEpisode = beyond_tv_select_episode($episodeLibrary, $requestedSeason, $requestedEpisode);
+$currentSeason = (int) ($currentEpisode['season'] ?? $requestedSeason);
+$currentEpisodeNumber = (int) ($currentEpisode['episode'] ?? $requestedEpisode);
+$currentEpisodeTitle = (string) ($currentEpisode['title'] ?? '');
+$currentEpisodeIsPlayable = !empty($currentEpisode['playable']);
+$currentVideoUrl = trim((string) ($currentEpisode['video_url'] ?? ''));
+$currentYoutubeId = preg_replace('/[^A-Za-z0-9_-]/', '', (string) ($currentEpisode['youtube_id'] ?? ''));
+$currentPlaylistIndex = max(0, (int) ($currentEpisode['playlist_index'] ?? ($currentEpisodeNumber - 1)));
+
+$episodeSeasons = [];
+$currentLibraryIndex = null;
+foreach ($episodeLibrary as $index => $episode) {
+    $season = max(1, (int) ($episode['season'] ?? 1));
+    $episodeSeasons[$season][] = $episode;
+    if ($season === $currentSeason && (int) ($episode['episode'] ?? 0) === $currentEpisodeNumber) {
+        $currentLibraryIndex = $index;
+    }
+}
+$previousEpisode = $currentLibraryIndex !== null && $currentLibraryIndex > 0 ? $episodeLibrary[$currentLibraryIndex - 1] : null;
+$nextEpisode = $currentLibraryIndex !== null && $currentLibraryIndex < count($episodeLibrary) - 1 ? $episodeLibrary[$currentLibraryIndex + 1] : null;
+$playableEpisodeCount = count(array_filter($episodeLibrary, static fn(array $episode): bool => !empty($episode['playable'])));
+$statusLabels = [
+    'Full Episode' => 'Full Episode',
+    'Clip' => 'Clip',
+    'Compilation' => 'Compilation',
+    'Trailer' => 'Trailer',
+    'Unavailable' => 'Unavailable',
+    'Episode listed' => 'Episode listed',
+];
+
+function beyond_tv_episode_href(string $slug, array $episode): string
+{
+    return '/beyond-tv/title.php?' . http_build_query([
+        'slug' => $slug,
+        'season' => max(1, (int) ($episode['season'] ?? 1)),
+        'episode' => max(1, (int) ($episode['episode'] ?? 1)),
+    ]) . '#player';
+}
+
+function beyond_tv_episode_code(array $episode): string
+{
+    return sprintf('S%02dE%02d', max(1, (int) ($episode['season'] ?? 1)), max(1, (int) ($episode['episode'] ?? 1)));
+}
 ?>
-<!doctype html><html lang="en"><head><script>(function(){try{const t=localStorage.getItem("beyond-tv-theme");document.documentElement.dataset.tvTheme=["dark","light","sunset"].includes(t)?t:"sunset"}catch(e){document.documentElement.dataset.tvTheme="sunset"}})();</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title><?=htmlspecialchars((string)$title['title'])?> | Beyond TV</title><link rel="stylesheet" href="/beyond-tv/assets/css/app.css?v=2.2.0"></head><body class="tv-app"><?php include __DIR__.'/partials/header.php'; ?>
-<main class="page shell title-page"><a class="back app-back" href="/beyond-tv/browse.php">← Browse</a>
-<section class="title-layout" id="player"><div class="title-player">
-<?php if($sourceType==='youtube_embed' && $youtubeId): ?><div class="youtube-player-wrap"><iframe class="youtube-player" src="https://www.youtube-nocookie.com/embed/<?=htmlspecialchars($youtubeId)?>?<?=htmlspecialchars($params)?>" title="<?=htmlspecialchars((string)$title['title'])?>" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
-<?php elseif($sourceType==='youtube_playlist_embed' && $youtubePlaylistId): ?><div class="youtube-player-wrap library-playlist-player"><iframe class="youtube-player" src="https://www.youtube-nocookie.com/embed/videoseries?list=<?=htmlspecialchars($youtubePlaylistId)?>&index=<?=max(0,$selectedEpisode-1)?>&playsinline=1&rel=0&modestbranding=1" title="<?=htmlspecialchars((string)$title['title'])?> Season 1 playlist" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
-<?php elseif($sourceType==='archive_embed' && $archiveId): ?><div class="youtube-player-wrap"><iframe class="youtube-player" src="https://archive.org/embed/<?=htmlspecialchars($archiveId)?>" title="<?=htmlspecialchars((string)$title['title'])?>" allow="autoplay; fullscreen" allowfullscreen></iframe></div>
-<?php elseif($sourceType==='archive_collection' && $archiveEpisodeUrl): ?><div class="provider-player title-video"><video class="beyond-video" controls playsinline preload="metadata" src="<?=htmlspecialchars($archiveEpisodeUrl)?>"></video></div><div class="playlist-actions"><span class="source-pill">INTERNET ARCHIVE</span><a class="btn btn-secondary" target="_blank" rel="noopener" href="https://archive.org/details/<?=htmlspecialchars($archiveId)?>">Open source item ↗</a></div>
-<?php elseif($sourceType==='archive_episode_map' && $archiveEpisodeUrl): ?><div class="provider-player title-video"><video class="beyond-video" controls playsinline preload="metadata" src="<?=htmlspecialchars($archiveEpisodeUrl)?>"></video></div><div class="playlist-actions"><span class="source-pill">INTERNET ARCHIVE</span><strong><?=htmlspecialchars(sprintf('S%02dE%02d · %s',(int)$archiveMappedSelected['season'],(int)$archiveMappedSelected['episode'],(string)$archiveMappedSelected['title']))?></strong><a class="btn btn-secondary" target="_blank" rel="noopener" href="https://archive.org/details/<?=htmlspecialchars($archiveId)?>">Open source item ↗</a></div>
-<?php elseif($sourceType==='direct_video' && !empty($title['video_url'])): ?><div class="provider-player title-video"><video class="beyond-video" controls playsinline preload="metadata" src="<?=htmlspecialchars((string)$title['video_url'])?>"></video></div>
-<?php elseif($sourceType==='watchlist'): $isHdPending=(string)($title['episode_catalog']??'')==='pending_hd'; ?><div class="external-player" style="background:<?=htmlspecialchars((string)$title['gradient'])?>"><span class="external-icon"><?=htmlspecialchars((string)$title['icon'])?></span><span class="source-pill"><?=htmlspecialchars(strtoupper((string)($title['source_label']??'OWNER WATCHLIST')))?></span><h2><?=$isHdPending?'HD source required':'Interested'?></h2><p><?=$isHdPending?'The supplied Archive item currently exposes only SD files. Playback remains disabled until a verified HD collection is available.':'This title is saved for curation. Playback stays disabled until a rights-authorized source is approved.'?></p><?php if(!empty($title['candidate_url'])):?><a class="btn btn-secondary" href="<?=htmlspecialchars((string)$title['candidate_url'])?>" target="_blank" rel="noopener">Review candidate metadata ↗</a><?php endif;?></div>
-<?php else: ?><div class="external-player" style="background:<?=htmlspecialchars((string)$title['gradient'])?>"><span class="external-icon"><?=htmlspecialchars((string)$title['icon'])?></span><h2>Catalogue available</h2><p>No approved full-show source has been added. Browse the episode availability below.</p></div><?php endif; ?>
-</div><aside class="title-info"><span class="source-pill"><?=($title['type']??'')==='movie'?'FREE MOVIE':'TV SHOW'?></span><h1><?=htmlspecialchars((string)$title['title'])?></h1><p class="title-meta"><?=htmlspecialchars((string)($title['year']??''))?> · <?=htmlspecialchars((string)($title['rating']??'NR'))?><?php if(!empty($title['runtime'])):?> · <?=htmlspecialchars((string)$title['runtime'])?><?php endif;?></p><p><?=htmlspecialchars((string)($title['description']??''))?></p><p><strong><?=htmlspecialchars((string)($title['genre']??''))?></strong></p><?php if(($title['type']??'')==='show'):?><?php if($sourceType==='youtube_playlist_embed'):?><p class="catalog-summary"><strong>Season 1 library</strong> · Choose any episode from the complete episode list below.</p><?php elseif($sourceType==='archive_episode_map'):?><p class="catalog-summary"><strong><?=count($archiveMappedSeasons)?> seasons</strong> · <?=count($archiveMappedEpisodes)?> correctly named episodes</p><?php else:?><p class="catalog-summary"><strong><?=count($seasons)?> seasons</strong> · <?=count($showEpisodes)?> episode records</p><?php endif;?><?php endif;?><?php if(!empty($title['source_label'])):?><p class="source-note"><span class="source-pill"><?=htmlspecialchars(strtoupper((string)$title['source_label']))?></span></p><?php endif;?><?php if(!empty($title['youtube_playlist_id'])): ?><a class="btn btn-secondary" target="_blank" rel="noopener" href="https://www.youtube.com/playlist?list=<?=htmlspecialchars((string)$title['youtube_playlist_id'])?>">Open official collection ↗</a><?php endif; ?></aside></section>
-<?php if(($title['type']??'')==='show' && $sourceType==='archive_episode_map' && $archiveMappedEpisodes):?>
-<section class="episode-catalog season-library" aria-labelledby="bluey-library-heading"><div class="episode-heading"><div><span class="kicker">CURATED EPISODE LIBRARY</span><h2 id="bluey-library-heading">Seasons & correctly named episodes</h2></div><p>The original archive filenames stay hidden. Each player link uses Beyond TV's corrected season, episode number, and title.</p></div>
-<?php foreach($archiveMappedSeasons as $seasonNumber=>$mappedSeason):?><details class="season-panel" <?=$seasonNumber===(int)($archiveMappedSelected['season']??1)?'open':''?>><summary><strong>Season <?=intval($seasonNumber)?></strong><span><?=count($mappedSeason)?> episodes</span></summary><div class="season-library-grid"><?php foreach($mappedSeason as $mappedEpisode):$isMappedPlaying=(int)$mappedEpisode['season']===(int)($archiveMappedSelected['season']??0)&&(int)$mappedEpisode['episode']===(int)($archiveMappedSelected['episode']??0);?><a class="season-episode-card <?=$isMappedPlaying?'is-playing':''?>" href="/beyond-tv/title.php?slug=<?=urlencode($slug)?>&amp;season=<?=(int)$mappedEpisode['season']?>&amp;episode=<?=(int)$mappedEpisode['episode']?>#player" aria-current="<?=$isMappedPlaying?'true':'false'?>"><span class="episode-index">S<?=str_pad((string)$mappedEpisode['season'],2,'0',STR_PAD_LEFT)?>E<?=str_pad((string)$mappedEpisode['episode'],2,'0',STR_PAD_LEFT)?></span><strong><?=htmlspecialchars((string)$mappedEpisode['title'])?></strong><span><?=$isMappedPlaying?'Now selected':'Play episode'?> ▶</span></a><?php endforeach;?></div></details><?php endforeach;?></section>
+<!doctype html>
+<html lang="en">
+<head>
+<script>(function(){try{const t=localStorage.getItem("beyond-tv-theme");document.documentElement.dataset.tvTheme=["dark","light","sunset"].includes(t)?t:"sunset"}catch(e){document.documentElement.dataset.tvTheme="sunset"}})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title><?= htmlspecialchars((string) $title['title']) ?><?= $currentEpisodeIsPlayable && $currentEpisodeTitle !== '' ? ' · ' . htmlspecialchars(beyond_tv_episode_code($currentEpisode ?? []) . ' ' . $currentEpisodeTitle) : '' ?> | Beyond TV</title>
+<link rel="stylesheet" href="/beyond-tv/assets/css/app.css?v=2.2.2">
+</head>
+<body class="tv-app">
+<?php include __DIR__ . '/partials/header.php'; ?>
+<main class="page shell title-page">
+<a class="back app-back" href="/beyond-tv/browse.php">← Browse</a>
+<section class="title-layout" id="player">
+<div class="title-player">
+<?php if ($currentYoutubeId !== ''): ?>
+<div class="youtube-player-wrap"><iframe class="youtube-player" src="https://www.youtube-nocookie.com/embed/<?= htmlspecialchars($currentYoutubeId) ?>?playsinline=1&amp;rel=0&amp;modestbranding=1" title="<?= htmlspecialchars($currentEpisodeTitle ?: (string) $title['title']) ?>" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+<?php elseif ($sourceType === 'youtube_playlist_embed' && $youtubePlaylistId !== ''): ?>
+<div class="youtube-player-wrap library-playlist-player"><iframe class="youtube-player" src="https://www.youtube-nocookie.com/embed/videoseries?list=<?= htmlspecialchars($youtubePlaylistId) ?>&amp;index=<?= $currentPlaylistIndex ?>&amp;playsinline=1&amp;rel=0&amp;modestbranding=1" title="<?= htmlspecialchars((string) $title['title']) ?> <?= htmlspecialchars(beyond_tv_episode_code($currentEpisode ?? [])) ?>" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+<?php elseif ($currentVideoUrl !== ''): ?>
+<div class="provider-player title-video"><video class="beyond-video" controls playsinline preload="metadata" src="<?= htmlspecialchars($currentVideoUrl) ?>"></video></div>
+<?php elseif ($sourceType === 'youtube_embed' && $youtubeId !== ''): ?>
+<?php $params = http_build_query(['autoplay' => !empty($title['autoplay']) ? 1 : 0, 'mute' => !empty($title['muted']) ? 1 : 0, 'playsinline' => 1, 'rel' => 0, 'start' => $youtubeStart]); ?>
+<div class="youtube-player-wrap"><iframe class="youtube-player" src="https://www.youtube-nocookie.com/embed/<?= htmlspecialchars($youtubeId) ?>?<?= htmlspecialchars($params) ?>" title="<?= htmlspecialchars((string) $title['title']) ?>" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+<?php elseif ($sourceType === 'archive_embed' && $archiveId !== ''): ?>
+<div class="youtube-player-wrap"><iframe class="youtube-player" src="https://archive.org/embed/<?= htmlspecialchars($archiveId) ?>" title="<?= htmlspecialchars((string) $title['title']) ?>" allow="autoplay; fullscreen" allowfullscreen></iframe></div>
+<?php elseif ($sourceType === 'watchlist'): ?>
+<?php $isHdPending = (string) ($title['episode_catalog'] ?? '') === 'pending_hd'; ?>
+<div class="external-player" style="background:<?= htmlspecialchars((string) ($title['gradient'] ?? 'linear-gradient(135deg,#111,#444)')) ?>"><span class="external-icon"><?= htmlspecialchars((string) ($title['icon'] ?? '📺')) ?></span><span class="source-pill"><?= htmlspecialchars(strtoupper((string) ($title['source_label'] ?? 'OWNER WATCHLIST'))) ?></span><h2><?= $isHdPending ? 'HD source required' : 'Interested' ?></h2><p><?= $isHdPending ? 'The supplied Archive item currently exposes only SD files. Playback remains disabled until a verified HD collection is available.' : 'This title is saved for curation. Playback stays disabled until a rights-authorized source is approved.' ?></p><?php if (!empty($title['candidate_url'])): ?><a class="btn btn-secondary" href="<?= htmlspecialchars((string) $title['candidate_url']) ?>" target="_blank" rel="noopener">Review candidate metadata ↗</a><?php endif; ?></div>
+<?php else: ?>
+<div class="external-player" style="background:<?= htmlspecialchars((string) ($title['gradient'] ?? 'linear-gradient(135deg,#111,#444)')) ?>"><span class="external-icon"><?= htmlspecialchars((string) ($title['icon'] ?? '📺')) ?></span><h2>Catalogue available</h2><p>No approved full-show source has been added. Browse the complete episode guide below.</p></div>
 <?php endif; ?>
-<?php if(($title['type']??'')==='show' && (($sourceType==='youtube_playlist_embed' && $youtubePlaylistId) || ($sourceType==='archive_collection' && $archiveId)) && $playlistEpisodeCount>0):?>
-<section class="episode-catalog season-library" aria-labelledby="season-library-heading"><div class="episode-heading"><div><span class="kicker">SEASON 1 LIBRARY</span><h2 id="season-library-heading">All episodes</h2></div><p>Select an episode here. Beyond TV loads it directly in the player above—no playlist menu required.</p></div>
-<div class="season-library-grid"><?php for($episodeNumber=1;$episodeNumber<=$playlistEpisodeCount;$episodeNumber++):?><a class="season-episode-card <?=$episodeNumber===$selectedEpisode?'is-playing':''?>" href="/beyond-tv/title.php?slug=<?=urlencode($slug)?>&amp;episode=<?=$episodeNumber?>#player" aria-current="<?=$episodeNumber===$selectedEpisode?'true':'false'?>"><span class="episode-index">S01E<?=str_pad((string)$episodeNumber,2,'0',STR_PAD_LEFT)?></span><strong>Episode <?=$episodeNumber?></strong><span><?=$episodeNumber===$selectedEpisode?'Now selected':'Play episode'?> ▶</span></a><?php endfor;?></div></section>
+
+<?php if (($title['type'] ?? '') === 'show' && $currentEpisode && $currentEpisodeIsPlayable): ?>
+<div class="current-episode-bar" data-tv-progress data-slug="<?= htmlspecialchars($slug) ?>" data-season="<?= $currentSeason ?>" data-episode="<?= $currentEpisodeNumber ?>" data-title="<?= htmlspecialchars($currentEpisodeTitle) ?>" data-explicit="<?= $hasExplicitEpisode ? '1' : '0' ?>">
+<div class="current-episode-copy"><span class="kicker">CURRENT EPISODE</span><strong><?= htmlspecialchars(beyond_tv_episode_code($currentEpisode)) ?> · <?= htmlspecialchars($currentEpisodeTitle) ?></strong><small><?= $currentLibraryIndex !== null ? 'Episode ' . ($currentLibraryIndex + 1) . ' of ' . count($episodeLibrary) : 'Episode selected' ?><?= !empty($currentEpisode['runtime']) ? ' · ' . htmlspecialchars((string) $currentEpisode['runtime']) : '' ?></small></div>
+<div class="episode-nav" aria-label="Episode navigation">
+<?php if ($previousEpisode && !empty($previousEpisode['playable'])): ?><a class="btn btn-secondary" href="<?= htmlspecialchars(beyond_tv_episode_href($slug, $previousEpisode)) ?>">← Previous</a><?php endif; ?>
+<span id="episode-resume-slot"></span>
+<?php if ($nextEpisode && !empty($nextEpisode['playable'])): ?><a class="btn" href="<?= htmlspecialchars(beyond_tv_episode_href($slug, $nextEpisode)) ?>">Next →</a><?php endif; ?>
+</div>
+</div>
 <?php endif; ?>
-<?php if(($title['type']??'')==='show' && !empty($seasons)):?><section class="episode-catalog" aria-labelledby="episodes-heading"><div class="episode-heading"><div><span class="kicker">EPISODE CATALOGUE</span><h2 id="episodes-heading">Seasons & episodes</h2></div><p>Availability reflects approved sources, not whether the episode exists commercially.</p></div>
-<?php foreach($seasons as $seasonNumber=>$seasonEpisodes):?><details class="season-panel" <?=$seasonNumber===1?'open':''?>><summary><strong>Season <?=intval($seasonNumber)?></strong><span><?=count($seasonEpisodes)?> episodes</span></summary><div class="episode-list">
-<?php foreach($seasonEpisodes as $episode): $status=(string)($episode['status']??'Unavailable'); $playable=($episode['source_type']??'none')!=='none'; ?><article class="episode-row"><div class="episode-number">S<?=str_pad((string)$episode['season'],2,'0',STR_PAD_LEFT)?>E<?=str_pad((string)$episode['episode'],2,'0',STR_PAD_LEFT)?></div><div class="episode-copy"><h3><?=htmlspecialchars((string)$episode['title'])?></h3><p><?=htmlspecialchars((string)($episode['synopsis']?:'Episode record catalogued. Approved playback details have not yet been added.'))?></p><small><?=htmlspecialchars((string)($episode['air_date']??''))?><?=!empty($episode['runtime'])?' · '.htmlspecialchars((string)$episode['runtime']):''?></small></div><div class="episode-actions"><span class="availability status-<?=strtolower(str_replace(' ','-', $status))?>"><?=htmlspecialchars($statusLabels[$status]??$status)?></span><?php if($playable && !empty($episode['youtube_id'])):?><a class="episode-play" target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=<?=htmlspecialchars((string)$episode['youtube_id'])?>">Watch source ↗</a><?php else:?><span class="episode-unavailable">No approved source</span><?php endif;?></div></article><?php endforeach; ?></div></details><?php endforeach; ?>
-</section><?php endif; ?>
-</main><?php include __DIR__.'/partials/footer.php'; ?><script src="/assets/js/visitor-analytics.js" defer></script></body></html>
+
+<?php if ($archiveId !== ''): ?><div class="playlist-actions"><span class="source-pill">INTERNET ARCHIVE</span><a class="btn btn-secondary" target="_blank" rel="noopener" href="https://archive.org/details/<?= htmlspecialchars($archiveId) ?>">Open source item ↗</a></div><?php endif; ?>
+</div>
+
+<aside class="title-info">
+<span class="source-pill"><?= ($title['type'] ?? '') === 'movie' ? 'FREE MOVIE' : 'TV SHOW' ?></span>
+<h1><?= htmlspecialchars((string) $title['title']) ?></h1>
+<p class="title-meta"><?= htmlspecialchars((string) ($title['year'] ?? '')) ?> · <?= htmlspecialchars((string) ($title['rating'] ?? 'NR')) ?><?php if (!empty($title['runtime'])): ?> · <?= htmlspecialchars((string) $title['runtime']) ?><?php endif; ?></p>
+<p><?= htmlspecialchars((string) ($title['description'] ?? '')) ?></p>
+<p><strong><?= htmlspecialchars((string) ($title['genre'] ?? '')) ?></strong></p>
+<?php if (($title['type'] ?? '') === 'show'): ?>
+<p class="catalog-summary"><strong><?= count($episodeSeasons) ?> season<?= count($episodeSeasons) === 1 ? '' : 's' ?></strong> · <?= count($episodeLibrary) ?> episode<?= count($episodeLibrary) === 1 ? '' : 's' ?> listed<?php if ($playableEpisodeCount > 0): ?> · <?= $playableEpisodeCount ?> playable<?php endif; ?></p>
+<?php endif; ?>
+<?php if (!empty($title['source_label'])): ?><p class="source-note"><span class="source-pill"><?= htmlspecialchars(strtoupper((string) $title['source_label'])) ?></span></p><?php endif; ?>
+<?php if ($youtubePlaylistId !== ''): ?><a class="btn btn-secondary" target="_blank" rel="noopener" href="https://www.youtube.com/playlist?list=<?= htmlspecialchars($youtubePlaylistId) ?>">Open official collection ↗</a><?php endif; ?>
+</aside>
+</section>
+
+<?php if (($title['type'] ?? '') === 'show'): ?>
+<section class="episode-catalog season-library" aria-labelledby="episode-library-heading">
+<div class="episode-heading"><div><span class="kicker">COMPLETE EPISODE GUIDE</span><h2 id="episode-library-heading">Seasons & episodes</h2></div><p>Choose an episode to load it in the player. The selected episode stays highlighted so you always know where you are.</p></div>
+<?php if ($episodeSeasons): ?>
+<?php foreach ($episodeSeasons as $seasonNumber => $seasonEpisodes): ?>
+<details class="season-panel" <?= $seasonNumber === $currentSeason ? 'open' : '' ?>><summary><strong>Season <?= (int) $seasonNumber ?></strong><span><?= count($seasonEpisodes) ?> episode<?= count($seasonEpisodes) === 1 ? '' : 's' ?></span></summary><div class="season-library-grid">
+<?php foreach ($seasonEpisodes as $episode): ?>
+<?php $playable = !empty($episode['playable']); $isCurrent = $currentEpisodeIsPlayable && $playable && (int) $episode['season'] === $currentSeason && (int) $episode['episode'] === $currentEpisodeNumber; $code = beyond_tv_episode_code($episode); ?>
+<?php if ($playable): ?><a class="season-episode-card <?= $isCurrent ? 'is-playing' : '' ?>" href="<?= htmlspecialchars(beyond_tv_episode_href($slug, $episode)) ?>" aria-current="<?= $isCurrent ? 'true' : 'false' ?>"><?php else: ?><article class="season-episode-card is-unavailable" aria-label="<?= htmlspecialchars($code . ' ' . (string) $episode['title']) ?> unavailable"><?php endif; ?>
+<span class="episode-index"><?= htmlspecialchars($code) ?></span>
+<strong><?= htmlspecialchars((string) $episode['title']) ?></strong>
+<?php if (!empty($episode['synopsis'])): ?><small class="episode-card-summary"><?= htmlspecialchars((string) $episode['synopsis']) ?></small><?php endif; ?>
+<span class="episode-card-action"><?= $isCurrent ? 'Now selected' : ($playable ? 'Play episode' : htmlspecialchars($statusLabels[(string) ($episode['status'] ?? '')] ?? 'Not available')) ?><?= $playable ? ' ▶' : '' ?></span>
+<?php if ($playable): ?></a><?php else: ?></article><?php endif; ?>
+<?php endforeach; ?>
+</div></details>
+<?php endforeach; ?>
+<?php else: ?>
+<div class="episode-empty"><strong>Episode guide pending</strong><p>This show is listed in the catalogue, but its episode metadata has not been connected yet.</p></div>
+<?php endif; ?>
+</section>
+<?php endif; ?>
+</main>
+<?php include __DIR__ . '/partials/footer.php'; ?>
+<script>
+(function(){
+  const progress = document.querySelector('[data-tv-progress]');
+  if (!progress) return;
+  const key = 'beyond-tv-progress:' + progress.dataset.slug;
+  const current = {
+    season: Number(progress.dataset.season || 1),
+    episode: Number(progress.dataset.episode || 1),
+    title: progress.dataset.title || '',
+    href: location.pathname + '?slug=' + encodeURIComponent(progress.dataset.slug) + '&season=' + encodeURIComponent(progress.dataset.season) + '&episode=' + encodeURIComponent(progress.dataset.episode) + '#player'
+  };
+  try {
+    const saved = JSON.parse(localStorage.getItem(key) || 'null');
+    if (progress.dataset.explicit === '1') {
+      localStorage.setItem(key, JSON.stringify(current));
+      return;
+    }
+    if (saved && (saved.season !== current.season || saved.episode !== current.episode)) {
+      const slot = document.getElementById('episode-resume-slot');
+      if (slot) {
+        const link = document.createElement('a');
+        link.className = 'btn btn-secondary resume-episode';
+        link.href = saved.href;
+        link.textContent = 'Resume S' + String(saved.season).padStart(2,'0') + 'E' + String(saved.episode).padStart(2,'0');
+        slot.replaceChildren(link);
+      }
+    }
+  } catch (error) {}
+})();
+</script>
+<script src="/assets/js/visitor-analytics.js" defer></script>
+</body>
+</html>

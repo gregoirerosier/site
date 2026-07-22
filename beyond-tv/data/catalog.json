@@ -83,7 +83,7 @@
     "slug": "that-70s-show-season-1",
     "type": "show",
     "title": "That ’70s Show · Season 1",
-    "subtitle": "TV library · Owner-verified Archive source",
+    "subtitle": "25 episodes · Beyond Comedy",
     "description": "The first season of the Wisconsin-set ensemble sitcom.",
     "icon": "🛋️",
     "gradient": "linear-gradient(135deg,#322243,#8a466e 55%,#db9e4e)",
@@ -96,7 +96,15 @@
     "candidate_url": "https://archive.org/details/that-70s-show-season-1",
     "channel_slug": "beyond-comedy",
     "approved_by": "owner",
-    "approved_at": "2026-07-19"
+    "approved_at": "2026-07-19",
+    "season_number": 1,
+    "archive_episode_count": 25,
+    "episode_catalog": "archive_auto",
+    "season_episode_counts": {
+      "1": 25
+    },
+    "episode_count": 25,
+    "seasons": 1
   },
   {
     "slug": "the-hateful-eight-extended",
@@ -122,7 +130,7 @@
     "slug": "that-70s-show-season-3",
     "type": "show",
     "title": "That ’70s Show · Season 3",
-    "subtitle": "TV library · Owner-verified Archive source",
+    "subtitle": "25 episodes · Beyond Comedy",
     "description": "The third season of the Wisconsin-set ensemble sitcom.",
     "icon": "📺",
     "gradient": "linear-gradient(135deg,#322243,#8a466e 55%,#db9e4e)",
@@ -135,7 +143,15 @@
     "candidate_url": "https://archive.org/details/that-70s-show-season-3",
     "channel_slug": "beyond-comedy",
     "approved_by": "owner",
-    "approved_at": "2026-07-19"
+    "approved_at": "2026-07-19",
+    "season_number": 3,
+    "archive_episode_count": 25,
+    "episode_catalog": "archive_auto",
+    "season_episode_counts": {
+      "3": 25
+    },
+    "episode_count": 25,
+    "seasons": 1
   },
   {
     "slug": "aladdin-1993-vhs",
@@ -197,7 +213,7 @@
     "slug": "rl-stines-haunting-hour",
     "type": "show",
     "title": "R. L. Stine’s The Haunting Hour",
-    "subtitle": "152 episodes · Beyond After Dark",
+    "subtitle": "76 episodes · Beyond After Dark",
     "description": "The full supernatural anthology library with individually named episodes.",
     "icon": "🕰️",
     "gradient": "linear-gradient(135deg,#171724,#493b68 55%,#a96b48)",
@@ -209,7 +225,8 @@
     "archive_episode_map": "haunting-hour-library.json",
     "source_label": "Internet Archive · Owner-verified source",
     "channel_slug": "beyond-after-dark",
-    "seasons": 1
+    "seasons": 1,
+    "episode_count": 76
   },
   {
     "slug": "winnie-pooh-storybook-classics",
@@ -266,7 +283,17 @@
     "source_bookmark": "kareneliot",
     "archive_id": "2-broke-girls-complete-series",
     "approved_by": "owner",
-    "approved_at": "2026-07-19"
+    "approved_at": "2026-07-19",
+    "season_episode_counts": {
+      "1": 24,
+      "2": 24,
+      "3": 24,
+      "4": 22,
+      "5": 22,
+      "6": 22
+    },
+    "episode_count": 138,
+    "seasons": 6
   },
   {
     "slug": "wonderful-world-brothers-grimm",
@@ -325,7 +352,17 @@
     "candidate_url": "https://archive.org/details/3rd-rock-from-the-sun-the-complete-series",
     "archive_id": "3rd-rock-from-the-sun-the-complete-series",
     "approved_by": "owner",
-    "approved_at": "2026-07-19"
+    "approved_at": "2026-07-19",
+    "season_episode_counts": {
+      "1": 20,
+      "2": 26,
+      "3": 27,
+      "4": 24,
+      "5": 22,
+      "6": 20
+    },
+    "episode_count": 139,
+    "seasons": 6
   },
   {
     "source_type": "archive_embed",
@@ -344,7 +381,18 @@
     "candidate_url": "https://archive.org/details/malcolm-in-the-middle-complete-series-2000-2006",
     "archive_id": "malcolm-in-the-middle-complete-series-2000-2006",
     "approved_by": "owner",
-    "approved_at": "2026-07-19"
+    "approved_at": "2026-07-19",
+    "season_episode_counts": {
+      "1": 16,
+      "2": 25,
+      "3": 22,
+      "4": 22,
+      "5": 22,
+      "6": 22,
+      "7": 22
+    },
+    "episode_count": 151,
+    "seasons": 7
   },
   {
     "source_type": "archive_embed",
@@ -363,7 +411,13 @@
     "candidate_url": "https://archive.org/details/dont-trust-the-b-in-apartment-23_202607",
     "archive_id": "dont-trust-the-b-in-apartment-23_202607",
     "approved_by": "owner",
-    "approved_at": "2026-07-19"
+    "approved_at": "2026-07-19",
+    "season_episode_counts": {
+      "1": 13,
+      "2": 13
+    },
+    "episode_count": 26,
+    "seasons": 2
   },
   {
     "source_type": "archive_embed",
@@ -382,7 +436,13 @@
     "candidate_url": "https://archive.org/details/reaper-complete",
     "archive_id": "reaper-complete",
     "approved_by": "owner",
-    "approved_at": "2026-07-19"
+    "approved_at": "2026-07-19",
+    "season_episode_counts": {
+      "1": 18,
+      "2": 13
+    },
+    "episode_count": 31,
+    "seasons": 2
   },
   {
     "source_type": "archive_embed",
@@ -401,7 +461,15 @@
     "candidate_url": "https://archive.org/details/what-i-like-about-you-COMPLETE",
     "archive_id": "what-i-like-about-you-COMPLETE",
     "approved_by": "owner",
-    "approved_at": "2026-07-19"
+    "approved_at": "2026-07-19",
+    "season_episode_counts": {
+      "1": 22,
+      "2": 22,
+      "3": 24,
+      "4": 18
+    },
+    "episode_count": 86,
+    "seasons": 4
   },
   {
     "source_type": "archive_embed",
@@ -420,7 +488,15 @@
     "candidate_url": "https://archive.org/details/the-o.c.",
     "archive_id": "the-o.c.",
     "approved_by": "owner",
-    "approved_at": "2026-07-19"
+    "approved_at": "2026-07-19",
+    "season_episode_counts": {
+      "1": 27,
+      "2": 24,
+      "3": 25,
+      "4": 16
+    },
+    "episode_count": 92,
+    "seasons": 4
   },
   {
     "source_type": "archive_embed",
@@ -439,7 +515,14 @@
     "candidate_url": "https://archive.org/details/clueless-1996-99",
     "archive_id": "clueless-1996-99",
     "approved_by": "owner",
-    "approved_at": "2026-07-19"
+    "approved_at": "2026-07-19",
+    "season_episode_counts": {
+      "1": 18,
+      "2": 22,
+      "3": 22
+    },
+    "episode_count": 62,
+    "seasons": 3
   },
   {
     "source_type": "archive_embed",
@@ -458,7 +541,14 @@
     "candidate_url": "https://archive.org/details/the-chronicles-of-narnia-the-complete-series-1988",
     "archive_id": "the-chronicles-of-narnia-the-complete-series-1988",
     "approved_by": "owner",
-    "approved_at": "2026-07-19"
+    "approved_at": "2026-07-19",
+    "season_episode_counts": {
+      "1": 6,
+      "2": 6,
+      "3": 6
+    },
+    "episode_count": 18,
+    "seasons": 3
   },
   {
     "source_type": "archive_embed",
@@ -477,7 +567,12 @@
     "candidate_url": "https://archive.org/details/world-of-peter-rabbit-and-friends-1992-98",
     "archive_id": "world-of-peter-rabbit-and-friends-1992-98",
     "approved_by": "owner",
-    "approved_at": "2026-07-19"
+    "approved_at": "2026-07-19",
+    "season_episode_counts": {
+      "1": 9
+    },
+    "episode_count": 9,
+    "seasons": 1
   },
   {
     "source_type": "watchlist",
@@ -493,7 +588,18 @@
     "icon": "🔥",
     "gradient": "linear-gradient(135deg,#111827,#34355d 55%,#c96b39)",
     "description": "The Midnight Society gathers around a campfire to tell frightening stories.",
-    "candidate_url": "https://archive.org/search?query=title%3A%28Are+You+Afraid+of+the+Dark%29"
+    "candidate_url": "https://archive.org/search?query=title%3A%28Are+You+Afraid+of+the+Dark%29",
+    "season_episode_counts": {
+      "1": 13,
+      "2": 13,
+      "3": 13,
+      "4": 13,
+      "5": 13,
+      "6": 13,
+      "7": 13
+    },
+    "episode_count": 91,
+    "seasons": 7
   },
   {
     "source_type": "archive_episode_map",
@@ -536,7 +642,15 @@
     "candidate_url": "https://archive.org/details/tales-from-the-darkside-tv-recordings",
     "archive_id": "tales-from-the-darkside-tv-recordings",
     "approved_by": "owner",
-    "approved_at": "2026-07-19"
+    "approved_at": "2026-07-19",
+    "season_episode_counts": {
+      "1": 24,
+      "2": 24,
+      "3": 22,
+      "4": 20
+    },
+    "episode_count": 90,
+    "seasons": 4
   },
   {
     "source_type": "archive_embed",
@@ -819,7 +933,10 @@
     "thumbnail": "https://archive.org/services/img/pokemon-indigo-league-season-1-1998",
     "seasons": 1,
     "network": "Kids' WB",
-    "episode_catalog": "archive_episode_map"
+    "episode_catalog": "archive_episode_map",
+    "season_episode_counts": {
+      "1": 42
+    }
   },
   {
     "slug": "digimon-digital-monsters",
@@ -842,7 +959,11 @@
     "thumbnail": "https://archive.org/services/img/digimon-digital-monsters-the-complete-collection-saban-entertainment-edited-version",
     "seasons": 2,
     "network": "Fox Kids",
-    "episode_catalog": "archive_episode_map"
+    "episode_catalog": "archive_episode_map",
+    "season_episode_counts": {
+      "1": 54,
+      "2": 50
+    }
   },
   {
     "slug": "yugioh-season-1",
