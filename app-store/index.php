@@ -53,7 +53,7 @@ $wallet = beyond_nav_bootstrap('Beyond App Store');
       <?=bos_app_card('Bit Runner','Run through Beyond OS, recover bit$ and defeat security viruses.','beyond-games/bit-runner.php','RUN','Play now','@atom')?>
       <?=bos_app_card('Beyond Skate','Tricks, custom parks and daily skating challenges.','beyond-games/game.php?slug=beyond-skate','SKATE','View game plan','@atom')?>
       <?=bos_app_card('Tattoo Master','A creative tattoo-studio simulator connected to Beyond Tattoo.','beyond-games/game.php?slug=tattoo-master','INK','View game plan','assets/icons/app-store/beyond-tattoo.jpg')?>
-      <?=bos_app_card("Zak’s Kitchen Rush",'Fast restaurant management with Haitian and American dishes.','beyond-games/game.php?slug=zaks-kitchen-rush','ZAK','View game plan','@atom')?>
+      <?=bos_app_card("Zak’s Kitchen Rush",'Prepare timed Haitian and American orders, build combos and upgrade the kitchen.','beyond-games/zaks-kitchen-rush.php','ZAK','Play now','@atom')?>
       <?=bos_app_card('Codebreaker Academy','Program robots with visual commands to escape puzzle chambers.','beyond-games/game.php?slug=codebreaker-academy','CODE','View game plan','@atom')?>
       <?=bos_app_card('Bit Drop','A polished physics-merging puzzle for quick daily play.','beyond-games/game.php?slug=bit-drop','DROP','View game plan','@atom')?>
     </div>

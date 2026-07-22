@@ -313,12 +313,12 @@ $cartoonNext = $cartoonSchedule['next'];
     </article>
 
     <article class="live-app-card games-card">
-      <div class="live-app-card__art" aria-hidden="true">⚡</div>
-      <span class="live-app-label">BEYOND GAMES &middot; ORIGINAL INSTANT PLAY</span>
-      <h3>Bit Runner is online.</h3>
-      <p class="translation">Run, jump and recover bit$ across a neon Beyond OS</p>
-      <p class="pronunciation">Playable now on mobile and PC with local achievements and capped demo rewards.</p>
-      <div class="live-app-actions"><a href="/beyond-games/bit-runner.php">Play Bit Runner</a><a href="/beyond-games/">Explore Beyond Games</a></div>
+      <div class="live-app-card__art" aria-hidden="true">🍲</div>
+      <span class="live-app-label">BEYOND GAMES &middot; TWO ORIGINAL GAMES ONLINE</span>
+      <h3>Zak’s Kitchen is open.</h3>
+      <p class="translation">Cook Haitian favourites, serve orders and upgrade a lively kitchen</p>
+      <p class="pronunciation">Playable now on mobile and PC alongside Bit Runner, with local progression and fair demo rewards.</p>
+      <div class="live-app-actions"><a href="/beyond-games/zaks-kitchen-rush.php">Play Kitchen Rush</a><a href="/beyond-games/bit-runner.php">Play Bit Runner</a><a href="/beyond-games/">All games</a></div>
     </article>
   </div>
 </section>
@@ -339,6 +339,7 @@ $cartoonNext = $cartoonSchedule['next'];
 .home-shortcuts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:45px}.home-shortcuts a{display:grid;grid-template-columns:auto 1fr;column-gap:12px;align-items:center;padding:18px;border:1px solid rgba(255,255,255,.14);border-radius:18px;background:rgba(10,14,29,.72);text-decoration:none}.home-shortcuts span{grid-row:1/3;font-size:29px}.home-shortcuts strong{font-size:15px}.home-shortcuts small{margin-top:3px;color:#aeb5c9}
 @media(max-width:1100px){.home-live-player{min-height:0;aspect-ratio:16/9}.home-live-switch{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:800px){.home-live-stage{width:calc(100vw - 12px);border-radius:23px;margin-bottom:32px}.home-live-stage__inner{padding:14px}.home-live-stage__top{align-items:flex-start;flex-direction:column;margin-bottom:14px}.home-live-actions{width:100%}.home-live-button{flex:1}.home-live-player{aspect-ratio:16/9;border-radius:16px}.home-live-meta{align-items:flex-start;flex-direction:column}.home-live-switch{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:4px}.home-live-switch button{min-width:93px;scroll-snap-align:start}.live-apps-heading{align-items:flex-start;flex-direction:column}.live-app-grid{grid-template-columns:1fr}.live-app-card{min-height:340px}.home-shortcuts{grid-template-columns:1fr}}
+.games-card:before{background:radial-gradient(circle at 77% 17%,rgba(255,203,103,.34),transparent 24%),linear-gradient(135deg,#24120b,#7c2f20 55%,#e88a25)}.games-card .live-app-label{color:#ffd17f}.games-card .live-app-card__art{filter:drop-shadow(0 18px 32px rgba(0,0,0,.28))}
 .casino-card:before{background:radial-gradient(circle at 77% 17%,rgba(255,216,109,.3),transparent 23%),linear-gradient(135deg,#160b25,#54205c 55%,#a42e65)}.casino-card .live-app-label{color:#ffd86d}.casino-card h3{font-size:clamp(34px,5vw,64px)}
 .math-card:before{background:radial-gradient(circle at 78% 18%,rgba(91,219,69,.3),transparent 24%),linear-gradient(135deg,#06172d,#0a4c82 58%,#178b73)}.math-card .live-app-label{color:#8ff0b3}.coding-card:before{background:radial-gradient(circle at 78% 18%,rgba(53,214,255,.28),transparent 24%),linear-gradient(135deg,#16092c,#51269a 56%,#087f9b)}.coding-card .live-app-label{color:#95eaff}.coding-card .live-app-card__art{font-size:clamp(60px,9vw,124px);font-weight:950;letter-spacing:-.12em}
 @media(min-width:1051px){.live-app-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}

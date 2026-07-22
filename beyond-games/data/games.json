@@ -12,7 +12,12 @@
     "playable": true,
     "play_url": "/beyond-games/bit-runner.php",
     "color": "#8e5cff",
-    "features": ["Responsive runner controls", "Security-virus obstacles", "Achievement challenges", "Capped demo rewards"]
+    "features": [
+      "Responsive runner controls",
+      "Security-virus obstacles",
+      "Achievement challenges",
+      "Capped demo rewards"
+    ]
   },
   {
     "slug": "beyond-skate",
@@ -27,7 +32,12 @@
     "playable": false,
     "related_url": "/beyond-skate/",
     "color": "#23d7c4",
-    "features": ["2.5D trick system", "Custom park builder", "Board designer", "Daily competitions"]
+    "features": [
+      "2.5D trick system",
+      "Custom park builder",
+      "Board designer",
+      "Daily competitions"
+    ]
   },
   {
     "slug": "beyond-circuit",
@@ -41,7 +51,12 @@
     "launch": false,
     "playable": false,
     "color": "#ff4d74",
-    "features": ["Short-format races", "Precision drifting", "Vehicle upgrades", "Time trials"]
+    "features": [
+      "Short-format races",
+      "Precision drifting",
+      "Vehicle upgrades",
+      "Time trials"
+    ]
   },
   {
     "slug": "beyond-space-frontier",
@@ -56,7 +71,12 @@
     "playable": false,
     "related_url": "/beyond-space/",
     "color": "#438cff",
-    "features": ["Procedural expeditions", "Resource mining", "Ship upgrades", "Anomaly discoveries"]
+    "features": [
+      "Procedural expeditions",
+      "Resource mining",
+      "Ship upgrades",
+      "Anomaly discoveries"
+    ]
   },
   {
     "slug": "tattoo-master",
@@ -71,7 +91,12 @@
     "playable": false,
     "related_url": "/beyond-tattoo/",
     "color": "#e64fa2",
-    "features": ["Stencil tracing", "Needle control", "Layered shading", "Studio progression"]
+    "features": [
+      "Stencil tracing",
+      "Needle control",
+      "Layered shading",
+      "Studio progression"
+    ]
   },
   {
     "slug": "zaks-kitchen-rush",
@@ -79,13 +104,19 @@
     "category": "Creative & Simulation",
     "icon": "🍲",
     "tagline": "Fast-paced restaurant management.",
-    "gameplay": "Prepare Haitian and American dishes, manage orders and upgrade a lively kitchen.",
-    "status": "Design phase",
+    "gameplay": "Prepare Haitian and American dishes, manage timed orders, build combos and upgrade a lively kitchen.",
+    "status": "Playable prototype",
     "phase": "Launch lineup",
     "launch": true,
-    "playable": false,
+    "playable": true,
     "color": "#ff9948",
-    "features": ["Recipe mastery", "Order combos", "Kitchen upgrades", "Haitian and American menus"]
+    "features": [
+      "Recipe mastery",
+      "Order combos and Kitchen Rush boosts",
+      "Persistent kitchen upgrades",
+      "Haitian and American menus"
+    ],
+    "play_url": "/beyond-games/zaks-kitchen-rush.php"
   },
   {
     "slug": "beyond-hoops",
@@ -99,7 +130,12 @@
     "launch": false,
     "playable": false,
     "color": "#ff7a32",
-    "features": ["Swipe shooting", "Trick-shot challenges", "Street tournaments", "Character customization"]
+    "features": [
+      "Swipe shooting",
+      "Trick-shot challenges",
+      "Street tournaments",
+      "Character customization"
+    ]
   },
   {
     "slug": "bit-defender",
@@ -113,7 +149,12 @@
     "launch": false,
     "playable": false,
     "color": "#4de8cd",
-    "features": ["Four system worlds", "Upgradeable defenses", "Virus behaviors", "Strategic challenges"]
+    "features": [
+      "Four system worlds",
+      "Upgradeable defenses",
+      "Virus behaviors",
+      "Strategic challenges"
+    ]
   },
   {
     "slug": "beyond-city",
@@ -127,7 +168,12 @@
     "launch": false,
     "playable": false,
     "color": "#57c889",
-    "features": ["Cozy city planning", "Connected businesses", "Resident goals", "Creative decoration"]
+    "features": [
+      "Cozy city planning",
+      "Connected businesses",
+      "Resident goals",
+      "Creative decoration"
+    ]
   },
   {
     "slug": "shadow-protocol",
@@ -141,7 +187,12 @@
     "launch": false,
     "playable": false,
     "color": "#7180a8",
-    "features": ["Line-of-sight stealth", "Terminal hacking", "Compact levels", "Multiple solutions"]
+    "features": [
+      "Line-of-sight stealth",
+      "Terminal hacking",
+      "Compact levels",
+      "Multiple solutions"
+    ]
   },
   {
     "slug": "beyond-islands",
@@ -155,7 +206,12 @@
     "launch": false,
     "playable": false,
     "color": "#38c9e8",
-    "features": ["Party races", "Survival rounds", "Team challenges", "Seasonal islands"]
+    "features": [
+      "Party races",
+      "Survival rounds",
+      "Team challenges",
+      "Seasonal islands"
+    ]
   },
   {
     "slug": "dreamforge",
@@ -169,7 +225,12 @@
     "launch": false,
     "playable": false,
     "color": "#bc6cff",
-    "features": ["Original creatures", "Ability evolution", "Exploration", "Friendly battles"]
+    "features": [
+      "Original creatures",
+      "Ability evolution",
+      "Exploration",
+      "Friendly battles"
+    ]
   },
   {
     "slug": "codebreaker-academy",
@@ -184,7 +245,12 @@
     "playable": false,
     "related_url": "/coding-school/",
     "color": "#4b9cff",
-    "features": ["Visual programming", "Robot abilities", "Puzzle chambers", "Coding School connections"]
+    "features": [
+      "Visual programming",
+      "Robot abilities",
+      "Puzzle chambers",
+      "Coding School connections"
+    ]
   },
   {
     "slug": "math-raiders",
@@ -199,7 +265,12 @@
     "playable": false,
     "related_url": "/beyond-math/academy.php",
     "color": "#586dff",
-    "features": ["Adaptive calculations", "Tactical battles", "Ship abilities", "Math Academy connections"]
+    "features": [
+      "Adaptive calculations",
+      "Tactical battles",
+      "Ship abilities",
+      "Math Academy connections"
+    ]
   },
   {
     "slug": "french-quest",
@@ -214,7 +285,12 @@
     "playable": false,
     "related_url": "/beyond-french/",
     "color": "#3979ef",
-    "features": ["Dialogue missions", "Pronunciation practice", "Cultural locations", "Vocabulary progression"]
+    "features": [
+      "Dialogue missions",
+      "Pronunciation practice",
+      "Cultural locations",
+      "Vocabulary progression"
+    ]
   },
   {
     "slug": "daily-breath-garden",
@@ -229,7 +305,12 @@
     "playable": false,
     "related_url": "/dailybreath/",
     "color": "#54c782",
-    "features": ["Daily reflections", "Breathing activities", "Garden growth", "Gentle streaks"]
+    "features": [
+      "Daily reflections",
+      "Breathing activities",
+      "Garden growth",
+      "Gentle streaks"
+    ]
   },
   {
     "slug": "word-voyage",
@@ -243,7 +324,12 @@
     "launch": false,
     "playable": false,
     "color": "#2dc6ad",
-    "features": ["Five languages", "Daily puzzles", "Travel map", "Vocabulary collections"]
+    "features": [
+      "Five languages",
+      "Daily puzzles",
+      "Travel map",
+      "Vocabulary collections"
+    ]
   },
   {
     "slug": "beyond-money",
@@ -258,7 +344,12 @@
     "playable": false,
     "related_url": "/beyond-id/dashboard/wallet.php",
     "color": "#d8b948",
-    "features": ["Budget decisions", "Savings goals", "Investment lessons", "Business simulation"]
+    "features": [
+      "Budget decisions",
+      "Savings goals",
+      "Investment lessons",
+      "Business simulation"
+    ]
   },
   {
     "slug": "bit-drop",
@@ -272,7 +363,12 @@
     "launch": true,
     "playable": false,
     "color": "#efce4f",
-    "features": ["Physics merging", "Daily seed", "Combo system", "One-hand controls"]
+    "features": [
+      "Physics merging",
+      "Daily seed",
+      "Combo system",
+      "One-hand controls"
+    ]
   },
   {
     "slug": "orbit",
@@ -286,7 +382,12 @@
     "launch": false,
     "playable": false,
     "color": "#5865e8",
-    "features": ["One-touch play", "Orbital hazards", "Endless progression", "Daily distance challenge"]
+    "features": [
+      "One-touch play",
+      "Orbital hazards",
+      "Endless progression",
+      "Daily distance challenge"
+    ]
   },
   {
     "slug": "beyond-solitaire",
@@ -300,7 +401,12 @@
     "launch": false,
     "playable": false,
     "color": "#b84f74",
-    "features": ["Multiple variants", "Daily deals", "Theme collection", "Relaxed play"]
+    "features": [
+      "Multiple variants",
+      "Daily deals",
+      "Theme collection",
+      "Relaxed play"
+    ]
   },
   {
     "slug": "pixel-cafe",
@@ -314,7 +420,12 @@
     "launch": false,
     "playable": false,
     "color": "#c6855b",
-    "features": ["Idle progression", "Menu creation", "Café decorating", "Regular customers"]
+    "features": [
+      "Idle progression",
+      "Menu creation",
+      "Café decorating",
+      "Regular customers"
+    ]
   },
   {
     "slug": "atom-match",
@@ -328,7 +439,12 @@
     "launch": false,
     "playable": false,
     "color": "#4cd9e9",
-    "features": ["Chain reactions", "Compact boards", "Timed modes", "Atom power-ups"]
+    "features": [
+      "Chain reactions",
+      "Compact boards",
+      "Timed modes",
+      "Atom power-ups"
+    ]
   },
   {
     "slug": "daily-dash",
@@ -342,6 +458,11 @@
     "launch": false,
     "playable": false,
     "color": "#ff6868",
-    "features": ["Daily microgame", "60-second sessions", "Personal bests", "Friend challenges"]
+    "features": [
+      "Daily microgame",
+      "60-second sessions",
+      "Personal bests",
+      "Friend challenges"
+    ]
   }
 ]
