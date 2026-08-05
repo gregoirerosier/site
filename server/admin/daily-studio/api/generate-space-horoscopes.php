@@ -227,8 +227,12 @@ try {
     if (!Auth::check()) {
         spaceJson(['ok'=>false, 'error'=>'Administrator access required.'], 403);
     }
-    if (!Auth::verifyCsrf($_SERVER['HTTP_X_CSRF_TOKEN'] ?? null)) {
-        spaceJson(['ok'=>false, 'error'=>'Invalid security token.'], 403);
+    $csrf = (string)($_SERVER['HTTP_X_CSRF_TOKEN'] ?? '');
+    if (
+        empty($_SESSION['verse_generator_csrf'])
+        || !hash_equals((string)$_SESSION['verse_generator_csrf'], $csrf)
+    ) {
+        spaceJson(['ok'=>false, 'error'=>'Reload the generator and try again.'], 419);
     }
     $input = json_decode((string)file_get_contents('php://input'), true, 16, JSON_THROW_ON_ERROR);
     if (!is_array($input)) throw new RuntimeException('Invalid horoscope request.');

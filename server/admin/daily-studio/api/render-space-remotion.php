@@ -37,7 +37,13 @@ function spaceLocalImage(string $source, string $root): string {
 
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') spaceRemotionError(405, 'POST required.');
 if (!Auth::check()) spaceRemotionError(403, 'Administrator access required.');
-if (!Auth::verifyCsrf($_SERVER['HTTP_X_CSRF_TOKEN'] ?? null)) spaceRemotionError(419, 'Reload Beyond Studio and try again.');
+$csrf = (string)($_SERVER['HTTP_X_CSRF_TOKEN'] ?? '');
+if (
+    empty($_SESSION['verse_generator_csrf'])
+    || !hash_equals((string)$_SESSION['verse_generator_csrf'], $csrf)
+) {
+    spaceRemotionError(419, 'Reload the generator and try again.');
+}
 
 $input = json_decode((string)file_get_contents('php://input'), true);
 if (!is_array($input)) spaceRemotionError(400, 'Invalid Beyond Space render request.');
