@@ -321,6 +321,13 @@ $featuredTitles = json_decode((string)@file_get_contents(__DIR__ . '/beyond-tv/d
 // Catalogue additions are appended, so newest titles lead the discovery carousel.
 $featuredTitles = array_reverse($featuredTitles);
 $featuredTitleCount = count($featuredTitles);
+$featuredThumbnailCounts = [];
+foreach ($featuredTitles as $featuredTitle) {
+    $thumbnail = trim((string)($featuredTitle['thumbnail'] ?? ''));
+    if ($thumbnail !== '') {
+        $featuredThumbnailCounts[$thumbnail] = ($featuredThumbnailCounts[$thumbnail] ?? 0) + 1;
+    }
+}
 $posterProviderConfig = beyond_tv_poster_config();
 $premiumPosterProvider = beyond_tv_poster_provider_configured();
 $tmdbPosterProvider = $posterProviderConfig['tmdb_read_token'] !== '' || $posterProviderConfig['tmdb_api_key'] !== '';
@@ -361,8 +368,13 @@ $homeLiveControls = [
     <?php foreach ($featuredTitles as $featuredIndex => $featuredTitle):
       $featuredSlug = (string)($featuredTitle['slug'] ?? '');
       $featuredFallbackThumbnail = trim((string)($featuredTitle['thumbnail'] ?? ''));
+      $featuredFallbackIsSharedArchive = str_starts_with($featuredFallbackThumbnail, 'https://archive.org/services/img/')
+          && ($featuredThumbnailCounts[$featuredFallbackThumbnail] ?? 0) > 1;
+      if ($featuredFallbackIsSharedArchive) {
+          $featuredFallbackThumbnail = '';
+      }
       $featuredThumbnail = $premiumPosterProvider
-          ? '/beyond-tv/api/poster.php?slug=' . rawurlencode($featuredSlug)
+          ? '/beyond-tv/api/poster.php?slug=' . rawurlencode($featuredSlug) . '&fallback=cover'
           : trim((string)($featuredTitle['tmdb_poster_url'] ?? $featuredTitle['poster_url'] ?? $featuredFallbackThumbnail));
       if (!$premiumPosterProvider && $featuredThumbnail === '') {
           $featuredThumbnail = $featuredFallbackThumbnail;

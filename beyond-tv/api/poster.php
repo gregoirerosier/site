@@ -4,6 +4,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../includes/movie-art.php';
 
 $slug = preg_replace('/[^a-z0-9-]/', '', strtolower((string)($_GET['slug'] ?? '')));
+$useCoverFallback = (string)($_GET['fallback'] ?? '') === 'cover';
 $catalog = json_decode((string)@file_get_contents(__DIR__ . '/../data/catalog.json'), true) ?: [];
 $item = null;
 foreach ($catalog as $candidate) {
@@ -21,6 +22,10 @@ if (!is_array($item)) {
 $poster = beyond_tv_poster_url($item);
 if (!$poster) {
     $poster = trim((string)($item['tmdb_poster_url'] ?? $item['poster_url'] ?? ''));
+}
+if (!$poster && $useCoverFallback) {
+    http_response_code(404);
+    exit;
 }
 if (!$poster) {
     $poster = '/beyond-tv/assets/img/beyond-tv-promo.webp';
