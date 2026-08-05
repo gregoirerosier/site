@@ -173,19 +173,25 @@ function beyond_tv_poster_url(array $item): ?string
         return null;
     }
 
+    $config = beyond_tv_poster_config();
+    $configHash = substr(hash('sha256', implode('|', [
+        $config['tmdb_read_token'] !== '' ? 'tmdb-read:' . $config['tmdb_read_token'] : '',
+        $config['tmdb_api_key'] !== '' ? 'tmdb-key:' . $config['tmdb_api_key'] : '',
+        $config['omdb_api_key'] !== '' ? 'omdb:' . $config['omdb_api_key'] : '',
+    ])), 0, 16);
     $cache = beyond_tv_poster_cache();
     $cached = is_array($cache[$slug] ?? null) ? $cache[$slug] : [];
     $checkedAt = (int)($cached['checked_at'] ?? 0);
     $ttl = !empty($cached['url']) ? 2592000 : 86400;
-    if ($checkedAt > time() - $ttl) {
+    if (($cached['config_hash'] ?? '') === $configHash && $checkedAt > time() - $ttl) {
         return !empty($cached['url']) ? (string)$cached['url'] : null;
     }
 
-    $config = beyond_tv_poster_config();
     $poster = beyond_tv_tmdb_poster($item, $config)
         ?? beyond_tv_omdb_poster($item, $config);
     $cache[$slug] = [
         'url' => $poster,
+        'config_hash' => $configHash,
         'checked_at' => time(),
     ];
     beyond_tv_save_poster_cache($cache);

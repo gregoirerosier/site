@@ -20,7 +20,10 @@ if (!is_array($item)) {
 
 $poster = beyond_tv_poster_url($item);
 if (!$poster) {
-    $poster = trim((string)($item['tmdb_poster_url'] ?? $item['poster_url'] ?? $item['thumbnail'] ?? ''));
+    $poster = trim((string)($item['tmdb_poster_url'] ?? $item['poster_url'] ?? ''));
+}
+if (!$poster) {
+    $poster = '/beyond-tv/assets/img/beyond-tv-promo.webp';
 }
 
 $host = strtolower((string)parse_url((string)$poster, PHP_URL_HOST));
