@@ -26,4 +26,23 @@ final class DailyBreathTests: XCTestCase {
         XCTAssertEqual(library.chapter(bookCode: "GEN", number: 1)?.verses.count, 2)
         XCTAssertEqual(library.search("loved world").first?.reference, "John 3:16")
     }
+
+    func testBreathPatternIncludesReadableRhythm() {
+        let pattern = BreathPattern.dailyPatterns[0]
+
+        XCTAssertEqual(pattern.rhythmText, "Inhale 4 · Hold 4 · Exhale 6")
+        XCTAssertFalse(pattern.intention.isEmpty)
+    }
+
+    func testBreathOfTheDayRotatesPredictably() {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(secondsFromGMT: 0)!
+        let firstDay = DateComponents(calendar: calendar, year: 2026, month: 1, day: 1).date!
+        let secondDay = DateComponents(calendar: calendar, year: 2026, month: 1, day: 2).date!
+
+        XCTAssertNotEqual(
+            BreathPattern.breathOfTheDay(for: firstDay, calendar: calendar),
+            BreathPattern.breathOfTheDay(for: secondDay, calendar: calendar)
+        )
+    }
 }

@@ -1,4 +1,4 @@
-# DailyBreath 1.1 - App Store Connect Metadata
+# DailyBreath 1.1.1 - App Store Connect Metadata
 
 ## Promotional Text
 
@@ -10,7 +10,7 @@ DailyBreath is a faith-centered wellness app designed to help you begin with Scr
 
 Read the Verse of the Day, search the full World English Bible, open any book and chapter, pause with a guided breathing practice, reflect through devotional prompts, and preview the Bible Academy coming in Fall 2026.
 
-DailyBreath 1.1 includes:
+DailyBreath 1.1.1 includes:
 
 - Verse of the Day
 - Scripture listening
@@ -21,7 +21,10 @@ DailyBreath 1.1 includes:
 - Continue Reading saved chapter
 - Daily devotional reflection
 - Bible Academy preview
-- Peace Breath practice
+- Breath of the Day with gentle session polish
+- Remembered breathing duration
+- Quick Repeat after a completed breath session
+- Gentle weekly breathing count
 - Guided prayer prompts
 - Private reflection journal
 - App Clip preview for a quick verse and breath
@@ -42,7 +45,7 @@ https://beyondimagination.co.technology/dailybreath/
 
 ## Version
 
-1.1
+1.1.1
 
 ## Copyright
 
@@ -52,11 +55,11 @@ https://beyondimagination.co.technology/dailybreath/
 
 Sign-in required: No
 
-DailyBreath 1.1 does not require an account to use the included Verse of the Day, full Bible reader, Bible search, Academy preview, breathing practice, or reflection journal.
+DailyBreath 1.1.1 does not require an account to use the included Verse of the Day, full Bible reader, Bible search, Academy preview, breathing practice, or reflection journal.
 
 ## App Review Notes
 
-DailyBreath 1.1 is a self-contained faith-centered wellness app. No sign-in is required for review. The app opens directly to the Today screen and includes the Verse of the Day, devotional card, full local World English Bible reader, Bible search, Academy preview, Peace Breath practice, reflection journal, and an App Clip preview.
+DailyBreath 1.1.1 is a self-contained faith-centered wellness app. No sign-in is required for review. The app opens directly to the Today screen and includes the Verse of the Day, devotional card, full local World English Bible reader, Bible search, Academy preview, breathing practice, reflection journal, and an App Clip preview.
 
 The first version does not include in-app purchases, subscriptions, iMessage features, Game Center, routing coverage, or user-generated public content.
 

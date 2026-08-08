@@ -25,6 +25,55 @@ struct PrayerPractice: Identifiable, Equatable {
     let systemImage: String
 }
 
+struct BreathPattern: Identifiable, Equatable {
+    let id: Int
+    let title: String
+    let intention: String
+    let instruction: String
+    let inhale: Int
+    let hold: Int
+    let exhale: Int
+
+    var rhythmText: String {
+        "Inhale \(inhale) · Hold \(hold) · Exhale \(exhale)"
+    }
+
+    static let dailyPatterns = [
+        BreathPattern(
+            id: 1,
+            title: "Peace Breath",
+            intention: "Settle your pace before the day asks for more.",
+            instruction: "Inhale for four, hold for four, exhale for six.",
+            inhale: 4,
+            hold: 4,
+            exhale: 6
+        ),
+        BreathPattern(
+            id: 2,
+            title: "Mercy Breath",
+            intention: "Make room for patience with yourself and others.",
+            instruction: "Inhale for three, hold for three, exhale for five.",
+            inhale: 3,
+            hold: 3,
+            exhale: 5
+        ),
+        BreathPattern(
+            id: 3,
+            title: "Courage Breath",
+            intention: "Enter the next step with a steady heart.",
+            instruction: "Inhale for four, hold for two, exhale for four.",
+            inhale: 4,
+            hold: 2,
+            exhale: 4
+        )
+    ]
+
+    static func breathOfTheDay(for date: Date = Date(), calendar: Calendar = .current) -> BreathPattern {
+        let day = calendar.ordinality(of: .day, in: .era, for: date) ?? 1
+        return dailyPatterns[(day - 1) % dailyPatterns.count]
+    }
+}
+
 struct AcademyModule: Identifiable, Equatable {
     let id: Int
     let title: String
