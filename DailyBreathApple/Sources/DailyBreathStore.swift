@@ -7,6 +7,8 @@ final class DailyBreathStore: ObservableObject {
     @Published private(set) var devotional = Devotional.today
     @Published var breathPhase = "Inhale"
     @Published var journalText = ""
+    @Published var journalPrompt = DailyBreathStore.promptOfTheDay()
+    @Published var journalMood = "Peaceful"
     @Published private(set) var entries: [JournalEntry] = []
     @Published private(set) var bibleLibrary = BibleLibrary.loadWorldEnglishBible()
 
@@ -15,12 +17,6 @@ final class DailyBreathStore: ObservableObject {
         PrayerPractice(id: 2, title: "Guidance Prayer", subtitle: "Pause before decisions and ask for wisdom.", systemImage: "hands.sparkles.fill"),
         PrayerPractice(id: 3, title: "Gratitude Reset", subtitle: "Name what is good before the day moves on.", systemImage: "heart.fill"),
         PrayerPractice(id: 4, title: "Weekly Challenge", subtitle: "Turn faith into one practical action.", systemImage: "calendar.badge.checkmark")
-    ]
-
-    let modules = [
-        AcademyModule(id: 1, title: "Foundations of Faith", subtitle: "Prayer, Scripture, reflection, and daily practice.", progress: 0.42, isFree: true),
-        AcademyModule(id: 2, title: "Life of Jesus", subtitle: "A guided path through the Gospels.", progress: 0.18, isFree: false),
-        AcademyModule(id: 3, title: "Wisdom Books", subtitle: "Psalms, Proverbs, and practical devotion.", progress: 0.0, isFree: false)
     ]
 
     private let speaker = AVSpeechSynthesizer()
@@ -36,7 +32,52 @@ final class DailyBreathStore: ObservableObject {
     func saveJournalEntry() {
         let trimmed = journalText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
-        entries.insert(JournalEntry(id: UUID(), createdAt: Date(), text: trimmed), at: 0)
+        entries.insert(
+            JournalEntry(
+                id: UUID(),
+                createdAt: Date(),
+                prompt: journalPrompt,
+                text: trimmed,
+                mood: journalMood
+            ),
+            at: 0
+        )
         journalText = ""
+    }
+
+    func prepareJournalReflection(prompt: String, text: String = "", mood: String? = nil) {
+        journalPrompt = prompt
+        journalText = text
+        if let mood {
+            journalMood = mood
+        }
+    }
+
+    func updateJournalEntry(_ entry: JournalEntry, text: String, mood: String?) {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty, let index = entries.firstIndex(where: { $0.id == entry.id }) else { return }
+        entries[index] = JournalEntry(
+            id: entry.id,
+            createdAt: entry.createdAt,
+            prompt: entry.prompt,
+            text: trimmed,
+            mood: mood
+        )
+    }
+
+    func deleteJournalEntries(at offsets: IndexSet) {
+        entries.remove(atOffsets: offsets)
+    }
+
+    static func promptOfTheDay(for date: Date = Date(), calendar: Calendar = .current) -> String {
+        let prompts = [
+            "Where do I need to practice stillness today?",
+            "What is one faithful next step I can take?",
+            "What am I carrying that I can entrust to God?",
+            "Where did I notice grace today?",
+            "Who needs patience, courage, or kindness from me?"
+        ]
+        let day = calendar.ordinality(of: .day, in: .era, for: date) ?? 1
+        return prompts[(day - 1) % prompts.count]
     }
 }

@@ -1,47 +1,45 @@
 import SwiftUI
 
 struct AcademyView: View {
-    @EnvironmentObject private var store: DailyBreathStore
     @Environment(\.openURL) private var openURL
+    @AppStorage("dailyBreathTheme") private var selectedThemeID = DailyBreathTheme.forest.id
 
     private let beyondIDLoginURL = URL(string: "https://beyondimagination.co.technology/beyond-id/auth/login.php?app=dailybreath")!
+    private let previewPaths = [
+        ("Foundations of Faith", "Prayer, Scripture, reflection, and daily practice."),
+        ("Life of Jesus", "A guided path through the Gospels."),
+        ("Wisdom and Prayer", "Psalms, Proverbs, and everyday devotion.")
+    ]
+
+    private var selectedTheme: DailyBreathTheme {
+        DailyBreathTheme(id: selectedThemeID)
+    }
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                Text("Bible Academy")
-                    .font(.largeTitle.weight(.black))
-                Text("Guided Bible learning for teens and adults, with narrated lessons, checks, and saved progress.")
-                    .foregroundStyle(.secondary)
-
-                academyComingSoon
-                lockedPreview
+            VStack(alignment: .leading, spacing: 18) {
+                hero
+                preview
             }
             .padding()
         }
-        .background(Color(.systemGroupedBackground))
+        .background(DailyBreathThemeBackground(theme: selectedTheme))
         .navigationTitle("Academy")
         .navigationBarTitleDisplayMode(.inline)
     }
 
-    private var academyComingSoon: some View {
+    private var hero: some View {
         VStack(alignment: .leading, spacing: 16) {
-            VStack(alignment: .leading, spacing: 8) {
-                HStack(spacing: 10) {
-                    Image(systemName: "lock.shield.fill")
-                        .font(.title2)
-                        .foregroundStyle(Color.dailyGold)
-                    Text("Coming next update")
-                        .font(.title2.weight(.bold))
-                }
-                Text("Bible Academy content will unlock through Beyond ID in Fall 2026.")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                Text("Sign in to Beyond ID when the Academy launch is ready.")
-                    .font(.caption.bold())
-                    .foregroundStyle(Color.dailyGreen)
-            }
-
+            Label("Beyond ID", systemImage: "person.badge.key.fill")
+                .font(.caption.bold())
+                .foregroundStyle(selectedTheme.accent)
+            Text("Bible Academy")
+                .font(.largeTitle.weight(.black))
+            Text("Coming Fall 2026")
+                .font(.title2.weight(.bold))
+                .foregroundStyle(selectedTheme.primary)
+            Text("Guided Bible learning will unlock through Beyond ID when Academy content is ready. This version does not include lessons, progress, or account-gated content.")
+                .foregroundStyle(.secondary)
             Button {
                 openURL(beyondIDLoginURL)
             } label: {
@@ -49,34 +47,33 @@ struct AcademyView: View {
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
-            .tint(Color.dailyGreen)
+            .tint(selectedTheme.primary)
             .controlSize(.large)
         }
-        .padding()
-        .background(.background, in: RoundedRectangle(cornerRadius: 20))
+        .padding(20)
+        .background(.background.opacity(0.9), in: RoundedRectangle(cornerRadius: 8))
     }
 
-    private var lockedPreview: some View {
+    private var preview: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Fall 2026 Academy Preview")
+            Text("Planned Paths")
                 .font(.headline)
-
-            ForEach(store.modules) { module in
+            ForEach(previewPaths, id: \.0) { path in
                 HStack(spacing: 12) {
                     Image(systemName: "lock.fill")
-                        .foregroundStyle(Color.dailyGold)
+                        .foregroundStyle(selectedTheme.accent)
                         .frame(width: 24)
                     VStack(alignment: .leading, spacing: 3) {
-                        Text(module.title)
+                        Text(path.0)
                             .font(.subheadline.weight(.semibold))
-                        Text(module.subtitle)
+                        Text(path.1)
                             .font(.caption)
                             .foregroundStyle(.secondary)
-                            .lineLimit(2)
                     }
                 }
                 .padding(12)
-                .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 14))
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(.background.opacity(0.86), in: RoundedRectangle(cornerRadius: 8))
             }
         }
     }

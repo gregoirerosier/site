@@ -1,9 +1,11 @@
 import SwiftUI
+import UIKit
 
 struct BibleView: View {
     @EnvironmentObject private var store: DailyBreathStore
     @AppStorage("bibleLastBookCode") private var lastBookCode = "GEN"
     @AppStorage("bibleLastChapter") private var lastChapter = 1
+    @AppStorage("favoriteVerseIDs") private var favoriteVerseIDs = ""
     @State private var searchText = ""
 
     private var searchResults: [BibleVerse] {
@@ -20,6 +22,7 @@ struct BibleView: View {
                 )
             } else if searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                 continueReadingSection
+                favoritesSection
                 testamentSection("Old Testament")
                 testamentSection("New Testament")
             } else {
@@ -58,6 +61,16 @@ struct BibleView: View {
         }
     }
 
+    private var favoriteVerses: [BibleVerse] {
+        let ids = Set(favoriteVerseIDs.split(separator: ",").map(String.init))
+        guard !ids.isEmpty else { return [] }
+        return store.bibleLibrary.books.flatMap { book in
+            book.chapters.flatMap { chapter in
+                chapter.verses.filter { ids.contains($0.id) }
+            }
+        }
+    }
+
     private func testamentSection(_ testament: String) -> some View {
         Section(testament) {
             ForEach(store.bibleLibrary.books.filter { $0.testament == testament }) { book in
@@ -74,6 +87,33 @@ struct BibleView: View {
                             Text("\(book.chapters.count) chapters")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private var favoritesSection: some View {
+        Section("Favorite Verses") {
+            if favoriteVerses.isEmpty {
+                Label("Tap and hold a verse to favorite it.", systemImage: "star")
+                    .foregroundStyle(.secondary)
+            } else {
+                ForEach(favoriteVerses.prefix(5)) { verse in
+                    NavigationLink {
+                        if let chapter = store.bibleLibrary.chapter(bookCode: verse.bookCode, number: verse.chapter) {
+                            BibleChapterView(chapter: chapter, highlightedVerseID: verse.id)
+                        }
+                    } label: {
+                        VStack(alignment: .leading, spacing: 5) {
+                            Text(verse.reference)
+                                .font(.headline)
+                                .foregroundStyle(Color.dailyGreen)
+                            Text(verse.text)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                                .lineLimit(2)
                         }
                     }
                 }
@@ -158,6 +198,7 @@ private struct BibleChapterView: View {
     var highlightedVerseID: BibleVerse.ID?
     @AppStorage("bibleLastBookCode") private var lastBookCode = "GEN"
     @AppStorage("bibleLastChapter") private var lastChapter = 1
+    @AppStorage("favoriteVerseIDs") private var favoriteVerseIDs = ""
 
     var body: some View {
         ScrollViewReader { proxy in
@@ -185,10 +226,31 @@ private struct BibleChapterView: View {
                             Text(verse.text)
                                 .font(.system(.body, design: .serif))
                                 .textSelection(.enabled)
+                            Spacer(minLength: 8)
+                            if isFavorite(verse) {
+                                Image(systemName: "star.fill")
+                                    .font(.caption)
+                                    .foregroundStyle(Color.dailyGold)
+                            }
                         }
                         .padding(.vertical, 5)
                         .listRowBackground(verse.id == highlightedVerseID ? Color.dailyGold.opacity(0.16) : nil)
                         .id(verse.id)
+                        .contextMenu {
+                            Button {
+                                toggleFavorite(verse)
+                            } label: {
+                                Label(isFavorite(verse) ? "Remove Favorite" : "Favorite Verse", systemImage: isFavorite(verse) ? "star.slash" : "star")
+                            }
+                            Button {
+                                UIPasteboard.general.string = shareText(for: verse)
+                            } label: {
+                                Label("Copy Verse", systemImage: "doc.on.doc")
+                            }
+                            ShareLink(item: shareText(for: verse)) {
+                                Label("Share Verse", systemImage: "square.and.arrow.up")
+                            }
+                        }
                     }
                 }
             }
@@ -200,5 +262,26 @@ private struct BibleChapterView: View {
                 proxy.scrollTo(highlightedVerseID, anchor: .center)
             }
         }
+    }
+
+    private func isFavorite(_ verse: BibleVerse) -> Bool {
+        favoriteVerseIDs.split(separator: ",").contains(Substring(verse.id))
+    }
+
+    private func toggleFavorite(_ verse: BibleVerse) {
+        var ids = favoriteVerseIDs
+            .split(separator: ",")
+            .map(String.init)
+            .filter { !$0.isEmpty }
+        if ids.contains(verse.id) {
+            ids.removeAll { $0 == verse.id }
+        } else {
+            ids.append(verse.id)
+        }
+        favoriteVerseIDs = ids.joined(separator: ",")
+    }
+
+    private func shareText(for verse: BibleVerse) -> String {
+        "\(verse.text) \(verse.reference)"
     }
 }

@@ -180,10 +180,31 @@ struct BreatheView: View {
                     .tint(lastComparison == comparison ? Color.dailyGold : .secondary)
                 }
             }
+            NavigationLink {
+                JournalView()
+            } label: {
+                Label("Save Feeling to Journal", systemImage: "square.and.pencil")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(Color.dailyGreen)
+            .simultaneousGesture(TapGesture().onEnded {
+                store.prepareJournalReflection(
+                    prompt: "After today's breath session",
+                    text: breathJournalText,
+                    mood: lastMood.isEmpty ? "Peaceful" : lastMood
+                )
+            })
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(16)
         .background(.white.opacity(0.72), in: RoundedRectangle(cornerRadius: 8))
+    }
+
+    private var breathJournalText: String {
+        let moodText = lastMood.isEmpty ? "I noticed how I felt after breathing." : "I felt \(lastMood.lowercased()) after breathing."
+        guard !lastComparison.isEmpty else { return moodText }
+        return "\(moodText) Compared with yesterday, today felt \(lastComparison.lowercased())."
     }
 
     private var practiceList: some View {

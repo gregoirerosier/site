@@ -7,12 +7,6 @@ final class DailyBreathTests: XCTestCase {
         XCTAssertFalse(Verse.daily.text.isEmpty)
     }
 
-    func testAcademyHasFreeStarterModule() async {
-        let store = await DailyBreathStore()
-        let hasFreeModule = await store.modules.contains { $0.isFree }
-        XCTAssertTrue(hasFreeModule)
-    }
-
     func testBibleParserBuildsBooksChaptersAndSearchableVerses() {
         let source = """
         GEN 1:1 In the beginning, God created the heavens and the earth.

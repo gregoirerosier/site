@@ -74,18 +74,12 @@ struct BreathPattern: Identifiable, Equatable {
     }
 }
 
-struct AcademyModule: Identifiable, Equatable {
-    let id: Int
-    let title: String
-    let subtitle: String
-    let progress: Double
-    let isFree: Bool
-}
-
 struct JournalEntry: Identifiable, Equatable {
     let id: UUID
     let createdAt: Date
+    let prompt: String
     let text: String
+    let mood: String?
 }
 
 struct BibleVerse: Identifiable, Equatable {
