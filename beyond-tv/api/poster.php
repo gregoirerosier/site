@@ -20,9 +20,6 @@ if (!is_array($item)) {
 }
 
 $poster = beyond_tv_poster_url($item);
-if (!$poster) {
-    $poster = trim((string)($item['tmdb_poster_url'] ?? $item['poster_url'] ?? ''));
-}
 if (!$poster && $useCoverFallback) {
     http_response_code(404);
     exit;
@@ -34,9 +31,6 @@ if (!$poster) {
 $host = strtolower((string)parse_url((string)$poster, PHP_URL_HOST));
 $path = (string)parse_url((string)$poster, PHP_URL_PATH);
 $allowedHosts = [
-    'image.tmdb.org',
-    'm.media-amazon.com',
-    'ia.media-imdb.com',
     'archive.org',
     'i.ytimg.com',
     'img.youtube.com',
