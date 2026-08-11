@@ -1,4 +1,4 @@
-# DailyBreath 1.1.1 - App Store Connect Metadata
+# DailyBreath 1.1.2 - App Store Connect Metadata
 
 ## Promotional Text
 
@@ -10,7 +10,7 @@ DailyBreath is a faith-centered wellness app designed to help you begin with Scr
 
 Read the Verse of the Day, search the full World English Bible, open any book and chapter, pause with a guided breathing practice, reflect through devotional prompts, and learn through Bible Academy starter lessons.
 
-DailyBreath 1.1.1 includes:
+DailyBreath 1.1.2 includes:
 
 - Verse of the Day
 - Improved Scripture and lesson narration
@@ -48,7 +48,7 @@ https://beyondimagination.co.technology/dailybreath/
 
 ## Version
 
-1.1.1
+1.1.2
 
 ## Copyright
 
@@ -58,11 +58,11 @@ https://beyondimagination.co.technology/dailybreath/
 
 Sign-in required: No
 
-DailyBreath 1.1.1 does not require an account to use the included Verse of the Day, full Bible reader, Bible search, Academy starter lessons, breathing practice, or reflection journal.
+DailyBreath 1.1.2 does not require an account to use the included Verse of the Day, full Bible reader, Bible search, Academy starter lessons, breathing practice, or reflection journal.
 
 ## App Review Notes
 
-DailyBreath 1.1.1 is a self-contained faith-centered wellness app. No sign-in is required for review. The app opens directly to the Today screen and includes the Verse of the Day, devotional card, full local World English Bible reader, Bible search, Bible Academy starter lessons, breathing practice, reflection journal, optional daily reminders, and an App Clip preview.
+DailyBreath 1.1.2 is a self-contained faith-centered wellness app. No sign-in is required for review. The app opens directly to the Today screen and includes the Verse of the Day, devotional card, full local World English Bible reader, Bible search, Bible Academy starter lessons, breathing practice, reflection journal, optional daily reminders, and an App Clip preview.
 
 The first version does not include in-app purchases, subscriptions, iMessage features, Game Center, routing coverage, or user-generated public content.
 
