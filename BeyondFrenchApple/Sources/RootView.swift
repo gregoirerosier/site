@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct RootView: View {
+    @EnvironmentObject private var store: AppStore
+
     var body: some View {
         TabView {
             NavigationStack { TodayView() }
@@ -14,11 +16,13 @@ struct RootView: View {
             NavigationStack { LearningProgressView() }
                 .tabItem { Label("Progress", systemImage: "chart.bar.fill") }
         }
-        .tint(.indigo)
+        .tint(store.appTheme.accent)
     }
 }
 
 struct BrandHeader: View {
+    @EnvironmentObject private var store: AppStore
+
     var body: some View {
         HStack(spacing: 12) {
             Image("BeyondFrenchLogo").resizable().scaledToFit().frame(width: 54, height: 54).clipShape(Circle())
@@ -27,7 +31,11 @@ struct BrandHeader: View {
                 Text("Speak, listen, remember").font(.caption).foregroundStyle(.secondary)
             }
             Spacer()
-            Text("2.0").font(.caption.bold()).padding(.horizontal, 10).padding(.vertical, 6).background(.indigo.opacity(0.12), in: Capsule())
+            Image(systemName: store.appTheme.symbol)
+                .font(.headline)
+                .foregroundStyle(store.appTheme.accent)
+                .frame(width: 34, height: 34)
+                .background(store.appTheme.accent.opacity(0.12), in: Circle())
         }
     }
 }
@@ -62,5 +70,44 @@ struct MetricTile: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(14)
         .background(color.opacity(0.10), in: RoundedRectangle(cornerRadius: 16))
+    }
+}
+
+struct ThemePicker: View {
+    @EnvironmentObject private var store: AppStore
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Theme")
+                .font(.title3.weight(.black))
+            Picker("Theme", selection: $store.appTheme) {
+                ForEach(AppTheme.allCases) { theme in
+                    Label(theme.title, systemImage: theme.symbol).tag(theme)
+                }
+            }
+            .pickerStyle(.segmented)
+        }
+        .padding(18)
+        .background(.background, in: RoundedRectangle(cornerRadius: 22))
+    }
+}
+
+extension AppTheme {
+    var accent: Color {
+        switch self {
+        case .classic: .indigo
+        case .ocean: .teal
+        case .sunrise: .orange
+        case .garden: .green
+        }
+    }
+
+    var symbol: String {
+        switch self {
+        case .classic: "sparkles"
+        case .ocean: "water.waves"
+        case .sunrise: "sun.max.fill"
+        case .garden: "leaf.fill"
+        }
     }
 }

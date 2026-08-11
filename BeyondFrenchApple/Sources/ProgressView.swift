@@ -3,27 +3,25 @@ import SwiftUI
 struct LearningProgressView: View {
     @EnvironmentObject private var store: AppStore
 
-    private var totalLessons: Int {
-        store.academy.modules.reduce(0) { $0 + $1.lessons.count }
-    }
-
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
                 BrandHeader()
 
+                ThemePicker()
+
                 LazyVGrid(columns: [.init(.flexible()), .init(.flexible())], spacing: 12) {
-                    MetricTile(title: "Completed", value: "\(store.completedLessonIDs.count)/\(totalLessons)", systemImage: "checkmark.seal.fill", color: .green)
+                    MetricTile(title: "Age Paths", value: "\(store.academy.ageGroups.count)", systemImage: "person.3.fill", color: .green)
                     MetricTile(title: "Practice", value: "\(store.correctPracticeCount)", systemImage: "bolt.fill", color: .orange)
                     MetricTile(title: "Dictionary", value: "\(store.dictionary.count)", systemImage: "character.book.closed.fill", color: .teal)
-                    MetricTile(title: "Access", value: store.hasBeyondID ? "Full" : "Free", systemImage: "person.crop.circle.badge.checkmark", color: .indigo)
+                    MetricTile(title: "Access", value: store.hasBeyondID ? "Full" : "Free", systemImage: "person.crop.circle.badge.checkmark", color: store.appTheme.accent)
                 }
 
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Module Progress")
+                    Text("Age Path Progress")
                         .font(.title3.weight(.black))
-                    ForEach(store.academy.modules) { module in
-                        ModuleProgressRow(module: module)
+                    ForEach(store.academy.ageGroups) { ageGroup in
+                        AgeProgressRow(ageGroup: ageGroup)
                     }
                 }
                 .padding(18)
@@ -43,7 +41,7 @@ struct LearningProgressView: View {
                         .controlSize(.large)
                     }
                     .padding(18)
-                    .background(.indigo.opacity(0.08), in: RoundedRectangle(cornerRadius: 22))
+                    .background(store.appTheme.accent.opacity(0.08), in: RoundedRectangle(cornerRadius: 22))
                 }
             }
             .padding()
@@ -53,26 +51,26 @@ struct LearningProgressView: View {
     }
 }
 
-private struct ModuleProgressRow: View {
+private struct AgeProgressRow: View {
     @EnvironmentObject private var store: AppStore
-    let module: AcademyModule
+    let ageGroup: AgeGroup
 
     private var completed: Int {
-        module.lessons.indices.filter { store.isLessonCompleted(module: module, lessonIndex: $0) }.count
+        store.completedAcademyLessons(ageGroup: ageGroup)
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
-                Text("\(module.icon) \(module.title)")
+                Text("\(ageGroup.title) · \(ageGroup.ages)")
                     .font(.subheadline.weight(.bold))
                 Spacer()
-                Text("\(completed)/\(module.lessons.count)")
+                Text("\(completed)/\(store.totalAcademyLessons)")
                     .font(.caption.weight(.bold))
                     .foregroundStyle(.secondary)
             }
-            SwiftUI.ProgressView(value: Double(completed), total: Double(max(module.lessons.count, 1)))
-                .tint(module.isFree ? .green : .indigo)
+            SwiftUI.ProgressView(value: Double(completed), total: Double(max(store.totalAcademyLessons, 1)))
+                .tint(store.appTheme.accent)
         }
     }
 }

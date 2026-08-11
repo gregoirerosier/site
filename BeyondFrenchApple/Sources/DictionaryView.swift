@@ -31,7 +31,7 @@ struct DictionaryView: View {
                                     .font(.caption.weight(.bold))
                                     .padding(.horizontal, 12)
                                     .padding(.vertical, 8)
-                                    .background(selectedType == type ? Color.indigo : Color.secondary.opacity(0.12), in: Capsule())
+                                    .background(selectedType == type ? store.appTheme.accent : Color.secondary.opacity(0.12), in: Capsule())
                                     .foregroundStyle(selectedType == type ? .white : .primary)
                             }
                             .buttonStyle(.plain)
@@ -78,7 +78,7 @@ private struct DictionaryCard: View {
                 Button { store.speak(word.french) } label: {
                     Image(systemName: "speaker.wave.2.fill")
                         .frame(width: 36, height: 36)
-                        .background(.indigo.opacity(0.12), in: Circle())
+                        .background(store.appTheme.accent.opacity(0.12), in: Circle())
                 }
                 .buttonStyle(.plain)
             }
@@ -86,7 +86,7 @@ private struct DictionaryCard: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(word.french)
                     .font(.title2.weight(.black))
-                    .foregroundStyle(.indigo)
+                    .foregroundStyle(store.appTheme.accent)
                 Text(word.pronunciation)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)

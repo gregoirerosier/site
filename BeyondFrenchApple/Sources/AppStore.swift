@@ -10,18 +10,45 @@ final class AppStore: ObservableObject {
     @Published private(set) var completedLessonIDs: Set<String> = []
     @Published private(set) var correctPracticeCount = 0
     @Published private(set) var isRefreshing = false
-    @Published private(set) var statusMessage = "Free daily lesson"
+    @Published private(set) var statusMessage = "Daily lesson"
     @Published var hasBeyondID = false
+    @Published var appTheme = AppTheme.classic {
+        didSet { UserDefaults.standard.set(appTheme.rawValue, forKey: themeKey) }
+    }
 
     private let endpoint = URL(string: "https://beyondimagination.co.technology/beyond-french/api/today.php")!
     private let speaker = AVSpeechSynthesizer()
     private let completedKey = "BeyondFrench.completedLessonIDs"
     private let practiceKey = "BeyondFrench.correctPracticeCount"
+    private let themeKey = "BeyondFrench.appTheme"
+
+    var totalAcademyLessons: Int {
+        academy.modules.reduce(0) { $0 + $1.lessons.count }
+    }
+
+    var unlockedAcademyLessons: Int {
+        academy.modules.reduce(0) { total, module in
+            total + module.lessons.indices.filter { isLessonUnlocked(module: module, lessonIndex: $0) }.count
+        }
+    }
+
+    func completedAcademyLessons(ageGroup: AgeGroup) -> Int {
+        academy.modules.reduce(0) { total, module in
+            total + module.lessons.indices.filter { isLessonCompleted(module: module, lessonIndex: $0, ageGroup: ageGroup) }.count
+        }
+    }
+
+    func unlockedAcademyLessons(ageGroup: AgeGroup) -> Int {
+        academy.modules.reduce(0) { total, module in
+            total + module.lessons.indices.filter { isLessonUnlocked(module: module, lessonIndex: $0, ageGroup: ageGroup) }.count
+        }
+    }
 
     func load() async {
         loadDictionary()
         loadAcademy()
         loadProgress()
+        loadTheme()
         await refreshLesson()
     }
 
@@ -32,7 +59,7 @@ final class AppStore: ObservableObject {
             let (data, response) = try await URLSession.shared.data(from: endpoint)
             guard let http = response as? HTTPURLResponse, http.statusCode == 200 else { throw URLError(.badServerResponse) }
             lesson = try JSONDecoder().decode(TodayResponse.self, from: data).lesson
-            statusMessage = "Updated from Daily Studio"
+            statusMessage = "Synced daily lesson"
         } catch {
             statusMessage = "Offline lesson"
         }
@@ -50,14 +77,29 @@ final class AppStore: ObservableObject {
         completedLessonIDs.contains(lessonID(module: module, lessonIndex: lessonIndex))
     }
 
+    func isLessonCompleted(module: AcademyModule, lessonIndex: Int, ageGroup: AgeGroup) -> Bool {
+        completedLessonIDs.contains(lessonID(module: module, lessonIndex: lessonIndex, ageGroup: ageGroup))
+    }
+
     func isLessonUnlocked(module: AcademyModule, lessonIndex: Int) -> Bool {
         guard lessonIndex > 0 else { return module.isFree || hasBeyondID }
         if !module.isFree && !hasBeyondID { return false }
         return hasBeyondID || isLessonCompleted(module: module, lessonIndex: lessonIndex - 1)
     }
 
+    func isLessonUnlocked(module: AcademyModule, lessonIndex: Int, ageGroup: AgeGroup) -> Bool {
+        guard lessonIndex > 0 else { return module.isFree || hasBeyondID }
+        if !module.isFree && !hasBeyondID { return false }
+        return hasBeyondID || isLessonCompleted(module: module, lessonIndex: lessonIndex - 1, ageGroup: ageGroup)
+    }
+
     func completeLesson(module: AcademyModule, lessonIndex: Int) {
         completedLessonIDs.insert(lessonID(module: module, lessonIndex: lessonIndex))
+        saveProgress()
+    }
+
+    func completeLesson(module: AcademyModule, lessonIndex: Int, ageGroup: AgeGroup) {
+        completedLessonIDs.insert(lessonID(module: module, lessonIndex: lessonIndex, ageGroup: ageGroup))
         saveProgress()
     }
 
@@ -89,6 +131,11 @@ final class AppStore: ObservableObject {
         correctPracticeCount = UserDefaults.standard.integer(forKey: practiceKey)
     }
 
+    private func loadTheme() {
+        let savedTheme = UserDefaults.standard.string(forKey: themeKey).flatMap(AppTheme.init(rawValue:))
+        appTheme = savedTheme ?? .classic
+    }
+
     private func saveProgress() {
         UserDefaults.standard.set(Array(completedLessonIDs), forKey: completedKey)
         UserDefaults.standard.set(correctPracticeCount, forKey: practiceKey)
@@ -96,6 +143,10 @@ final class AppStore: ObservableObject {
 
     private func lessonID(module: AcademyModule, lessonIndex: Int) -> String {
         "\(module.slug)-\(lessonIndex + 1)"
+    }
+
+    private func lessonID(module: AcademyModule, lessonIndex: Int, ageGroup: AgeGroup) -> String {
+        "\(ageGroup.slug)-\(module.slug)-\(lessonIndex + 1)"
     }
 
     private func normalized(_ value: String) -> String {

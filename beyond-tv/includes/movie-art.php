@@ -5,9 +5,10 @@ function beyond_tv_rpdb_api_key(): string
 {
     $environmentKey = getenv('RPDB_API_KEY');
     if (is_string($environmentKey) && trim($environmentKey) !== '') {
-        return trim($environmentKey);
+        $key = trim($environmentKey);
+        return strcasecmp($key, 't0-free-rpdb') === 0 ? '' : $key;
     }
-    return 't0-free-rpdb';
+    return '';
 }
 
 function beyond_tv_rpdb_known_ids(): array

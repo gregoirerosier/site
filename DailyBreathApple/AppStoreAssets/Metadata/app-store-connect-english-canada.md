@@ -2,18 +2,18 @@
 
 ## Promotional Text
 
-Begin each day with the full Bible, guided prayer, peaceful breathing, devotional reflection, and a Bible Academy preview.
+Begin each day with the full Bible, guided prayer, peaceful breathing, devotional reflection, and Bible Academy starter lessons.
 
 ## Description
 
 DailyBreath is a faith-centered wellness app designed to help you begin with Scripture and carry peace into your day.
 
-Read the Verse of the Day, search the full World English Bible, open any book and chapter, pause with a guided breathing practice, reflect through devotional prompts, and preview the Bible Academy coming in Fall 2026.
+Read the Verse of the Day, search the full World English Bible, open any book and chapter, pause with a guided breathing practice, reflect through devotional prompts, and learn through Bible Academy starter lessons.
 
 DailyBreath 1.1.1 includes:
 
 - Verse of the Day
-- Scripture listening
+- Improved Scripture and lesson narration
 - Full World English Bible reader
 - All 66 books and 31,103 verses
 - Bible search
@@ -22,7 +22,7 @@ DailyBreath 1.1.1 includes:
 - Favorite, copy, and share verse actions
 - Daily devotional reflection
 - Mark-read devotional flow
-- Bible Academy preview
+- Bible Academy starter lessons with checks and progress
 - Breath of the Day with gentle session polish
 - Remembered breathing duration
 - Quick Repeat after a completed breath session
@@ -58,11 +58,11 @@ https://beyondimagination.co.technology/dailybreath/
 
 Sign-in required: No
 
-DailyBreath 1.1.1 does not require an account to use the included Verse of the Day, full Bible reader, Bible search, Academy preview, breathing practice, or reflection journal.
+DailyBreath 1.1.1 does not require an account to use the included Verse of the Day, full Bible reader, Bible search, Academy starter lessons, breathing practice, or reflection journal.
 
 ## App Review Notes
 
-DailyBreath 1.1.1 is a self-contained faith-centered wellness app. No sign-in is required for review. The app opens directly to the Today screen and includes the Verse of the Day, devotional card, full local World English Bible reader, Bible search, Academy preview, breathing practice, reflection journal, and an App Clip preview. Academy content is clearly marked as coming Fall 2026 and does not unlock any placeholder lessons in this build.
+DailyBreath 1.1.1 is a self-contained faith-centered wellness app. No sign-in is required for review. The app opens directly to the Today screen and includes the Verse of the Day, devotional card, full local World English Bible reader, Bible search, Bible Academy starter lessons, breathing practice, reflection journal, optional daily reminders, and an App Clip preview.
 
 The first version does not include in-app purchases, subscriptions, iMessage features, Game Center, routing coverage, or user-generated public content.
 

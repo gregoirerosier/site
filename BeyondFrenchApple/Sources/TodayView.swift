@@ -14,14 +14,14 @@ struct TodayView: View {
                 }
                 LazyVGrid(columns: [.init(.flexible()), .init(.flexible()), .init(.flexible())], spacing: 10) {
                     MetricTile(title: "Words", value: "\(store.dictionary.count)", systemImage: "text.book.closed.fill", color: .teal)
-                    MetricTile(title: "Modules", value: "\(store.academy.modules.count)", systemImage: "square.grid.2x2.fill", color: .indigo)
+                    MetricTile(title: "Modules", value: "\(store.academy.modules.count)", systemImage: "square.grid.2x2.fill", color: store.appTheme.accent)
                     MetricTile(title: "Correct", value: "\(store.correctPracticeCount)", systemImage: "checkmark.circle.fill", color: .green)
                 }
                 VStack(alignment: .leading, spacing: 14) {
-                    Text("TODAY'S PHRASE").font(.caption.bold()).tracking(2).foregroundStyle(.indigo)
+                    Text("TODAY'S PHRASE").font(.caption.bold()).tracking(2).foregroundStyle(store.appTheme.accent)
                     Text(store.lesson.english).font(.system(size: 38, weight: .black, design: .rounded))
                     Divider()
-                    Text(store.lesson.french).font(.system(size: 34, weight: .bold, design: .rounded)).foregroundStyle(.indigo)
+                    Text(store.lesson.french).font(.system(size: 34, weight: .bold, design: .rounded)).foregroundStyle(store.appTheme.accent)
                     Text(store.lesson.frenchPronunciation).font(.headline).foregroundStyle(.secondary)
                     HStack {
                         Button { store.speak(store.lesson.french) } label: {
@@ -41,7 +41,7 @@ struct TodayView: View {
                 .shadow(color: .black.opacity(0.08), radius: 20, y: 10)
 
                 LazyVGrid(columns: [.init(.flexible()), .init(.flexible())], spacing: 12) {
-                    LanguageTile(flag: "FR", name: "Francais", value: store.lesson.french, color: .indigo)
+                    LanguageTile(flag: "FR", name: "Francais", value: store.lesson.french, color: store.appTheme.accent)
                     LanguageTile(flag: "🇭🇹", name: "Kreyòl", value: store.lesson.kreyol, color: .red)
                     LanguageTile(flag: "🇯🇲", name: "Patois", value: store.lesson.patois, color: .green)
                     LanguageTile(flag: "ES", name: "Espanol", value: store.lesson.spanish, color: .orange)

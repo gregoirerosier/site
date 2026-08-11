@@ -246,7 +246,7 @@ struct TodayView: View {
             NavigationLink {
                 AcademyView()
             } label: {
-                QuickAction(title: "Bible Academy", subtitle: "Coming Fall 2026", systemImage: "graduationcap.fill")
+                QuickAction(title: "Bible Academy", subtitle: "Starter lessons", systemImage: "graduationcap.fill")
             }
             NavigationLink {
                 JournalView()

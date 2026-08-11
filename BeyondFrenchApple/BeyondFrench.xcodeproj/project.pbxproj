@@ -20,6 +20,7 @@
 		300000000000000000000011 /* academy.json in Resources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000011 /* academy.json */; };
 		300000000000000000000012 /* dictionary.json in Resources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000012 /* dictionary.json */; };
 		300000000000000000000013 /* BeyondFrenchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000013 /* BeyondFrenchTests.swift */; };
+		300000000000000000000014 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000016 /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,7 @@
 		100000000000000000000013 /* BeyondFrenchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeyondFrenchTests.swift; sourceTree = "<group>"; };
 		100000000000000000000014 /* BeyondFrench.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BeyondFrench.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		100000000000000000000015 /* BeyondFrenchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BeyondFrenchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		100000000000000000000016 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +100,7 @@
 			isa = PBXGroup;
 			children = (
 				100000000000000000000010 /* Assets.xcassets */,
+				100000000000000000000016 /* LaunchScreen.storyboard */,
 				100000000000000000000011 /* academy.json */,
 				100000000000000000000012 /* dictionary.json */,
 			);
@@ -207,6 +210,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				300000000000000000000010 /* Assets.xcassets in Resources */,
+				300000000000000000000014 /* LaunchScreen.storyboard in Resources */,
 				300000000000000000000011 /* academy.json in Resources */,
 				300000000000000000000012 /* dictionary.json in Resources */,
 			);
@@ -261,7 +265,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Beyond French";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -288,7 +292,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Beyond French";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -399,7 +403,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 1.1.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -460,7 +464,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 1.1.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";

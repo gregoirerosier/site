@@ -25,6 +25,27 @@ struct PrayerPractice: Identifiable, Equatable {
     let systemImage: String
 }
 
+struct AcademyLesson: Identifiable, Equatable {
+    let id: Int
+    let title: String
+    let duration: String
+    let scripture: String
+    let summary: String
+    let teaching: String
+    let practice: String
+    let reflectionPrompt: String
+    let checkPrompt: String
+    let checkAnswer: String
+}
+
+struct AcademyPath: Identifiable, Equatable {
+    let id: Int
+    let title: String
+    let subtitle: String
+    let systemImage: String
+    let lessons: [AcademyLesson]
+}
+
 struct BreathPattern: Identifiable, Equatable {
     let id: Int
     let title: String
