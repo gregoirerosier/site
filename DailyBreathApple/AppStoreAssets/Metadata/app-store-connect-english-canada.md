@@ -29,6 +29,7 @@ DailyBreath 1.1.1 includes:
 - Gentle weekly breathing count
 - Guided prayer prompts
 - Private reflection journal with mood prompts and edit/delete
+- Optional daily reminder with rotating gentle copy
 - App Clip preview for a quick verse and breath
 
 DailyBreath is built for a quiet daily rhythm: read, breathe, pray, reflect, and take one faithful next step.

@@ -5,6 +5,9 @@ struct TodayView: View {
     @AppStorage("dailyBreathTheme") private var selectedThemeID = DailyBreathTheme.forest.id
     @AppStorage("devotionalReadDayKeys") private var devotionalReadDayKeys = ""
     @AppStorage("completedBreathDayKeys") private var completedBreathDayKeys = ""
+    @AppStorage("dailyReminderEnabled") private var reminderEnabled = false
+    @AppStorage("dailyReminderHour") private var reminderHour = 8
+    @AppStorage("dailyReminderMinute") private var reminderMinute = 0
 
     private var selectedTheme: DailyBreathTheme {
         DailyBreathTheme(id: selectedThemeID)
@@ -32,6 +35,7 @@ struct TodayView: View {
                 BrandHeader()
                 themePicker
                 dailyRhythmCard
+                reminderCard
                 verseCard
                 devotionalCard
                 journalCard
@@ -66,6 +70,34 @@ struct TodayView: View {
         }
         .padding(16)
         .background(.background.opacity(0.9), in: RoundedRectangle(cornerRadius: 8))
+    }
+
+    private var reminderCard: some View {
+        NavigationLink {
+            ReminderSettingsView()
+        } label: {
+            HStack(spacing: 14) {
+                Image(systemName: reminderEnabled ? "bell.badge.fill" : "bell.fill")
+                    .font(.title2)
+                    .foregroundStyle(selectedTheme.accent)
+                    .frame(width: 34)
+                VStack(alignment: .leading, spacing: 5) {
+                    Text("Daily Reminder")
+                        .font(.headline)
+                    Text(reminderEnabled ? "Scheduled for \(formattedReminderTime)" : "Set a gentle nudge to return tomorrow")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                }
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.footnote.weight(.bold))
+                    .foregroundStyle(.tertiary)
+            }
+            .padding(16)
+            .background(.background.opacity(0.9), in: RoundedRectangle(cornerRadius: 8))
+        }
+        .buttonStyle(.plain)
     }
 
     private var themePicker: some View {
@@ -221,8 +253,18 @@ struct TodayView: View {
             } label: {
                 QuickAction(title: "One Sentence", subtitle: "Reflect today", systemImage: "pencil.and.list.clipboard")
             }
+            NavigationLink {
+                ReminderSettingsView()
+            } label: {
+                QuickAction(title: "Reminder", subtitle: reminderEnabled ? formattedReminderTime : "Daily nudge", systemImage: "bell.badge.fill")
+            }
         }
         .buttonStyle(.plain)
+    }
+
+    private var formattedReminderTime: String {
+        let date = Calendar.current.date(from: DateComponents(hour: reminderHour, minute: reminderMinute)) ?? Date()
+        return date.formatted(date: .omitted, time: .shortened)
     }
 
     private static let dayFormatter: DateFormatter = {
