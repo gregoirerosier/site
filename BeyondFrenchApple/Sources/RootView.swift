@@ -17,6 +17,7 @@ struct RootView: View {
                 .tabItem { Label("Progress", systemImage: "chart.bar.fill") }
         }
         .tint(store.appTheme.accent)
+        .preferredColorScheme(.dark)
     }
 }
 
@@ -35,8 +36,9 @@ struct BrandHeader: View {
                 .font(.headline)
                 .foregroundStyle(store.appTheme.accent)
                 .frame(width: 34, height: 34)
-                .background(store.appTheme.accent.opacity(0.12), in: Circle())
+                .background(store.appTheme.accent.opacity(0.20), in: Circle())
         }
+        .foregroundStyle(.white)
     }
 }
 
@@ -46,7 +48,7 @@ struct AccessPill: View {
         Label(text, systemImage: "checkmark.seal.fill")
             .font(.caption.bold()).foregroundStyle(.green)
             .padding(.horizontal, 10).padding(.vertical, 7)
-            .background(.green.opacity(0.11), in: Capsule())
+            .background(.green.opacity(0.18), in: Capsule())
     }
 }
 
@@ -65,11 +67,16 @@ struct MetricTile: View {
                 .font(.title2.weight(.black))
             Text(title.uppercased())
                 .font(.caption2.weight(.bold))
-                .foregroundStyle(.secondary)
+                .foregroundStyle(.white.opacity(0.66))
         }
+        .foregroundStyle(.white)
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(14)
-        .background(color.opacity(0.10), in: RoundedRectangle(cornerRadius: 16))
+        .background(
+            LinearGradient(colors: [color.opacity(0.32), Color.white.opacity(0.055)], startPoint: .topLeading, endPoint: .bottomTrailing),
+            in: RoundedRectangle(cornerRadius: 16)
+        )
+        .overlay(RoundedRectangle(cornerRadius: 16).stroke(color.opacity(0.22), lineWidth: 1))
     }
 }
 
@@ -88,17 +95,37 @@ struct ThemePicker: View {
             .pickerStyle(.segmented)
         }
         .padding(18)
-        .background(.background, in: RoundedRectangle(cornerRadius: 22))
+        .background(AppTheme.cardFill, in: RoundedRectangle(cornerRadius: 22))
+        .overlay(RoundedRectangle(cornerRadius: 22).stroke(store.appTheme.accent.opacity(0.18), lineWidth: 1))
     }
 }
 
 extension AppTheme {
+    static let appBackground = LinearGradient(
+        colors: [
+            Color(red: 0.015, green: 0.018, blue: 0.030),
+            Color(red: 0.030, green: 0.044, blue: 0.082),
+            Color(red: 0.006, green: 0.008, blue: 0.014)
+        ],
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
+    )
+
+    static let cardFill = LinearGradient(
+        colors: [
+            Color.white.opacity(0.105),
+            Color.white.opacity(0.045)
+        ],
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
+    )
+
     var accent: Color {
         switch self {
-        case .classic: .indigo
-        case .ocean: .teal
-        case .sunrise: .orange
-        case .garden: .green
+        case .classic: Color(red: 0.12, green: 0.45, blue: 1.0)
+        case .ocean: Color(red: 0.00, green: 0.78, blue: 0.86)
+        case .sunrise: Color(red: 1.0, green: 0.72, blue: 0.12)
+        case .garden: Color(red: 0.06, green: 0.78, blue: 0.30)
         }
     }
 

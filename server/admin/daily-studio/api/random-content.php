@@ -93,7 +93,7 @@ try {
             }
             require $root . '/beyond-id/includes/db.php';
             $managedLocale = $language;
-            $statement = $pdo->prepare("SELECT publish_date,locale,translation_code,heading,verse_text,scripture_reference,footer_message,status FROM verse_day_posts WHERE publish_date=? AND locale=? ORDER BY CASE WHEN status='published' THEN 0 ELSE 1 END, id DESC LIMIT 1");
+            $statement = $pdo->prepare("SELECT publish_date,locale,translation_code,heading,verse_text,scripture_reference,footer_message,background_asset_url,status FROM verse_day_posts WHERE publish_date=? AND locale=? ORDER BY CASE WHEN status='published' THEN 0 ELSE 1 END, id DESC LIMIT 1");
             $statement->execute([$managedDate, $managedLocale]);
             $managed = $statement->fetch(PDO::FETCH_ASSOC);
             if (!$managed || trim((string)($managed['verse_text'] ?? '')) === '') {
@@ -107,6 +107,11 @@ try {
                     break;
                 }
             }
+            $backgroundAsset = (string)($managed['background_asset_url'] ?? '');
+            $templateStyle = str_contains($backgroundAsset, 'olive-sanctuary') ? 'olive'
+                : (str_contains($backgroundAsset, 'heritage-botanical') ? 'botanical'
+                : (str_contains($backgroundAsset, 'modern-aurora') ? 'forest'
+                : (str_contains($backgroundAsset, 'living-sanctuary') ? 'advanced' : 'forest')));
             jsonOut(['ok'=>true, 'source'=>'content_manager', 'item'=>[
                 'id'=>$managedId,
                 'verse'=>(string)$managed['verse_text'],
@@ -114,6 +119,7 @@ try {
                 'translation'=>(string)($managed['translation_code'] ?: 'KJV'),
                 'heading'=>(string)($managed['heading'] ?: 'VERSE OF THE DAY'),
                 'footer'=>(string)($managed['footer_message'] ?: 'WALK IN FAITH TODAY.'),
+                'template_style'=>$templateStyle,
                 'publish_date'=>(string)$managed['publish_date'],
                 'locale'=>(string)$managed['locale'],
                 'status'=>(string)$managed['status'],

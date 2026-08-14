@@ -49,7 +49,7 @@ struct DictionaryView: View {
             }
             .padding(.vertical)
         }
-        .background(Color(uiColor: .systemGroupedBackground))
+        .background(AppTheme.appBackground)
         .navigationTitle("Dictionary")
         .searchable(text: $query, prompt: "Search every language")
         .overlay {
@@ -99,7 +99,9 @@ private struct DictionaryCard: View {
             }
         }
         .padding(16)
-        .background(.background, in: RoundedRectangle(cornerRadius: 18))
+        .foregroundStyle(.white)
+        .background(AppTheme.cardFill, in: RoundedRectangle(cornerRadius: 18))
+        .overlay(RoundedRectangle(cornerRadius: 18).stroke(store.appTheme.accent.opacity(0.16), lineWidth: 1))
     }
 }
 
@@ -120,6 +122,7 @@ private struct TranslationPill: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(9)
-        .background(color.opacity(0.09), in: RoundedRectangle(cornerRadius: 12))
+        .background(color.opacity(0.17), in: RoundedRectangle(cornerRadius: 12))
+        .overlay(RoundedRectangle(cornerRadius: 12).stroke(color.opacity(0.22), lineWidth: 1))
     }
 }

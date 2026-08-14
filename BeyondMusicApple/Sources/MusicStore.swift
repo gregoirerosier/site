@@ -105,6 +105,26 @@ final class MusicStore: ObservableObject {
         tracks.compactMap(\.durationSeconds).reduce(0, +) / 60
     }
 
+    var offlineStorageBytes: Int64 {
+        localTracks.reduce(Int64(0)) { total, track in
+            guard let url = localURL(for: track),
+                  let values = try? url.resourceValues(forKeys: [.fileSizeKey])
+            else { return total }
+            return total + Int64(values.fileSize ?? 0)
+        }
+    }
+
+    var offlineStorageText: String {
+        ByteCountFormatter.string(fromByteCount: offlineStorageBytes, countStyle: .file)
+    }
+
+    var offlineReadinessText: String {
+        if localTracks.isEmpty {
+            return "Import MP3 files or download search results to build an offline library."
+        }
+        return "\(localTracks.count) offline track\(localTracks.count == 1 ? "" : "s") ready for screen-off listening."
+    }
+
     var playlists: [MusicPlaylist] {
         [
             MusicPlaylist(
@@ -150,6 +170,9 @@ final class MusicStore: ObservableObject {
         [
             .all: searchResults.count,
             .youtube: searchResults.filter { $0.providerName == "YouTube" }.count,
+            .mixtapes: searchResults.filter { $0.providerName == "Mixtape Archive" }.count,
+            .audius: searchResults.filter { $0.providerName == "Audius" }.count,
+            .ccMixter: searchResults.filter { $0.providerName == "ccMixter" }.count,
             .internetArchive: searchResults.filter { $0.providerName == "Internet Archive" }.count
         ]
     }
@@ -338,17 +361,35 @@ final class MusicStore: ObservableObject {
         localURL(for: track) != nil
     }
 
+    func fileSizeText(for track: MusicTrack) -> String? {
+        guard let url = localURL(for: track),
+              let values = try? url.resourceValues(forKeys: [.fileSizeKey]),
+              let size = values.fileSize
+        else { return nil }
+        return ByteCountFormatter.string(fromByteCount: Int64(size), countStyle: .file)
+    }
+
+    func localDetailText(for track: MusicTrack) -> String {
+        let source = track.sourceKind.rawValue
+        if let fileSize = fileSizeText(for: track) {
+            return "\(source) · \(fileSize)"
+        }
+        return source
+    }
+
     func remove(_ track: MusicTrack) {
         if let url = localURL(for: track), fileManager.fileExists(atPath: url.path) {
             try? fileManager.removeItem(at: url)
         }
         tracks.removeAll { $0.id == track.id }
+        downloadStates[track.id] = nil
         if currentTrack?.id == track.id {
             player.pause()
             currentTrack = nil
             isPlaying = false
         }
         saveLibrary()
+        statusMessage = "Removed \(track.title) from this device"
     }
 
     func toggleFavorite(_ track: MusicTrack) {

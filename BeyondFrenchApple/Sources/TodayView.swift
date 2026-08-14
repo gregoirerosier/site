@@ -37,8 +37,10 @@ struct TodayView: View {
                     }
                     .controlSize(.large)
                 }
-                .padding(22).background(.background, in: RoundedRectangle(cornerRadius: 22))
-                .shadow(color: .black.opacity(0.08), radius: 20, y: 10)
+                .padding(22)
+                .background(AppTheme.cardFill, in: RoundedRectangle(cornerRadius: 22))
+                .overlay(RoundedRectangle(cornerRadius: 22).stroke(store.appTheme.accent.opacity(0.24), lineWidth: 1))
+                .shadow(color: store.appTheme.accent.opacity(0.18), radius: 20, y: 10)
 
                 LazyVGrid(columns: [.init(.flexible()), .init(.flexible())], spacing: 12) {
                     LanguageTile(flag: "FR", name: "Francais", value: store.lesson.french, color: store.appTheme.accent)
@@ -46,12 +48,20 @@ struct TodayView: View {
                     LanguageTile(flag: "🇯🇲", name: "Patois", value: store.lesson.patois, color: .green)
                     LanguageTile(flag: "ES", name: "Espanol", value: store.lesson.spanish, color: .orange)
                 }
-                GroupBox("Culture note") {
-                    Text(store.lesson.cultureNote).frame(maxWidth: .infinity, alignment: .leading)
+                VStack(alignment: .leading, spacing: 8) {
+                    Label("Culture note", systemImage: "globe.americas.fill")
+                        .font(.headline)
+                        .foregroundStyle(store.appTheme.accent)
+                    Text(store.lesson.cultureNote)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundStyle(.white.opacity(0.82))
                 }
+                .padding(16)
+                .background(AppTheme.cardFill, in: RoundedRectangle(cornerRadius: 18))
+                .overlay(RoundedRectangle(cornerRadius: 18).stroke(store.appTheme.accent.opacity(0.16), lineWidth: 1))
             }.padding()
         }
-        .background(Color(uiColor: .systemGroupedBackground))
+        .background(AppTheme.appBackground)
         .refreshable { await store.refreshLesson() }
         .navigationTitle("Today")
         .navigationBarTitleDisplayMode(.inline)
@@ -66,6 +76,11 @@ private struct LanguageTile: View {
             Text(flag).font(.title3.weight(.black))
             Text(name.uppercased()).font(.caption.bold()).foregroundStyle(color)
             Text(value).font(.headline).frame(maxWidth: .infinity, alignment: .leading)
-        }.padding().frame(minHeight: 132).background(color.opacity(0.09), in: RoundedRectangle(cornerRadius: 18))
+        }
+        .foregroundStyle(.white)
+        .padding()
+        .frame(minHeight: 132)
+        .background(color.opacity(0.18), in: RoundedRectangle(cornerRadius: 18))
+        .overlay(RoundedRectangle(cornerRadius: 18).stroke(color.opacity(0.24), lineWidth: 1))
     }
 }

@@ -25,7 +25,8 @@ struct LearningProgressView: View {
                     }
                 }
                 .padding(18)
-                .background(.background, in: RoundedRectangle(cornerRadius: 22))
+                .background(AppTheme.cardFill, in: RoundedRectangle(cornerRadius: 22))
+                .overlay(RoundedRectangle(cornerRadius: 22).stroke(store.appTheme.accent.opacity(0.18), lineWidth: 1))
 
                 if !store.hasBeyondID {
                     VStack(alignment: .leading, spacing: 12) {
@@ -46,7 +47,7 @@ struct LearningProgressView: View {
             }
             .padding()
         }
-        .background(Color(uiColor: .systemGroupedBackground))
+        .background(AppTheme.appBackground)
         .navigationTitle("Progress")
     }
 }

@@ -39,7 +39,8 @@ struct PracticeView: View {
                         .textInputAutocapitalization(.sentences)
                         .submitLabel(.done)
                         .padding(14)
-                        .background(Color(uiColor: .secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 14))
+                        .background(Color.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
+                        .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.white.opacity(0.12), lineWidth: 1))
                         .onSubmit(check)
 
                     HStack {
@@ -60,7 +61,8 @@ struct PracticeView: View {
                     }
                 }
                 .padding(18)
-                .background(.background, in: RoundedRectangle(cornerRadius: 22))
+                .background(AppTheme.cardFill, in: RoundedRectangle(cornerRadius: 22))
+                .overlay(RoundedRectangle(cornerRadius: 22).stroke(store.appTheme.accent.opacity(0.18), lineWidth: 1))
 
                 HStack {
                     Button {
@@ -86,7 +88,7 @@ struct PracticeView: View {
             }
             .padding()
         }
-        .background(Color(uiColor: .systemGroupedBackground))
+        .background(AppTheme.appBackground)
         .navigationTitle("Practice")
     }
 

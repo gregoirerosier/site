@@ -5,6 +5,8 @@ import Foundation
 final class DailyBreathStore: ObservableObject {
     @Published private(set) var verse = Verse.daily
     @Published private(set) var devotional = Devotional.today
+    @Published private(set) var isRefreshing = false
+    @Published private(set) var statusMessage = "Bundled daily verse"
     @Published var breathPhase = "Inhale"
     @Published var journalText = ""
     @Published var journalPrompt = DailyBreathStore.promptOfTheDay()
@@ -95,6 +97,34 @@ final class DailyBreathStore: ObservableObject {
     ]
 
     private let speaker = AVSpeechSynthesizer()
+    private let endpoint = URL(string: "https://beyondimagination.co.technology/dailybreath/api/today.php")!
+
+    func load() async {
+        verse = .daily
+        devotional = .today
+        await refreshToday()
+    }
+
+    func refreshToday() async {
+        isRefreshing = true
+        defer { isRefreshing = false }
+
+        do {
+            let (data, response) = try await URLSession.shared.data(from: endpoint)
+            guard let http = response as? HTTPURLResponse, http.statusCode == 200 else {
+                throw URLError(.badServerResponse)
+            }
+
+            let today = try JSONDecoder().decode(DailyBreathTodayResponse.self, from: data)
+            verse = today.verse
+            devotional = today.devotional
+            statusMessage = "Synced admin verse"
+        } catch {
+            verse = .daily
+            devotional = .today
+            statusMessage = "Offline verse"
+        }
+    }
 
     func speakVerse() {
         speakText("\(verse.text) \(verse.reference)")
@@ -183,4 +213,9 @@ final class DailyBreathStore: ObservableObject {
         let day = calendar.ordinality(of: .day, in: .era, for: date) ?? 1
         return prompts[(day - 1) % prompts.count]
     }
+}
+
+private struct DailyBreathTodayResponse: Decodable {
+    let verse: Verse
+    let devotional: Devotional
 }

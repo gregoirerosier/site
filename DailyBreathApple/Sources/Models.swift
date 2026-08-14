@@ -1,13 +1,13 @@
 import Foundation
 
-struct Verse: Identifiable, Equatable {
+struct Verse: Identifiable, Codable, Equatable {
     let id: Int
     let text: String
     let reference: String
     let reflection: String
 }
 
-struct Devotional: Identifiable, Equatable {
+struct Devotional: Identifiable, Codable, Equatable {
     let id: Int
     let title: String
     let excerpt: String

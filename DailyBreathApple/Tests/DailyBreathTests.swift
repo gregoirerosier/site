@@ -4,7 +4,42 @@ import XCTest
 final class DailyBreathTests: XCTestCase {
     func testDailyVerseHasReference() {
         XCTAssertEqual(Verse.daily.reference, "Psalm 46:10")
-        XCTAssertFalse(Verse.daily.text.isEmpty)
+        XCTAssertEqual(Verse.daily.text, "Be still, and know that I am God.")
+    }
+
+    func testTodayResponseDecodesAdminVersePayload() throws {
+        let data = """
+        {
+          "ok": true,
+          "date": "2026-08-14",
+          "verse": {
+            "id": 1,
+            "text": "Be still, and know that I am God.",
+            "reference": "Psalm 46:10",
+            "reflection": "Begin slowly."
+          },
+          "devotional": {
+            "id": 1,
+            "title": "Walk in Quiet Confidence",
+            "excerpt": "Make room for stillness.",
+            "body": "Stillness is not empty time.",
+            "scripture": "Psalm 46:10",
+            "minutes": 5,
+            "prayer": "Lord, quiet my heart.",
+            "practice": "Take three slow breaths."
+          }
+        }
+        """.data(using: .utf8)!
+
+        struct TodayPayload: Decodable {
+            let verse: Verse
+            let devotional: Devotional
+        }
+
+        let payload = try JSONDecoder().decode(TodayPayload.self, from: data)
+
+        XCTAssertEqual(payload.verse.reference, "Psalm 46:10")
+        XCTAssertEqual(payload.devotional.scripture, "Psalm 46:10")
     }
 
     func testBibleParserBuildsBooksChaptersAndSearchableVerses() {

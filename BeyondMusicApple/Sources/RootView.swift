@@ -38,7 +38,7 @@ struct MusicHeader: View {
         HStack(spacing: 12) {
             ZStack {
                 RoundedRectangle(cornerRadius: 8)
-                    .fill(.linearGradient(colors: [.musicAqua, .musicRose], startPoint: .topLeading, endPoint: .bottomTrailing))
+                    .fill(.linearGradient(colors: [.musicRose, .musicAqua], startPoint: .topLeading, endPoint: .bottomTrailing))
                 Image(systemName: "waveform")
                     .font(.title2.weight(.black))
                     .foregroundStyle(.white)
@@ -55,7 +55,7 @@ struct MusicHeader: View {
 
             Spacer()
 
-            Text("1.1 BETA")
+            Text("1.1.1")
                 .font(.caption.bold())
                 .padding(.horizontal, 10)
                 .padding(.vertical, 6)
@@ -124,10 +124,10 @@ struct MiniPlayer: View {
 }
 
 extension Color {
-    static let musicBackground = Color(red: 0.035, green: 0.040, blue: 0.060)
-    static let musicPanel = Color(red: 0.090, green: 0.100, blue: 0.125)
-    static let musicPanelSoft = Color(red: 0.130, green: 0.140, blue: 0.165)
-    static let musicAqua = Color(red: 0.270, green: 0.930, blue: 0.860)
-    static let musicRose = Color(red: 0.930, green: 0.310, blue: 0.610)
-    static let musicGold = Color(red: 0.980, green: 0.780, blue: 0.300)
+    static let musicBackground = Color(red: 0.055, green: 0.030, blue: 0.050)
+    static let musicPanel = Color(red: 0.130, green: 0.070, blue: 0.115)
+    static let musicPanelSoft = Color(red: 0.185, green: 0.095, blue: 0.160)
+    static let musicAqua = Color(red: 1.000, green: 0.255, blue: 0.610)
+    static let musicRose = Color(red: 0.970, green: 0.120, blue: 0.455)
+    static let musicGold = Color(red: 1.000, green: 0.690, blue: 0.360)
 }

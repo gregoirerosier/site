@@ -36,7 +36,8 @@ struct AcademyView: View {
                 }
                 .padding(20)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(.background, in: RoundedRectangle(cornerRadius: 22))
+                .background(AppTheme.cardFill, in: RoundedRectangle(cornerRadius: 22))
+                .overlay(RoundedRectangle(cornerRadius: 22).stroke(store.appTheme.accent.opacity(0.18), lineWidth: 1))
 
                 LazyVGrid(columns: [.init(.flexible()), .init(.flexible())], spacing: 12) {
                     MetricTile(title: "\(selectedGroup.title) Done", value: "\(store.completedAcademyLessons(ageGroup: selectedGroup))/\(store.totalAcademyLessons)", systemImage: "checkmark.seal.fill", color: .green)
@@ -66,7 +67,8 @@ struct AcademyView: View {
                                 .foregroundStyle(.secondary)
                         }
                         .padding(16)
-                        .background(.background, in: RoundedRectangle(cornerRadius: 18))
+                        .background(AppTheme.cardFill, in: RoundedRectangle(cornerRadius: 18))
+                        .overlay(RoundedRectangle(cornerRadius: 18).stroke(store.appTheme.accent.opacity(0.16), lineWidth: 1))
                     }
                     .buttonStyle(.plain)
                 }
@@ -77,7 +79,7 @@ struct AcademyView: View {
             }
             .padding()
         }
-        .background(Color(uiColor: .systemGroupedBackground))
+        .background(AppTheme.appBackground)
         .navigationTitle("Academy")
     }
 }
@@ -123,7 +125,8 @@ private struct ModuleCard: View {
             }
         }
         .padding(18)
-        .background(.background, in: RoundedRectangle(cornerRadius: 22))
+        .background(AppTheme.cardFill, in: RoundedRectangle(cornerRadius: 22))
+        .overlay(RoundedRectangle(cornerRadius: 22).stroke(store.appTheme.accent.opacity(0.18), lineWidth: 1))
     }
 }
 
@@ -229,7 +232,8 @@ private struct AcademyLessonDetailView: View {
                     }
                 }
                 .padding(16)
-                .background(.background, in: RoundedRectangle(cornerRadius: 18))
+                .background(AppTheme.cardFill, in: RoundedRectangle(cornerRadius: 18))
+                .overlay(RoundedRectangle(cornerRadius: 18).stroke(store.appTheme.accent.opacity(0.16), lineWidth: 1))
 
                 LessonInfoBlock(title: "\(ageGroup.title) Teaching", text: experience.teaching, systemImage: "lightbulb.fill", color: .yellow)
                 LessonInfoBlock(title: "\(ageGroup.title) Practice", text: experience.practice, systemImage: "person.wave.2.fill", color: .teal)
@@ -251,7 +255,8 @@ private struct AcademyLessonDetailView: View {
                         .textInputAutocapitalization(.sentences)
                         .submitLabel(.done)
                         .padding(14)
-                        .background(Color(uiColor: .secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 14))
+                        .background(Color.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
+                        .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.white.opacity(0.12), lineWidth: 1))
                         .onSubmit(checkLesson)
                     HStack {
                         Button(action: checkLesson) {
@@ -276,11 +281,12 @@ private struct AcademyLessonDetailView: View {
                     }
                 }
                 .padding(16)
-                .background(.background, in: RoundedRectangle(cornerRadius: 18))
+                .background(AppTheme.cardFill, in: RoundedRectangle(cornerRadius: 18))
+                .overlay(RoundedRectangle(cornerRadius: 18).stroke(store.appTheme.accent.opacity(0.16), lineWidth: 1))
             }
             .padding()
         }
-        .background(Color(uiColor: .systemGroupedBackground))
+        .background(AppTheme.appBackground)
         .navigationTitle("Lesson \(lessonIndex + 1)")
         .navigationBarTitleDisplayMode(.inline)
     }
@@ -371,7 +377,9 @@ private struct BeyondLanguageTile: View {
         }
         .frame(maxWidth: .infinity, minHeight: 118, alignment: .topLeading)
         .padding(12)
-        .background(language.color.opacity(0.09), in: RoundedRectangle(cornerRadius: 14))
+        .foregroundStyle(.white)
+        .background(language.color.opacity(0.17), in: RoundedRectangle(cornerRadius: 14))
+        .overlay(RoundedRectangle(cornerRadius: 14).stroke(language.color.opacity(0.24), lineWidth: 1))
     }
 
     private var speechCode: String {
@@ -424,6 +432,7 @@ struct LessonInfoBlock: View {
             Spacer()
         }
         .padding(16)
-        .background(.background, in: RoundedRectangle(cornerRadius: 18))
+        .background(AppTheme.cardFill, in: RoundedRectangle(cornerRadius: 18))
+        .overlay(RoundedRectangle(cornerRadius: 18).stroke(color.opacity(0.16), lineWidth: 1))
     }
 }
