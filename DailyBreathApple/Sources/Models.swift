@@ -259,21 +259,21 @@ struct BibleLibrary: Equatable {
 extension Verse {
     static let daily = Verse(
         id: 1,
-        text: "Be still, and know that I am God.",
-        reference: "Psalm 46:10",
-        reflection: "Begin slowly. Make room for quiet, notice your breath, and let the next faithful step be enough for today."
+        text: "If therefore the Son makes you free, you will be free indeed.",
+        reference: "John 8:36",
+        reflection: "When a craving rises, pause before you answer it. Take one honest breath, ask God for help, and choose the next free step."
     )
 }
 
 extension Devotional {
     static let today = Devotional(
         id: 1,
-        title: "Walk in Quiet Confidence",
-        excerpt: "Make room for stillness and remember that God is present before your next step.",
-        body: "Stillness is not empty time. It is a faithful pause where you remember that God is already present, already attentive, and already enough for the road in front of you. Begin today by slowing your pace before you solve everything. Let confidence grow from trust, not hurry.",
-        scripture: "Psalm 46:10",
+        title: "One Free Breath",
+        excerpt: "Meet the next craving with prayer, patience, and one faithful choice.",
+        body: "Freedom often arrives one moment at a time. You do not have to solve every urge at once; you can bring this breath, this craving, and this decision to God. When the pull feels loud, pause long enough to remember that grace is present here too. Choose the next free step, then the next one after that.",
+        scripture: "John 8:36",
         minutes: 5,
-        prayer: "Lord, quiet my heart and steady my thoughts. Help me move through today with trust, patience, and courage.",
-        practice: "Before your next task, take three slow breaths and name one thing you can entrust to God."
+        prayer: "Lord, strengthen me in this moment. Help me breathe through the craving, receive your grace, and choose freedom one step at a time.",
+        practice: "When an urge comes, take three slow breaths, drink water, and pray: Lord, help me choose freedom now."
     )
 }

@@ -171,14 +171,14 @@ struct TodayView: View {
                     Text("TODAY'S DEVOTIONAL")
                         .font(.caption.bold())
                         .tracking(1.6)
-                        .foregroundStyle(Color.dailyGreen)
+                        .foregroundStyle(selectedTheme.primary)
                     Text(store.devotional.title)
                         .font(.title2.weight(.bold))
                     Text(store.devotional.excerpt)
                         .foregroundStyle(.secondary)
                     Label("\(store.devotional.scripture) · \(store.devotional.minutes) minute read", systemImage: "clock.fill")
                         .font(.caption.bold())
-                        .foregroundStyle(Color.dailyGold)
+                        .foregroundStyle(selectedTheme.accent)
                 }
                 Spacer(minLength: 8)
                 Image(systemName: "chevron.right")
@@ -302,12 +302,17 @@ private struct QuickAction: View {
     let title: String
     let subtitle: String
     let systemImage: String
+    @AppStorage("dailyBreathTheme") private var selectedThemeID = DailyBreathTheme.forest.id
+
+    private var selectedTheme: DailyBreathTheme {
+        DailyBreathTheme(id: selectedThemeID)
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 9) {
             Image(systemName: systemImage)
                 .font(.title2)
-                .foregroundStyle(Color.dailyGold)
+                .foregroundStyle(selectedTheme.accent)
             Text(title)
                 .font(.headline)
             Text(subtitle)
@@ -322,6 +327,11 @@ private struct QuickAction: View {
 
 private struct VerseDetailView: View {
     let verse: Verse
+    @AppStorage("dailyBreathTheme") private var selectedThemeID = DailyBreathTheme.forest.id
+
+    private var selectedTheme: DailyBreathTheme {
+        DailyBreathTheme(id: selectedThemeID)
+    }
 
     var body: some View {
         ScrollView {
@@ -329,13 +339,13 @@ private struct VerseDetailView: View {
                 Label("Verse of the Day", systemImage: "sun.max.fill")
                     .font(.caption.bold())
                     .tracking(1.4)
-                    .foregroundStyle(Color.dailyGold)
+                    .foregroundStyle(selectedTheme.accent)
                 Text("\"\(verse.text)\"")
                     .font(.system(size: 38, weight: .semibold, design: .serif))
                     .fixedSize(horizontal: false, vertical: true)
                 Text(verse.reference)
                     .font(.title3.weight(.black))
-                    .foregroundStyle(Color.dailyGreen)
+                    .foregroundStyle(selectedTheme.primary)
                 Divider()
                 Text(verse.reflection)
                     .font(.body)
@@ -347,12 +357,12 @@ private struct VerseDetailView: View {
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
-                .tint(Color.dailyGreen)
+                .tint(selectedTheme.primary)
                 .controlSize(.large)
             }
             .padding()
         }
-        .background(Color(.systemGroupedBackground))
+        .background(DailyBreathThemeBackground(theme: selectedTheme))
         .navigationTitle(verse.reference)
         .navigationBarTitleDisplayMode(.inline)
     }
@@ -362,6 +372,11 @@ private struct DevotionalDetailView: View {
     @EnvironmentObject private var store: DailyBreathStore
     let devotional: Devotional
     @AppStorage("devotionalReadDayKeys") private var devotionalReadDayKeys = ""
+    @AppStorage("dailyBreathTheme") private var selectedThemeID = DailyBreathTheme.forest.id
+
+    private var selectedTheme: DailyBreathTheme {
+        DailyBreathTheme(id: selectedThemeID)
+    }
 
     private var todayKey: String {
         Self.dayFormatter.string(from: Date())
@@ -377,7 +392,7 @@ private struct DevotionalDetailView: View {
                 VStack(alignment: .leading, spacing: 12) {
                     Text(devotional.scripture)
                         .font(.caption.bold())
-                        .foregroundStyle(Color.dailyGold)
+                        .foregroundStyle(selectedTheme.accent)
                     Text(devotional.title)
                         .font(.largeTitle.weight(.black))
                     Label("\(devotional.minutes) minute read", systemImage: "clock.fill")
@@ -423,10 +438,12 @@ private struct DevotionalDetailView: View {
                 } label: {
                     Label(isReadToday ? "Read Today" : "Mark as Read", systemImage: isReadToday ? "checkmark.circle.fill" : "circle")
                 }
-                .foregroundStyle(Color.dailyGreen)
+                .foregroundStyle(selectedTheme.primary)
             }
         }
         .navigationTitle("Devotional")
+        .scrollContentBackground(.hidden)
+        .background(DailyBreathThemeBackground(theme: selectedTheme))
     }
 
     private func markRead() {
@@ -451,6 +468,11 @@ private struct DevotionalDetailView: View {
 
 private struct PrayerPracticesView: View {
     @EnvironmentObject private var store: DailyBreathStore
+    @AppStorage("dailyBreathTheme") private var selectedThemeID = DailyBreathTheme.forest.id
+
+    private var selectedTheme: DailyBreathTheme {
+        DailyBreathTheme(id: selectedThemeID)
+    }
 
     var body: some View {
         List {
@@ -468,18 +490,25 @@ private struct PrayerPracticesView: View {
                             }
                         } icon: {
                             Image(systemName: practice.systemImage)
-                                .foregroundStyle(Color.dailyGold)
+                                .foregroundStyle(selectedTheme.accent)
                         }
                     }
                 }
             }
         }
         .navigationTitle("Specific Prayers")
+        .scrollContentBackground(.hidden)
+        .background(DailyBreathThemeBackground(theme: selectedTheme))
     }
 }
 
 private struct PrayerPracticeDetailView: View {
     let practice: PrayerPractice
+    @AppStorage("dailyBreathTheme") private var selectedThemeID = DailyBreathTheme.forest.id
+
+    private var selectedTheme: DailyBreathTheme {
+        DailyBreathTheme(id: selectedThemeID)
+    }
 
     var body: some View {
         List {
@@ -487,7 +516,7 @@ private struct PrayerPracticeDetailView: View {
                 VStack(alignment: .leading, spacing: 12) {
                     Image(systemName: practice.systemImage)
                         .font(.largeTitle)
-                        .foregroundStyle(Color.dailyGold)
+                        .foregroundStyle(selectedTheme.accent)
                     Text(practice.title)
                         .font(.largeTitle.weight(.black))
                     Text(practice.subtitle)
@@ -509,6 +538,8 @@ private struct PrayerPracticeDetailView: View {
             }
         }
         .navigationTitle(practice.title)
+        .scrollContentBackground(.hidden)
+        .background(DailyBreathThemeBackground(theme: selectedTheme))
     }
 
     private var prayerText: String {
@@ -524,13 +555,19 @@ private struct PrayerPracticeDetailView: View {
 }
 
 private struct WeeklyChallengeView: View {
+    @AppStorage("dailyBreathTheme") private var selectedThemeID = DailyBreathTheme.forest.id
+
+    private var selectedTheme: DailyBreathTheme {
+        DailyBreathTheme(id: selectedThemeID)
+    }
+
     var body: some View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 12) {
                     Image(systemName: "calendar.badge.checkmark")
                         .font(.largeTitle)
-                        .foregroundStyle(Color.dailyGold)
+                        .foregroundStyle(selectedTheme.accent)
                     Text("Faith in Action")
                         .font(.largeTitle.weight(.black))
                     Text("Choose one quiet act of faith this week and make it concrete.")
@@ -554,5 +591,7 @@ private struct WeeklyChallengeView: View {
             }
         }
         .navigationTitle("Weekly Challenge")
+        .scrollContentBackground(.hidden)
+        .background(DailyBreathThemeBackground(theme: selectedTheme))
     }
 }

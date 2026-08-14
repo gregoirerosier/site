@@ -89,6 +89,9 @@ struct ReminderSettingsView: View {
             }
         }
         .navigationTitle("Reminders")
+        .scrollContentBackground(.hidden)
+        .background(DailyBreathThemeBackground(theme: selectedTheme))
+        .tint(selectedTheme.primary)
         .task {
             authorizationStatus = await DailyBreathNotificationService.authorizationStatus()
         }

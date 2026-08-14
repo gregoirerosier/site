@@ -3,8 +3,8 @@ import XCTest
 
 final class DailyBreathTests: XCTestCase {
     func testDailyVerseHasReference() {
-        XCTAssertEqual(Verse.daily.reference, "Psalm 46:10")
-        XCTAssertEqual(Verse.daily.text, "Be still, and know that I am God.")
+        XCTAssertEqual(Verse.daily.reference, "John 8:36")
+        XCTAssertEqual(Verse.daily.text, "If therefore the Son makes you free, you will be free indeed.")
     }
 
     func testTodayResponseDecodesAdminVersePayload() throws {

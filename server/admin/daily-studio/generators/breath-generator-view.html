@@ -50,7 +50,7 @@
         <label class="language-option"><input type="radio" name="verseLanguage" value="jm"><span>🇯🇲 Patois</span></label>
         <label class="language-option"><input type="radio" name="verseLanguage" value="ht"><span>🇭🇹 Kreyòl</span></label>
       </div>
-      <div class="hint" style="margin:0 0 16px">English uses KJV. French and Spanish use their matching hardcoded scripture banks.</div>
+      <div class="hint" style="margin:0 0 16px">English uses a recovery-focused WEB bank for cravings, freedom, strength, and self-control. Other languages use their matching hardcoded scripture banks.</div>
       <label>Select a specific Bible verse</label>
       <div class="verse-picker">
         <div class="field"><label for="verseBook">Book</label><select id="verseBook"></select></div>
@@ -297,12 +297,12 @@
   }
 
   async function generateTodayVerse(){
-    const button=$('generateTodayVerse');button.disabled=true;status('Choosing a fresh verse from the full Bible…');
+    const button=$('generateTodayVerse');button.disabled=true;status(verseLanguage()==='en'?'Choosing a fresh recovery-focused verse…':'Choosing a fresh verse…');
     try{
       const response=await fetch(`/server/admin/daily-studio/api/random-content.php?type=bible&language=${encodeURIComponent(verseLanguage())}`,{cache:'no-store'});
       const data=await response.json();if(!response.ok||!data.item)throw new Error(data.error||'No verse was returned.');
       const item=data.item;applyVerseItem(item);
-      status(`Fresh verse selected — ${data.remaining.toLocaleString()} unused verses remain in this cycle.${data.cycle_restarted?' A new Bible cycle just began.':''}`);
+      status(`Fresh verse selected — ${data.remaining.toLocaleString()} unused verses remain in this cycle.${data.cycle_restarted?' A new cycle just began.':''}`);
     }catch(error){status(error.message||'Verse generation failed.',true)}finally{button.disabled=false}
   }
   async function loadFreshVerseForCurrentLanguage(){

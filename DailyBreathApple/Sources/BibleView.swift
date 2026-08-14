@@ -6,7 +6,12 @@ struct BibleView: View {
     @AppStorage("bibleLastBookCode") private var lastBookCode = "GEN"
     @AppStorage("bibleLastChapter") private var lastChapter = 1
     @AppStorage("favoriteVerseIDs") private var favoriteVerseIDs = ""
+    @AppStorage("dailyBreathTheme") private var selectedThemeID = DailyBreathTheme.forest.id
     @State private var searchText = ""
+
+    private var selectedTheme: DailyBreathTheme {
+        DailyBreathTheme(id: selectedThemeID)
+    }
 
     private var searchResults: [BibleVerse] {
         store.bibleLibrary.search(searchText)
@@ -31,6 +36,8 @@ struct BibleView: View {
         }
         .navigationTitle("Bible")
         .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search verses")
+        .scrollContentBackground(.hidden)
+        .background(DailyBreathThemeBackground(theme: selectedTheme))
     }
 
     private var continueReadingSection: some View {
@@ -44,7 +51,7 @@ struct BibleView: View {
                     VStack(alignment: .leading, spacing: 10) {
                         Label(chapter.bookCode == "GEN" && chapter.number == 1 ? "Start Reading" : "Continue Reading", systemImage: "bookmark.fill")
                             .font(.caption.bold())
-                            .foregroundStyle(Color.dailyGold)
+                            .foregroundStyle(selectedTheme.accent)
                         Text(chapter.title)
                             .font(.largeTitle.weight(.bold))
                         Text(firstVerse.text)
@@ -53,7 +60,7 @@ struct BibleView: View {
                             .lineLimit(3)
                         Text("\(store.bibleLibrary.translation) • \(store.bibleLibrary.books.count) books • \(store.bibleLibrary.verseCount.formatted()) verses")
                             .font(.caption.bold())
-                            .foregroundStyle(Color.dailyGreen)
+                            .foregroundStyle(selectedTheme.primary)
                     }
                     .padding(.vertical, 8)
                 }
@@ -79,7 +86,7 @@ struct BibleView: View {
                 } label: {
                     HStack(spacing: 12) {
                         Image(systemName: "book.closed.fill")
-                            .foregroundStyle(Color.dailyGold)
+                            .foregroundStyle(selectedTheme.accent)
                             .frame(width: 24)
                         VStack(alignment: .leading, spacing: 3) {
                             Text(book.name)
@@ -109,7 +116,7 @@ struct BibleView: View {
                         VStack(alignment: .leading, spacing: 5) {
                             Text(verse.reference)
                                 .font(.headline)
-                                .foregroundStyle(Color.dailyGreen)
+                                .foregroundStyle(selectedTheme.primary)
                             Text(verse.text)
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
@@ -135,7 +142,7 @@ struct BibleView: View {
                         VStack(alignment: .leading, spacing: 6) {
                             Text(verse.reference)
                                 .font(.headline)
-                                .foregroundStyle(Color.dailyGreen)
+                                .foregroundStyle(selectedTheme.primary)
                             Text(verse.text)
                                 .font(.body)
                                 .foregroundStyle(.primary)
@@ -157,6 +164,11 @@ struct BibleView: View {
 
 private struct BibleBookView: View {
     let book: BibleBook
+    @AppStorage("dailyBreathTheme") private var selectedThemeID = DailyBreathTheme.forest.id
+
+    private var selectedTheme: DailyBreathTheme {
+        DailyBreathTheme(id: selectedThemeID)
+    }
 
     var body: some View {
         List {
@@ -164,7 +176,7 @@ private struct BibleBookView: View {
                 VStack(alignment: .leading, spacing: 8) {
                     Text(book.testament)
                         .font(.caption.bold())
-                        .foregroundStyle(Color.dailyGold)
+                        .foregroundStyle(selectedTheme.accent)
                     Text(book.name)
                         .font(.largeTitle.weight(.bold))
                     Text("\(book.chapters.count) chapters • \(book.verseCount.formatted()) verses")
@@ -190,6 +202,8 @@ private struct BibleBookView: View {
             }
         }
         .navigationTitle(book.name)
+        .scrollContentBackground(.hidden)
+        .background(DailyBreathThemeBackground(theme: selectedTheme))
     }
 }
 
@@ -199,6 +213,11 @@ private struct BibleChapterView: View {
     @AppStorage("bibleLastBookCode") private var lastBookCode = "GEN"
     @AppStorage("bibleLastChapter") private var lastChapter = 1
     @AppStorage("favoriteVerseIDs") private var favoriteVerseIDs = ""
+    @AppStorage("dailyBreathTheme") private var selectedThemeID = DailyBreathTheme.forest.id
+
+    private var selectedTheme: DailyBreathTheme {
+        DailyBreathTheme(id: selectedThemeID)
+    }
 
     var body: some View {
         ScrollViewReader { proxy in
@@ -207,7 +226,7 @@ private struct BibleChapterView: View {
                     VStack(alignment: .leading, spacing: 8) {
                         Text(chapter.bookName)
                             .font(.caption.bold())
-                            .foregroundStyle(Color.dailyGold)
+                            .foregroundStyle(selectedTheme.accent)
                         Text("Chapter \(chapter.number)")
                             .font(.largeTitle.weight(.bold))
                         Text("\(chapter.verses.count) verses")
@@ -221,7 +240,7 @@ private struct BibleChapterView: View {
                         HStack(alignment: .firstTextBaseline, spacing: 10) {
                             Text("\(verse.verse)")
                                 .font(.caption.bold())
-                                .foregroundStyle(Color.dailyGold)
+                                .foregroundStyle(selectedTheme.accent)
                                 .frame(width: 28, alignment: .trailing)
                             Text(verse.text)
                                 .font(.system(.body, design: .serif))
@@ -230,11 +249,11 @@ private struct BibleChapterView: View {
                             if isFavorite(verse) {
                                 Image(systemName: "star.fill")
                                     .font(.caption)
-                                    .foregroundStyle(Color.dailyGold)
+                                    .foregroundStyle(selectedTheme.accent)
                             }
                         }
                         .padding(.vertical, 5)
-                        .listRowBackground(verse.id == highlightedVerseID ? Color.dailyGold.opacity(0.16) : nil)
+                        .listRowBackground(verse.id == highlightedVerseID ? selectedTheme.accent.opacity(0.16) : nil)
                         .id(verse.id)
                         .contextMenu {
                             Button {
@@ -255,6 +274,8 @@ private struct BibleChapterView: View {
                 }
             }
             .navigationTitle(chapter.title)
+            .scrollContentBackground(.hidden)
+            .background(DailyBreathThemeBackground(theme: selectedTheme))
             .onAppear {
                 lastBookCode = chapter.bookCode
                 lastChapter = chapter.number

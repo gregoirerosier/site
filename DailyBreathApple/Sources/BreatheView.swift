@@ -10,6 +10,7 @@ struct BreatheView: View {
     @AppStorage("completedBreathDayKeys") private var completedBreathDayKeys = ""
     @AppStorage("lastBreathMood") private var lastMood = ""
     @AppStorage("lastBreathComparison") private var lastComparison = ""
+    @AppStorage("dailyBreathTheme") private var selectedThemeID = DailyBreathTheme.forest.id
 
     @State private var isBreathing = false
     @State private var remainingSeconds = 120
@@ -23,6 +24,10 @@ struct BreatheView: View {
 
     private var breathPattern: BreathPattern {
         BreathPattern.breathOfTheDay()
+    }
+
+    private var selectedTheme: DailyBreathTheme {
+        DailyBreathTheme(id: selectedThemeID)
     }
 
     private var weeklyBreathCount: Int {
@@ -66,7 +71,7 @@ struct BreatheView: View {
             .padding(.horizontal, 20)
             .padding(.vertical, 24)
         }
-        .background(Color.dailyCream.opacity(0.38))
+        .background(DailyBreathThemeBackground(theme: selectedTheme))
         .navigationTitle("Breathe")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
@@ -89,16 +94,16 @@ struct BreatheView: View {
         VStack(alignment: .leading, spacing: 12) {
             Label("Breath of the Day", systemImage: "sparkles")
                 .font(.caption.weight(.bold))
-                .foregroundStyle(Color.dailyGold)
+                .foregroundStyle(selectedTheme.accent)
             Text(breathPattern.title)
                 .font(.largeTitle.weight(.black))
-                .foregroundStyle(Color.dailyGreen)
+                .foregroundStyle(selectedTheme.primary)
             Text(breathPattern.intention)
                 .font(.body)
                 .foregroundStyle(.secondary)
             Text(breathPattern.rhythmText)
                 .font(.subheadline.weight(.semibold))
-                .foregroundStyle(Color.dailyGreen)
+                .foregroundStyle(selectedTheme.primary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -106,11 +111,11 @@ struct BreatheView: View {
     private var breathOrb: some View {
         ZStack {
             Circle()
-                .fill(Color.dailyGreen.opacity(0.14))
+                .fill(selectedTheme.primary.opacity(0.14))
                 .frame(width: isBreathing && !reduceMotion ? 252 : 178, height: isBreathing && !reduceMotion ? 252 : 178)
                 .animation(reduceMotion ? nil : .easeInOut(duration: Double(breathPattern.inhale)).repeatForever(autoreverses: true), value: isBreathing)
             Circle()
-                .stroke(Color.dailyGold, lineWidth: 4)
+                .stroke(selectedTheme.accent, lineWidth: 4)
                 .frame(width: 178, height: 178)
             VStack(spacing: 8) {
                 Text(isBreathing ? store.breathPhase : timeRemainingText)
@@ -143,7 +148,7 @@ struct BreatheView: View {
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
-            .tint(Color.dailyGreen)
+            .tint(selectedTheme.primary)
             .controlSize(.large)
 
             HStack {
@@ -166,7 +171,7 @@ struct BreatheView: View {
                         lastMood = mood
                     }
                     .buttonStyle(.bordered)
-                    .tint(lastMood == mood ? Color.dailyGreen : .secondary)
+                    .tint(lastMood == mood ? selectedTheme.primary : .secondary)
                 }
             }
             Text("Compared with yesterday")
@@ -177,7 +182,7 @@ struct BreatheView: View {
                         lastComparison = comparison
                     }
                     .buttonStyle(.bordered)
-                    .tint(lastComparison == comparison ? Color.dailyGold : .secondary)
+                    .tint(lastComparison == comparison ? selectedTheme.accent : .secondary)
                 }
             }
             NavigationLink {
@@ -187,7 +192,7 @@ struct BreatheView: View {
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
-            .tint(Color.dailyGreen)
+            .tint(selectedTheme.primary)
             .simultaneousGesture(TapGesture().onEnded {
                 store.prepareJournalReflection(
                     prompt: "After today's breath session",
@@ -222,7 +227,7 @@ struct BreatheView: View {
                     }
                 } icon: {
                     Image(systemName: practice.systemImage)
-                        .foregroundStyle(Color.dailyGold)
+                        .foregroundStyle(selectedTheme.accent)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.vertical, 4)
