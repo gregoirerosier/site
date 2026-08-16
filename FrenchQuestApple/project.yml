@@ -21,6 +21,7 @@ targets:
     resources:
       - path: Resources/academy.json
       - path: Resources/dictionary.json
+      - path: Resources/Audio
       - path: Resources/Assets.xcassets
     settings:
       base:

@@ -10,7 +10,7 @@ struct RootView: View {
             NavigationStack { AcademyView() }
                 .tabItem { Label("Map", systemImage: "flag.checkered") }
             NavigationStack { DictionaryView() }
-                .tabItem { Label("Phrases", systemImage: "character.book.closed.fill") }
+                .tabItem { Label("Words", systemImage: "character.book.closed.fill") }
             NavigationStack { PracticeView() }
                 .tabItem { Label("Train", systemImage: "bolt.fill") }
             NavigationStack { LearningProgressView() }

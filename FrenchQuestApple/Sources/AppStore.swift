@@ -9,6 +9,7 @@ final class QuestStore: ObservableObject {
     @Published private(set) var hearts = 5
     @Published private(set) var streak = 0
     @Published private(set) var lastResult: QuestResult?
+    @Published private(set) var dictionary: [DictionaryWord] = []
     @Published var theme = QuestTheme.riviera {
         didSet { UserDefaults.standard.set(theme.rawValue, forKey: themeKey) }
     }
@@ -16,6 +17,7 @@ final class QuestStore: ObservableObject {
     let regions = QuestContent.regions
 
     private let speaker = AVSpeechSynthesizer()
+    private var prerecordedPlayer: AVAudioPlayer?
     private let completedKey = "FrenchQuest.completedChallengeIDs"
     private let xpKey = "FrenchQuest.xp"
     private let heartsKey = "FrenchQuest.hearts"
@@ -24,6 +26,7 @@ final class QuestStore: ObservableObject {
 
     init() {
         load()
+        loadDictionary()
     }
 
     var totalChallenges: Int {
@@ -93,12 +96,42 @@ final class QuestStore: ObservableObject {
 
     func speak(_ text: String) {
         speaker.stopSpeaking(at: .immediate)
+        prerecordedPlayer?.stop()
         configureAudioSession()
+
+        if let url = bundledQuestAudioURL(for: text),
+           let player = try? AVAudioPlayer(contentsOf: url) {
+            player.prepareToPlay()
+            prerecordedPlayer = player
+            if player.play() { return }
+        }
+
+        speakWithDeviceVoice(text, language: "fr-FR")
+    }
+
+    private func speakWithDeviceVoice(_ text: String, language: String) {
         let utterance = AVSpeechUtterance(string: text)
-        utterance.voice = bestVoice()
-        utterance.rate = 0.42
+        utterance.voice = bestVoice(for: language)
+        utterance.rate = speechRate(for: language)
         utterance.pitchMultiplier = 1.05
         speaker.speak(utterance)
+    }
+
+    func speakDictionaryWord(_ word: DictionaryWord, language: DictionaryAudioLanguage) {
+        let text = word.text(for: language)
+        guard !text.isEmpty else { return }
+        speaker.stopSpeaking(at: .immediate)
+        prerecordedPlayer?.stop()
+        configureAudioSession()
+
+        if let url = bundledDictionaryAudioURL(for: word, language: language),
+           let player = try? AVAudioPlayer(contentsOf: url) {
+            player.prepareToPlay()
+            prerecordedPlayer = player
+            if player.play() { return }
+        }
+
+        speakWithDeviceVoice(text, language: language.locale)
     }
 
     private func load() {
@@ -108,6 +141,13 @@ final class QuestStore: ObservableObject {
         hearts = savedHearts ?? 5
         streak = UserDefaults.standard.integer(forKey: streakKey)
         theme = UserDefaults.standard.string(forKey: themeKey).flatMap(QuestTheme.init(rawValue:)) ?? .riviera
+    }
+
+    private func loadDictionary() {
+        guard let url = Bundle.main.url(forResource: "dictionary", withExtension: "json"),
+              let data = try? Data(contentsOf: url),
+              let words = try? JSONDecoder().decode([DictionaryWord].self, from: data) else { return }
+        dictionary = words
     }
 
     private func save() {
@@ -128,13 +168,54 @@ final class QuestStore: ObservableObject {
         try? AVAudioSession.sharedInstance().setActive(true)
     }
 
-    private func bestVoice() -> AVSpeechSynthesisVoice? {
-        AVSpeechSynthesisVoice.speechVoices()
-            .filter { $0.language == "fr-FR" || $0.language == "fr-CA" }
-            .sorted {
-                if $0.quality != $1.quality { return $0.quality.rawValue > $1.quality.rawValue }
-                return $0.language == "fr-FR"
+    private func bundledQuestAudioURL(for text: String) -> URL? {
+        Bundle.main.url(
+            forResource: text.audioResourceName,
+            withExtension: "mp3",
+            subdirectory: "Audio/quest/fr-FR"
+        )
+    }
+
+    private func bundledDictionaryAudioURL(for word: DictionaryWord, language: DictionaryAudioLanguage) -> URL? {
+        Bundle.main.url(
+            forResource: word.audioResourceName,
+            withExtension: "mp3",
+            subdirectory: "Audio/dictionary/\(language.locale)"
+        )
+    }
+
+    private func bestVoice(for language: String) -> AVSpeechSynthesisVoice? {
+        let fallbacks: [String] = switch language {
+        case "ht-HT": ["ht-HT", "fr-FR", "fr-CA", "en-US"]
+        case "en-JM": ["en-JM", "en-GB", "en-US"]
+        case "es-ES": ["es-ES", "es-MX", "en-US"]
+        default: [language, "fr-FR", "fr-CA"]
+        }
+        let voices = AVSpeechSynthesisVoice.speechVoices()
+        for code in fallbacks {
+            if let voice = voices
+                .filter({ $0.language == code })
+                .sorted(by: voiceSort)
+                .first {
+                return voice
             }
-            .first ?? AVSpeechSynthesisVoice(language: "fr-FR")
+        }
+        return AVSpeechSynthesisVoice(language: language)
+    }
+
+    private func voiceSort(_ lhs: AVSpeechSynthesisVoice, _ rhs: AVSpeechSynthesisVoice) -> Bool {
+        if lhs.quality != rhs.quality {
+            return lhs.quality.rawValue > rhs.quality.rawValue
+        }
+        return lhs.name.localizedCaseInsensitiveCompare(rhs.name) == .orderedAscending
+    }
+
+    private func speechRate(for language: String) -> Float {
+        switch language {
+        case "es-ES": 0.45
+        case "en-JM": 0.44
+        case "ht-HT": 0.41
+        default: 0.42
+        }
     }
 }
