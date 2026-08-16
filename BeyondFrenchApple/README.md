@@ -1,6 +1,6 @@
 # Beyond French for iOS
 
-Native SwiftUI beta for Beyond French 1.1.1.
+Native SwiftUI beta for Beyond French 1.1.2.
 
 ## Free guest access
 

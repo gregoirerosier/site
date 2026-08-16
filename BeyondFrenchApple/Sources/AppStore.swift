@@ -2,6 +2,33 @@ import AVFoundation
 import Combine
 import Foundation
 
+private struct PremiumVoiceRequest: Encodable {
+    let text: String
+    let locale: String
+}
+
+private struct PremiumVoiceResult {
+    let audio: Data
+    let provider: String?
+}
+
+private enum PremiumVoiceError: LocalizedError {
+    case invalidResponse
+    case serverStatus(Int, String)
+    case invalidAudio
+
+    var errorDescription: String? {
+        switch self {
+        case .invalidResponse:
+            return "Premium voice response failed"
+        case let .serverStatus(status, message):
+            return message.isEmpty ? "Premium server \(status)" : "Premium server \(status): \(message)"
+        case .invalidAudio:
+            return "Premium voice returned invalid audio"
+        }
+    }
+}
+
 @MainActor
 final class AppStore: ObservableObject {
     @Published private(set) var lesson = FrenchLesson.fallback
@@ -17,7 +44,9 @@ final class AppStore: ObservableObject {
     }
 
     private let endpoint = URL(string: "https://beyondimagination.co.technology/beyond-french/api/today.php")!
+    private let voiceEndpoint = URL(string: "https://beyondimagination.co.technology/beyond-french/api/voice.php")!
     private let speaker = AVSpeechSynthesizer()
+    private var premiumVoicePlayer: AVAudioPlayer?
     private let completedKey = "BeyondFrench.completedLessonIDs"
     private let practiceKey = "BeyondFrench.correctPracticeCount"
     private let themeKey = "BeyondFrench.appTheme"
@@ -67,10 +96,98 @@ final class AppStore: ObservableObject {
 
     func speak(_ text: String, language: String = "fr-FR") {
         speaker.stopSpeaking(at: .immediate)
+        premiumVoicePlayer?.stop()
+        configureAudioSession()
+        statusMessage = "Premium voice..."
+
+        Task {
+            do {
+                let result = try await premiumVoiceAudio(for: text, language: language)
+                let player = try AVAudioPlayer(data: result.audio)
+                player.prepareToPlay()
+                premiumVoicePlayer = player
+                if player.play() {
+                    statusMessage = result.provider.map { "\($0.capitalized) voice" } ?? "Premium voice"
+                } else {
+                    speakWithDeviceVoice(text, language: language, fallbackReason: "Premium playback failed")
+                }
+            } catch {
+                speakWithDeviceVoice(text, language: language, fallbackReason: error.localizedDescription)
+            }
+        }
+    }
+
+    func speakDictionaryWord(_ word: DictionaryWord, language: DictionaryAudioLanguage) {
+        let text = word.text(for: language)
+        guard !text.isEmpty else { return }
+        speaker.stopSpeaking(at: .immediate)
+        premiumVoicePlayer?.stop()
+        configureAudioSession()
+
+        if let url = bundledDictionaryAudioURL(for: word, language: language),
+           let player = try? AVAudioPlayer(contentsOf: url) {
+            player.prepareToPlay()
+            premiumVoicePlayer = player
+            if player.play() {
+                statusMessage = "\(language.title) voice"
+                return
+            }
+        }
+
+        speak(text, language: language.locale)
+    }
+
+    private func speakWithDeviceVoice(_ text: String, language: String = "fr-FR", fallbackReason: String? = nil) {
+        speaker.stopSpeaking(at: .immediate)
+        premiumVoicePlayer?.stop()
+        configureAudioSession()
         let utterance = AVSpeechUtterance(string: text)
-        utterance.voice = AVSpeechSynthesisVoice(language: language)
-        utterance.rate = 0.43
+        utterance.voice = bestVoice(for: language)
+        utterance.rate = speechRate(for: language)
+        utterance.pitchMultiplier = 1.04
+        utterance.volume = 1
+        if let fallbackReason, !fallbackReason.isEmpty {
+            statusMessage = "Apple fallback: \(fallbackReason)"
+        } else {
+            statusMessage = utterance.voice?.quality == .premium ? "Premium device voice" : "Device voice"
+        }
         speaker.speak(utterance)
+    }
+
+    private func premiumVoiceAudio(for text: String, language: String) async throws -> PremiumVoiceResult {
+        var request = URLRequest(url: voiceEndpoint)
+        request.httpMethod = "POST"
+        request.timeoutInterval = 20
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("audio/mpeg", forHTTPHeaderField: "Accept")
+        request.httpBody = try JSONEncoder().encode(PremiumVoiceRequest(text: text, locale: language))
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let http = response as? HTTPURLResponse else {
+            throw PremiumVoiceError.invalidResponse
+        }
+        guard 200..<300 ~= http.statusCode else {
+            throw PremiumVoiceError.serverStatus(http.statusCode, premiumVoiceErrorMessage(from: data))
+        }
+        let contentType = http.value(forHTTPHeaderField: "Content-Type")?.lowercased() ?? ""
+        guard contentType.contains("audio"), data.count > 128 else {
+            throw PremiumVoiceError.invalidAudio
+        }
+        let provider = http.value(forHTTPHeaderField: "X-Narration-Provider")
+        return PremiumVoiceResult(audio: data, provider: provider)
+    }
+
+    private func premiumVoiceErrorMessage(from data: Data) -> String {
+        guard let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else { return "" }
+        return (object["message"] as? String) ?? (object["error"] as? String) ?? ""
+    }
+
+    private func bundledDictionaryAudioURL(for word: DictionaryWord, language: DictionaryAudioLanguage) -> URL? {
+        Bundle.main.url(
+            forResource: word.audioResourceName,
+            withExtension: "mp3",
+            subdirectory: "Audio/dictionary/\(language.locale)"
+        )
     }
 
     func isLessonCompleted(module: AcademyModule, lessonIndex: Int) -> Bool {
@@ -153,5 +270,72 @@ final class AppStore: ObservableObject {
         value
             .folding(options: [.caseInsensitive, .diacriticInsensitive], locale: .current)
             .replacingOccurrences(of: "[^a-z0-9]+", with: "", options: .regularExpression)
+    }
+
+    private func configureAudioSession() {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .spokenAudio, options: [.duckOthers])
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            statusMessage = "Voice ready"
+        }
+    }
+
+    private func bestVoice(for language: String) -> AVSpeechSynthesisVoice? {
+        let preferredLanguages = voiceFallbacks(for: language)
+        let voices = AVSpeechSynthesisVoice.speechVoices()
+        for code in preferredLanguages {
+            if let exact = voices
+                .filter({ $0.language == code })
+                .sorted(by: voiceSort)
+                .first {
+                return exact
+            }
+        }
+        for code in preferredLanguages {
+            let prefix = String(code.prefix(2))
+            if let regional = voices
+                .filter({ $0.language.hasPrefix(prefix) })
+                .sorted(by: voiceSort)
+                .first {
+                return regional
+            }
+        }
+        return AVSpeechSynthesisVoice(language: language)
+    }
+
+    private func voiceFallbacks(for language: String) -> [String] {
+        switch language {
+        case "ht-HT":
+            return ["ht-HT", "fr-FR", "fr-CA", "en-US"]
+        case "en-JM":
+            return ["en-JM", "en-GB", "en-US"]
+        case "fr-CA":
+            return ["fr-CA", "fr-FR", "en-US"]
+        case "es-ES":
+            return ["es-ES", "es-MX", "en-US"]
+        default:
+            return [language, "fr-FR", "en-US"]
+        }
+    }
+
+    private func voiceSort(_ lhs: AVSpeechSynthesisVoice, _ rhs: AVSpeechSynthesisVoice) -> Bool {
+        if lhs.quality != rhs.quality {
+            return lhs.quality.rawValue > rhs.quality.rawValue
+        }
+        return lhs.name.localizedCaseInsensitiveCompare(rhs.name) == .orderedAscending
+    }
+
+    private func speechRate(for language: String) -> Float {
+        switch language {
+        case "es-ES":
+            return 0.45
+        case "en-JM":
+            return 0.44
+        case "ht-HT":
+            return 0.41
+        default:
+            return 0.42
+        }
     }
 }

@@ -21,6 +21,7 @@
 		300000000000000000000012 /* dictionary.json in Resources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000012 /* dictionary.json */; };
 		300000000000000000000013 /* BeyondFrenchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000013 /* BeyondFrenchTests.swift */; };
 		300000000000000000000014 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000016 /* LaunchScreen.storyboard */; };
+		300000000000000000000015 /* Audio in Resources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000018 /* Audio */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		100000000000000000000015 /* BeyondFrenchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BeyondFrenchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		100000000000000000000016 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		100000000000000000000017 /* BeyondFrench.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BeyondFrench.entitlements; sourceTree = "<group>"; };
+		100000000000000000000018 /* Audio */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Audio; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +107,7 @@
 				100000000000000000000016 /* LaunchScreen.storyboard */,
 				100000000000000000000011 /* academy.json */,
 				100000000000000000000012 /* dictionary.json */,
+				100000000000000000000018 /* Audio */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -211,6 +214,7 @@
 				300000000000000000000014 /* LaunchScreen.storyboard in Resources */,
 				300000000000000000000011 /* academy.json in Resources */,
 				300000000000000000000012 /* dictionary.json in Resources */,
+				300000000000000000000015 /* Audio in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -397,7 +401,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = FK9QM3VUNH;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -419,7 +423,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.1.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -464,7 +468,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = FK9QM3VUNH;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -480,7 +484,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.1.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -49,7 +49,7 @@ struct DictionaryView: View {
             }
             .padding(.vertical)
         }
-        .background(AppTheme.appBackground)
+        .background(store.appTheme.appBackground)
         .navigationTitle("Dictionary")
         .searchable(text: $query, prompt: "Search every language")
         .overlay {
@@ -75,7 +75,7 @@ private struct DictionaryCard: View {
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
-                Button { store.speak(word.french) } label: {
+                Button { store.speakDictionaryWord(word, language: .french) } label: {
                     Image(systemName: "speaker.wave.2.fill")
                         .frame(width: 36, height: 36)
                         .background(store.appTheme.accent.opacity(0.12), in: Circle())
@@ -93,14 +93,20 @@ private struct DictionaryCard: View {
             }
 
             LazyVGrid(columns: [.init(.flexible()), .init(.flexible()), .init(.flexible())], spacing: 8) {
-                TranslationPill(label: "Kreyol", value: word.kreyol, color: .red)
-                TranslationPill(label: "Patois", value: word.patois, color: .green)
-                TranslationPill(label: "Spanish", value: word.spanish, color: .orange)
+                TranslationPill(label: "Kreyol", value: word.kreyol, color: .red) {
+                    store.speakDictionaryWord(word, language: .kreyol)
+                }
+                TranslationPill(label: "Patois", value: word.patois, color: .green) {
+                    store.speakDictionaryWord(word, language: .patois)
+                }
+                TranslationPill(label: "Spanish", value: word.spanish, color: .orange) {
+                    store.speakDictionaryWord(word, language: .spanish)
+                }
             }
         }
         .padding(16)
         .foregroundStyle(.white)
-        .background(AppTheme.cardFill, in: RoundedRectangle(cornerRadius: 18))
+        .background(store.appTheme.cardFill, in: RoundedRectangle(cornerRadius: 18))
         .overlay(RoundedRectangle(cornerRadius: 18).stroke(store.appTheme.accent.opacity(0.16), lineWidth: 1))
     }
 }
@@ -109,20 +115,28 @@ private struct TranslationPill: View {
     let label: String
     let value: String
     let color: Color
+    let action: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 3) {
-            Text(label.uppercased())
-                .font(.caption2.weight(.bold))
+        Button(action: action) {
+            VStack(alignment: .leading, spacing: 3) {
+                HStack(spacing: 4) {
+                    Text(label.uppercased())
+                        .font(.caption2.weight(.bold))
+                    Image(systemName: "speaker.wave.2.fill")
+                        .font(.caption2.weight(.bold))
+                }
                 .foregroundStyle(color)
-            Text(value)
-                .font(.caption.weight(.semibold))
-                .lineLimit(2)
-                .minimumScaleFactor(0.8)
+                Text(value)
+                    .font(.caption.weight(.semibold))
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.8)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(9)
+            .background(color.opacity(0.17), in: RoundedRectangle(cornerRadius: 12))
+            .overlay(RoundedRectangle(cornerRadius: 12).stroke(color.opacity(0.22), lineWidth: 1))
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(9)
-        .background(color.opacity(0.17), in: RoundedRectangle(cornerRadius: 12))
-        .overlay(RoundedRectangle(cornerRadius: 12).stroke(color.opacity(0.22), lineWidth: 1))
+        .buttonStyle(.plain)
     }
 }

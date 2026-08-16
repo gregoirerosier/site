@@ -12,11 +12,6 @@ struct TodayView: View {
                     Spacer()
                     Text(store.statusMessage).font(.caption).foregroundStyle(.secondary)
                 }
-                LazyVGrid(columns: [.init(.flexible()), .init(.flexible()), .init(.flexible())], spacing: 10) {
-                    MetricTile(title: "Words", value: "\(store.dictionary.count)", systemImage: "text.book.closed.fill", color: .teal)
-                    MetricTile(title: "Modules", value: "\(store.academy.modules.count)", systemImage: "square.grid.2x2.fill", color: store.appTheme.accent)
-                    MetricTile(title: "Correct", value: "\(store.correctPracticeCount)", systemImage: "checkmark.circle.fill", color: .green)
-                }
                 VStack(alignment: .leading, spacing: 14) {
                     Text("TODAY'S PHRASE").font(.caption.bold()).tracking(2).foregroundStyle(store.appTheme.accent)
                     Text(store.lesson.english).font(.system(size: 38, weight: .black, design: .rounded))
@@ -38,15 +33,23 @@ struct TodayView: View {
                     .controlSize(.large)
                 }
                 .padding(22)
-                .background(AppTheme.cardFill, in: RoundedRectangle(cornerRadius: 22))
+                .background(store.appTheme.cardFill, in: RoundedRectangle(cornerRadius: 22))
                 .overlay(RoundedRectangle(cornerRadius: 22).stroke(store.appTheme.accent.opacity(0.24), lineWidth: 1))
                 .shadow(color: store.appTheme.accent.opacity(0.18), radius: 20, y: 10)
 
                 LazyVGrid(columns: [.init(.flexible()), .init(.flexible())], spacing: 12) {
-                    LanguageTile(flag: "FR", name: "Francais", value: store.lesson.french, color: store.appTheme.accent)
-                    LanguageTile(flag: "🇭🇹", name: "Kreyòl", value: store.lesson.kreyol, color: .red)
-                    LanguageTile(flag: "🇯🇲", name: "Patois", value: store.lesson.patois, color: .green)
-                    LanguageTile(flag: "ES", name: "Espanol", value: store.lesson.spanish, color: .orange)
+                    LanguageTile(flag: "FR", name: "Francais", value: store.lesson.french, color: store.appTheme.accent) {
+                        store.speak(store.lesson.french, language: "fr-FR")
+                    }
+                    LanguageTile(flag: "HT", name: "Kreyòl", value: store.lesson.kreyol, color: .red) {
+                        store.speak(store.lesson.kreyol, language: "ht-HT")
+                    }
+                    LanguageTile(flag: "JM", name: "Patois", value: store.lesson.patois, color: .green) {
+                        store.speak(store.lesson.patois, language: "en-JM")
+                    }
+                    LanguageTile(flag: "ES", name: "Espanol", value: store.lesson.spanish, color: .orange) {
+                        store.speak(store.lesson.spanish, language: "es-ES")
+                    }
                 }
                 VStack(alignment: .leading, spacing: 8) {
                     Label("Culture note", systemImage: "globe.americas.fill")
@@ -57,11 +60,11 @@ struct TodayView: View {
                         .foregroundStyle(.white.opacity(0.82))
                 }
                 .padding(16)
-                .background(AppTheme.cardFill, in: RoundedRectangle(cornerRadius: 18))
+                .background(store.appTheme.cardFill, in: RoundedRectangle(cornerRadius: 18))
                 .overlay(RoundedRectangle(cornerRadius: 18).stroke(store.appTheme.accent.opacity(0.16), lineWidth: 1))
             }.padding()
         }
-        .background(AppTheme.appBackground)
+        .background(store.appTheme.appBackground)
         .refreshable { await store.refreshLesson() }
         .navigationTitle("Today")
         .navigationBarTitleDisplayMode(.inline)
@@ -71,9 +74,22 @@ struct TodayView: View {
 private struct LanguageTile: View {
     let flag: String, name: String, value: String
     let color: Color
+    let listen: () -> Void
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(flag).font(.title3.weight(.black))
+            HStack {
+                Text(flag).font(.title3.weight(.black))
+                Spacer()
+                Button(action: listen) {
+                    Image(systemName: "speaker.wave.2.fill")
+                        .font(.caption.weight(.bold))
+                        .frame(width: 30, height: 30)
+                        .background(color.opacity(0.22), in: Circle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Listen to \(name)")
+            }
             Text(name.uppercased()).font(.caption.bold()).foregroundStyle(color)
             Text(value).font(.headline).frame(maxWidth: .infinity, alignment: .leading)
         }

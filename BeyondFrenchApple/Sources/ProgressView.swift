@@ -25,7 +25,7 @@ struct LearningProgressView: View {
                     }
                 }
                 .padding(18)
-                .background(AppTheme.cardFill, in: RoundedRectangle(cornerRadius: 22))
+                .background(store.appTheme.cardFill, in: RoundedRectangle(cornerRadius: 22))
                 .overlay(RoundedRectangle(cornerRadius: 22).stroke(store.appTheme.accent.opacity(0.18), lineWidth: 1))
 
                 if !store.hasBeyondID {
@@ -47,7 +47,7 @@ struct LearningProgressView: View {
             }
             .padding()
         }
-        .background(AppTheme.appBackground)
+        .background(store.appTheme.appBackground)
         .navigationTitle("Progress")
     }
 }

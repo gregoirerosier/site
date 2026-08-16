@@ -63,6 +63,48 @@ struct DictionaryWord: Codable, Identifiable, Hashable {
     let kreyol: String
     let patois: String
     let type: String
+
+    var audioResourceName: String {
+        english
+            .folding(options: [.caseInsensitive, .diacriticInsensitive], locale: .current)
+            .lowercased()
+            .replacingOccurrences(of: "[^a-z0-9]+", with: "-", options: .regularExpression)
+            .trimmingCharacters(in: CharacterSet(charactersIn: "-"))
+    }
+
+    func text(for language: DictionaryAudioLanguage) -> String {
+        switch language {
+        case .french: french
+        case .spanish: spanish
+        case .kreyol: kreyol
+        case .patois: patois
+        }
+    }
+}
+
+enum DictionaryAudioLanguage {
+    case french
+    case spanish
+    case kreyol
+    case patois
+
+    var locale: String {
+        switch self {
+        case .french: "fr-FR"
+        case .spanish: "es-ES"
+        case .kreyol: "ht-HT"
+        case .patois: "en-JM"
+        }
+    }
+
+    var title: String {
+        switch self {
+        case .french: "French"
+        case .spanish: "Spanish"
+        case .kreyol: "Kreyol"
+        case .patois: "Patois"
+        }
+    }
 }
 
 struct AcademyCatalog: Codable {

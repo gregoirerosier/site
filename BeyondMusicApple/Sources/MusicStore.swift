@@ -9,6 +9,7 @@ final class MusicStore: ObservableObject {
     @Published private(set) var searchResults: [MusicTrack] = []
     @Published private(set) var currentTrack: MusicTrack?
     @Published private(set) var isPlaying = false
+    @Published private(set) var playQueue: [MusicTrack] = []
     @Published private(set) var isSearching = false
     @Published private(set) var isImporting = false
     @Published private(set) var statusMessage = "Import audio files or search open catalogs"
@@ -37,6 +38,9 @@ final class MusicStore: ObservableObject {
 
     init() {
         player.configureForBackgroundPlayback()
+        player.onPlaybackFinished = { [weak self] in
+            self?.playNext(automatic: true)
+        }
         loadPreferences()
         loadLibrary()
     }
@@ -166,6 +170,14 @@ final class MusicStore: ObservableObject {
         searchResults.filter { searchProviderFilter.matches($0) }
     }
 
+    var hasPreviousTrack: Bool {
+        queueNeighbor(offset: -1) != nil
+    }
+
+    var hasNextTrack: Bool {
+        queueNeighbor(offset: 1) != nil
+    }
+
     var searchProviderCounts: [MusicProviderFilter: Int] {
         [
             .all: searchResults.count,
@@ -217,7 +229,12 @@ final class MusicStore: ObservableObject {
         await searchOpenMusic(resetPage: false)
     }
 
-    func play(_ track: MusicTrack) {
+    func play(_ track: MusicTrack, in queue: [MusicTrack]? = nil) {
+        if let queue {
+            setQueue(queue, keeping: track)
+        } else if playQueue.isEmpty || !playQueue.contains(where: { $0.id == track.id }) {
+            setQueue(playableTracks(from: tracks), keeping: track)
+        }
         currentTrack = track
         guard let url = localURL(for: track) ?? track.streamURL else {
             statusMessage = "\(track.title) is not playable yet"
@@ -228,6 +245,27 @@ final class MusicStore: ObservableObject {
         isPlaying = true
         recordPlayback(for: track)
         statusMessage = localURL(for: track) == nil ? "Streaming \(track.title)" : "Playing \(track.title)"
+    }
+
+    func playPrevious() {
+        guard let previous = queueNeighbor(offset: -1) else {
+            statusMessage = "No previous song in this queue"
+            return
+        }
+        play(previous)
+    }
+
+    func playNext(automatic: Bool = false) {
+        guard let next = queueNeighbor(offset: 1) else {
+            isPlaying = false
+            if automatic {
+                statusMessage = "Queue finished"
+            } else {
+                statusMessage = "No next song in this queue"
+            }
+            return
+        }
+        play(next)
     }
 
     func togglePlayback() {
@@ -378,15 +416,21 @@ final class MusicStore: ObservableObject {
     }
 
     func remove(_ track: MusicTrack) {
+        let nextTrack = currentTrack?.id == track.id ? queueNeighbor(offset: 1) : nil
         if let url = localURL(for: track), fileManager.fileExists(atPath: url.path) {
             try? fileManager.removeItem(at: url)
         }
         tracks.removeAll { $0.id == track.id }
+        playQueue.removeAll { $0.id == track.id }
         downloadStates[track.id] = nil
         if currentTrack?.id == track.id {
-            player.pause()
-            currentTrack = nil
-            isPlaying = false
+            if let next = nextTrack, next.id != track.id {
+                play(next)
+            } else {
+                player.stop()
+                currentTrack = nil
+                isPlaying = false
+            }
         }
         saveLibrary()
         statusMessage = "Removed \(track.title) from this device"
@@ -591,12 +635,14 @@ final class MusicStore: ObservableObject {
             let data = try Data(contentsOf: libraryIndexURL)
             tracks = try JSONDecoder().decode([MusicTrack].self, from: data).filter { localURL(for: $0) != nil }
             currentTrack = tracks.first
+            playQueue = playableTracks(from: tracks)
             for track in tracks {
                 downloadStates[track.id] = .downloaded
             }
         } catch {
             tracks = []
             currentTrack = nil
+            playQueue = []
         }
     }
 
@@ -646,6 +692,31 @@ final class MusicStore: ObservableObject {
         guard let fileName = track.localFileName else { return nil }
         let url = audioDirectory.appendingPathComponent(fileName)
         return fileManager.fileExists(atPath: url.path) ? url : nil
+    }
+
+    private func setQueue(_ queue: [MusicTrack], keeping selectedTrack: MusicTrack) {
+        let playableQueue = playableTracks(from: queue)
+        if playableQueue.contains(where: { $0.id == selectedTrack.id }) {
+            playQueue = playableQueue
+        } else {
+            playQueue = [selectedTrack] + playableQueue
+        }
+    }
+
+    private func playableTracks(from queue: [MusicTrack]) -> [MusicTrack] {
+        queue.filter { localURL(for: $0) != nil || $0.streamURL != nil }
+    }
+
+    private func queueNeighbor(offset: Int) -> MusicTrack? {
+        let queue = playQueue.isEmpty ? playableTracks(from: tracks) : playQueue
+        guard queue.count > 1,
+              let currentTrack,
+              let index = queue.firstIndex(where: { $0.id == currentTrack.id }) else {
+            return nil
+        }
+        let nextIndex = index + offset
+        guard queue.indices.contains(nextIndex) else { return nil }
+        return queue[nextIndex]
     }
 
     private func uniqueStoredFileName(for proposedName: String) -> String {

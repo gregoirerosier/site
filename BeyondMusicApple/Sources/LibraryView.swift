@@ -196,7 +196,7 @@ struct TrackListView<HeaderAccessory: View>: View {
                 }
             } else {
                 ForEach(tracks) { track in
-                    TrackRow(track: track, showsSource: showsSource)
+                    TrackRow(track: track, queue: tracks, showsSource: showsSource)
                 }
             }
         }
@@ -223,6 +223,7 @@ extension TrackListView where HeaderAccessory == EmptyView {
 struct TrackRow: View {
     @EnvironmentObject private var store: MusicStore
     let track: MusicTrack
+    let queue: [MusicTrack]
     var showsSource = false
     @State private var showingRemoveConfirmation = false
 
@@ -230,7 +231,11 @@ struct TrackRow: View {
         MusicPanel {
             HStack(spacing: 12) {
                 Button {
-                    store.play(track)
+                    if store.currentTrack?.id == track.id {
+                        store.togglePlayback()
+                    } else {
+                        store.play(track, in: queue)
+                    }
                 } label: {
                     Image(systemName: store.currentTrack?.id == track.id && store.isPlaying ? "pause.circle.fill" : "play.circle.fill")
                         .font(.title)

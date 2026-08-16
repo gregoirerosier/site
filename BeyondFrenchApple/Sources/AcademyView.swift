@@ -36,7 +36,7 @@ struct AcademyView: View {
                 }
                 .padding(20)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(AppTheme.cardFill, in: RoundedRectangle(cornerRadius: 22))
+                .background(store.appTheme.cardFill, in: RoundedRectangle(cornerRadius: 22))
                 .overlay(RoundedRectangle(cornerRadius: 22).stroke(store.appTheme.accent.opacity(0.18), lineWidth: 1))
 
                 LazyVGrid(columns: [.init(.flexible()), .init(.flexible())], spacing: 12) {
@@ -67,7 +67,7 @@ struct AcademyView: View {
                                 .foregroundStyle(.secondary)
                         }
                         .padding(16)
-                        .background(AppTheme.cardFill, in: RoundedRectangle(cornerRadius: 18))
+                        .background(store.appTheme.cardFill, in: RoundedRectangle(cornerRadius: 18))
                         .overlay(RoundedRectangle(cornerRadius: 18).stroke(store.appTheme.accent.opacity(0.16), lineWidth: 1))
                     }
                     .buttonStyle(.plain)
@@ -79,7 +79,7 @@ struct AcademyView: View {
             }
             .padding()
         }
-        .background(AppTheme.appBackground)
+        .background(store.appTheme.appBackground)
         .navigationTitle("Academy")
     }
 }
@@ -125,7 +125,7 @@ private struct ModuleCard: View {
             }
         }
         .padding(18)
-        .background(AppTheme.cardFill, in: RoundedRectangle(cornerRadius: 22))
+        .background(store.appTheme.cardFill, in: RoundedRectangle(cornerRadius: 22))
         .overlay(RoundedRectangle(cornerRadius: 22).stroke(store.appTheme.accent.opacity(0.18), lineWidth: 1))
     }
 }
@@ -180,6 +180,8 @@ private struct AcademyLessonDetailView: View {
     @State private var answer = ""
     @State private var result: LessonCheckResult?
     @State private var checkLanguage = AcademyLanguage.french
+    @State private var showNextLesson = false
+    @FocusState private var answerFocused: Bool
 
     private var experience: AcademyLessonExperience {
         lesson.experience(for: ageGroup)
@@ -187,6 +189,23 @@ private struct AcademyLessonDetailView: View {
 
     private var phrase: BeyondPhrase {
         lesson.beyondPhrase
+    }
+
+    private var nextLessonRoute: (module: AcademyModule, lesson: AcademyLesson, index: Int)? {
+        var foundCurrentLesson = false
+        for academyModule in store.academy.modules {
+            for index in academyModule.lessons.indices {
+                let isCurrentLesson = academyModule.id == module.id && index == lessonIndex
+                if foundCurrentLesson,
+                   store.isLessonUnlocked(module: academyModule, lessonIndex: index, ageGroup: ageGroup) {
+                    return (academyModule, academyModule.lessons[index], index)
+                }
+                if isCurrentLesson {
+                    foundCurrentLesson = true
+                }
+            }
+        }
+        return nil
     }
 
     var body: some View {
@@ -212,7 +231,7 @@ private struct AcademyLessonDetailView: View {
                     Text(lesson.pronunciation)
                         .font(.headline)
                         .foregroundStyle(.secondary)
-                    Button { store.speak(lesson.french) } label: {
+                    Button { store.speak(lesson.french, language: "fr-FR") } label: {
                         Label("Listen in French", systemImage: "speaker.wave.2.fill").frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
@@ -232,7 +251,7 @@ private struct AcademyLessonDetailView: View {
                     }
                 }
                 .padding(16)
-                .background(AppTheme.cardFill, in: RoundedRectangle(cornerRadius: 18))
+                .background(store.appTheme.cardFill, in: RoundedRectangle(cornerRadius: 18))
                 .overlay(RoundedRectangle(cornerRadius: 18).stroke(store.appTheme.accent.opacity(0.16), lineWidth: 1))
 
                 LessonInfoBlock(title: "\(ageGroup.title) Teaching", text: experience.teaching, systemImage: "lightbulb.fill", color: .yellow)
@@ -254,6 +273,7 @@ private struct AcademyLessonDetailView: View {
                     TextField("\(checkLanguage.title) answer", text: $answer)
                         .textInputAutocapitalization(.sentences)
                         .submitLabel(.done)
+                        .focused($answerFocused)
                         .padding(14)
                         .background(Color.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
                         .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.white.opacity(0.12), lineWidth: 1))
@@ -278,25 +298,55 @@ private struct AcademyLessonDetailView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(14)
                             .background(result.color.opacity(0.10), in: RoundedRectangle(cornerRadius: 14))
+                            .transition(.move(edge: .top).combined(with: .opacity))
                     }
                 }
+                .animation(.snappy(duration: 0.24), value: result)
                 .padding(16)
-                .background(AppTheme.cardFill, in: RoundedRectangle(cornerRadius: 18))
+                .background(store.appTheme.cardFill, in: RoundedRectangle(cornerRadius: 18))
                 .overlay(RoundedRectangle(cornerRadius: 18).stroke(store.appTheme.accent.opacity(0.16), lineWidth: 1))
             }
             .padding()
         }
-        .background(AppTheme.appBackground)
+        .background(store.appTheme.appBackground)
         .navigationTitle("Lesson \(lessonIndex + 1)")
         .navigationBarTitleDisplayMode(.inline)
+        .navigationDestination(isPresented: $showNextLesson) {
+            if let nextLessonRoute {
+                AcademyLessonDetailView(
+                    module: nextLessonRoute.module,
+                    lesson: nextLessonRoute.lesson,
+                    lessonIndex: nextLessonRoute.index,
+                    ageGroup: ageGroup
+                )
+            }
+        }
     }
 
     private func checkLesson() {
         if store.checkAnswer(answer, expected: checkLanguage.value(in: phrase)) {
+            answerFocused = false
             store.completeLesson(module: module, lessonIndex: lessonIndex, ageGroup: ageGroup)
-            result = .correct
+            withAnimation(.snappy(duration: 0.24)) {
+                answer = ""
+                result = .correct
+            }
+            advanceToNextLessonIfNeeded()
         } else {
-            result = .incorrect
+            withAnimation(.snappy(duration: 0.24)) {
+                result = .incorrect
+            }
+        }
+    }
+
+    private func advanceToNextLessonIfNeeded() {
+        guard nextLessonRoute != nil else { return }
+        Task {
+            try? await Task.sleep(for: .milliseconds(850))
+            await MainActor.run {
+                guard result == .correct else { return }
+                showNextLesson = true
+            }
         }
     }
 }
@@ -386,13 +436,13 @@ private struct BeyondLanguageTile: View {
         switch language {
         case .french: "fr-FR"
         case .spanish: "es-ES"
-        case .kreyol: "fr-FR"
+        case .kreyol: "ht-HT"
         case .patois: "en-JM"
         }
     }
 }
 
-private enum LessonCheckResult {
+private enum LessonCheckResult: Equatable {
     case correct
     case incorrect
     case revealed
@@ -415,6 +465,7 @@ private enum LessonCheckResult {
 }
 
 struct LessonInfoBlock: View {
+    @EnvironmentObject private var store: AppStore
     let title: String
     let text: String
     let systemImage: String
@@ -432,7 +483,7 @@ struct LessonInfoBlock: View {
             Spacer()
         }
         .padding(16)
-        .background(AppTheme.cardFill, in: RoundedRectangle(cornerRadius: 18))
+        .background(store.appTheme.cardFill, in: RoundedRectangle(cornerRadius: 18))
         .overlay(RoundedRectangle(cornerRadius: 18).stroke(color.opacity(0.16), lineWidth: 1))
     }
 }

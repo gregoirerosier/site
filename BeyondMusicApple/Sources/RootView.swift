@@ -107,6 +107,18 @@ struct MiniPlayer: View {
                 }
                 Spacer()
                 Button {
+                    store.playPrevious()
+                } label: {
+                    Image(systemName: "backward.fill")
+                        .font(.subheadline)
+                        .frame(width: 34, height: 34)
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(store.hasPreviousTrack ? Color.musicAqua : .secondary)
+                .disabled(!store.hasPreviousTrack)
+                .accessibilityLabel("Previous song")
+
+                Button {
                     store.togglePlayback()
                 } label: {
                     Image(systemName: store.isPlaying ? "pause.fill" : "play.fill")
@@ -118,6 +130,18 @@ struct MiniPlayer: View {
                 .buttonStyle(.plain)
                 .disabled(store.currentTrack == nil)
                 .accessibilityLabel(store.isPlaying ? "Pause" : "Play")
+
+                Button {
+                    store.playNext()
+                } label: {
+                    Image(systemName: "forward.fill")
+                        .font(.subheadline)
+                        .frame(width: 34, height: 34)
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(store.hasNextTrack ? Color.musicAqua : .secondary)
+                .disabled(!store.hasNextTrack)
+                .accessibilityLabel("Next song")
             }
         }
     }

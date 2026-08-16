@@ -95,30 +95,61 @@ struct ThemePicker: View {
             .pickerStyle(.segmented)
         }
         .padding(18)
-        .background(AppTheme.cardFill, in: RoundedRectangle(cornerRadius: 22))
+        .background(store.appTheme.cardFill, in: RoundedRectangle(cornerRadius: 22))
         .overlay(RoundedRectangle(cornerRadius: 22).stroke(store.appTheme.accent.opacity(0.18), lineWidth: 1))
     }
 }
 
 extension AppTheme {
-    static let appBackground = LinearGradient(
-        colors: [
-            Color(red: 0.015, green: 0.018, blue: 0.030),
-            Color(red: 0.030, green: 0.044, blue: 0.082),
-            Color(red: 0.006, green: 0.008, blue: 0.014)
-        ],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
+    var appBackground: LinearGradient {
+        LinearGradient(colors: backgroundColors, startPoint: .topLeading, endPoint: .bottomTrailing)
+    }
 
-    static let cardFill = LinearGradient(
-        colors: [
-            Color.white.opacity(0.105),
-            Color.white.opacity(0.045)
-        ],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
+    var cardFill: LinearGradient {
+        LinearGradient(colors: cardColors, startPoint: .topLeading, endPoint: .bottomTrailing)
+    }
+
+    private var backgroundColors: [Color] {
+        switch self {
+        case .classic:
+            [
+                Color(red: 0.02, green: 0.05, blue: 0.13),
+                Color(red: 0.04, green: 0.14, blue: 0.29),
+                Color(red: 0.02, green: 0.03, blue: 0.08)
+            ]
+        case .ocean:
+            [
+                Color(red: 0.00, green: 0.12, blue: 0.17),
+                Color(red: 0.00, green: 0.28, blue: 0.33),
+                Color(red: 0.01, green: 0.06, blue: 0.12)
+            ]
+        case .sunrise:
+            [
+                Color(red: 0.20, green: 0.08, blue: 0.18),
+                Color(red: 0.45, green: 0.19, blue: 0.18),
+                Color(red: 0.10, green: 0.05, blue: 0.12)
+            ]
+        case .garden:
+            [
+                Color(red: 0.02, green: 0.13, blue: 0.08),
+                Color(red: 0.06, green: 0.25, blue: 0.14),
+                Color(red: 0.01, green: 0.06, blue: 0.05)
+            ]
+        }
+    }
+
+    private var cardColors: [Color] {
+        switch self {
+        case .classic:
+            [Color(red: 0.13, green: 0.24, blue: 0.45).opacity(0.52), Color.white.opacity(0.055)]
+        case .ocean:
+            [Color(red: 0.00, green: 0.46, blue: 0.53).opacity(0.34), Color.white.opacity(0.06)]
+        case .sunrise:
+            [Color(red: 0.76, green: 0.35, blue: 0.21).opacity(0.36), Color.white.opacity(0.07)]
+        case .garden:
+            [Color(red: 0.10, green: 0.46, blue: 0.22).opacity(0.34), Color.white.opacity(0.06)]
+        }
+    }
 
     var accent: Color {
         switch self {

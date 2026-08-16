@@ -24,7 +24,18 @@ struct ListenView: View {
                         }
                     }
                 }
-                HStack {
+                HStack(spacing: 12) {
+                    Button {
+                        store.playPrevious()
+                    } label: {
+                        Image(systemName: "backward.fill")
+                            .font(.headline)
+                            .frame(width: 48, height: 48)
+                    }
+                    .buttonStyle(.bordered)
+                    .disabled(!store.hasPreviousTrack)
+                    .accessibilityLabel("Previous song")
+
                     Button {
                         store.togglePlayback()
                     } label: {
@@ -34,6 +45,17 @@ struct ListenView: View {
                     }
                     .buttonStyle(.borderedProminent)
                     .disabled(store.currentTrack == nil)
+
+                    Button {
+                        store.playNext()
+                    } label: {
+                        Image(systemName: "forward.fill")
+                            .font(.headline)
+                            .frame(width: 48, height: 48)
+                    }
+                    .buttonStyle(.bordered)
+                    .disabled(!store.hasNextTrack)
+                    .accessibilityLabel("Next song")
 
                     if let track = store.currentTrack {
                         Button {

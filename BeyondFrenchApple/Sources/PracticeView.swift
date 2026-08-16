@@ -6,6 +6,7 @@ struct PracticeView: View {
     @State private var result: PracticeResult?
     @State private var promptMode = PromptMode.daily
     @State private var dictionaryIndex = 0
+    @FocusState private var answerFocused: Bool
 
     private var activePrompt: PracticePrompt {
         switch promptMode {
@@ -38,6 +39,7 @@ struct PracticeView: View {
                     TextField("Type the French answer", text: $answer)
                         .textInputAutocapitalization(.sentences)
                         .submitLabel(.done)
+                        .focused($answerFocused)
                         .padding(14)
                         .background(Color.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
                         .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.white.opacity(0.12), lineWidth: 1))
@@ -58,10 +60,12 @@ struct PracticeView: View {
 
                     if let result {
                         ResultPanel(result: result, expected: activePrompt.expected)
+                            .transition(.move(edge: .top).combined(with: .opacity))
                     }
                 }
+                .animation(.snappy(duration: 0.24), value: result)
                 .padding(18)
-                .background(AppTheme.cardFill, in: RoundedRectangle(cornerRadius: 22))
+                .background(store.appTheme.cardFill, in: RoundedRectangle(cornerRadius: 22))
                 .overlay(RoundedRectangle(cornerRadius: 22).stroke(store.appTheme.accent.opacity(0.18), lineWidth: 1))
 
                 HStack {
@@ -88,16 +92,37 @@ struct PracticeView: View {
             }
             .padding()
         }
-        .background(AppTheme.appBackground)
+        .background(store.appTheme.appBackground)
         .navigationTitle("Practice")
     }
 
     private func check() {
         if store.checkAnswer(answer, expected: activePrompt.expected) {
-            result = .correct
+            answerFocused = false
+            withAnimation(.snappy(duration: 0.24)) {
+                answer = ""
+                result = .correct
+            }
             store.recordCorrectPractice()
+            advanceDictionaryPromptIfNeeded()
         } else {
-            result = .incorrect
+            withAnimation(.snappy(duration: 0.24)) {
+                result = .incorrect
+            }
+        }
+    }
+
+    private func advanceDictionaryPromptIfNeeded() {
+        guard promptMode == .dictionary else { return }
+        Task {
+            try? await Task.sleep(for: .milliseconds(700))
+            await MainActor.run {
+                guard result == .correct, promptMode == .dictionary else { return }
+                withAnimation(.snappy(duration: 0.28)) {
+                    dictionaryIndex += 1
+                    result = nil
+                }
+            }
         }
     }
 }
@@ -123,7 +148,7 @@ private struct PracticePrompt {
     let hint: String
 }
 
-private enum PracticeResult {
+private enum PracticeResult: Equatable {
     case correct
     case incorrect
     case revealed
