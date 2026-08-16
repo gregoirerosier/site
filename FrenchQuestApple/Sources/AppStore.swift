@@ -10,6 +10,7 @@ final class QuestStore: ObservableObject {
     @Published private(set) var streak = 0
     @Published private(set) var lastResult: QuestResult?
     @Published private(set) var dictionary: [DictionaryWord] = []
+    @Published private(set) var musicEnabled = true
     @Published var theme = QuestTheme.riviera {
         didSet { UserDefaults.standard.set(theme.rawValue, forKey: themeKey) }
     }
@@ -18,11 +19,13 @@ final class QuestStore: ObservableObject {
 
     private let speaker = AVSpeechSynthesizer()
     private var prerecordedPlayer: AVAudioPlayer?
+    private var musicPlayer: AVAudioPlayer?
     private let completedKey = "FrenchQuest.completedChallengeIDs"
     private let xpKey = "FrenchQuest.xp"
     private let heartsKey = "FrenchQuest.hearts"
     private let streakKey = "FrenchQuest.streak"
     private let themeKey = "FrenchQuest.theme"
+    private let musicKey = "FrenchQuest.musicEnabled"
 
     init() {
         load()
@@ -134,6 +137,43 @@ final class QuestStore: ObservableObject {
         speakWithDeviceVoice(text, language: language.locale)
     }
 
+    func startBackgroundMusicIfNeeded() {
+        guard musicEnabled else { return }
+        if let musicPlayer {
+            if !musicPlayer.isPlaying {
+                musicPlayer.play()
+            }
+            return
+        }
+        guard let url = Bundle.main.url(
+            forResource: "french-accordion",
+            withExtension: "mp3",
+            subdirectory: "Audio/Music"
+        ), let player = try? AVAudioPlayer(contentsOf: url) else { return }
+
+        try? AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default, options: [.mixWithOthers])
+        try? AVAudioSession.sharedInstance().setActive(true)
+        player.numberOfLoops = -1
+        player.volume = 0.16
+        player.prepareToPlay()
+        musicPlayer = player
+        player.play()
+    }
+
+    func pauseBackgroundMusic() {
+        musicPlayer?.pause()
+    }
+
+    func toggleBackgroundMusic() {
+        musicEnabled.toggle()
+        UserDefaults.standard.set(musicEnabled, forKey: musicKey)
+        if musicEnabled {
+            startBackgroundMusicIfNeeded()
+        } else {
+            musicPlayer?.pause()
+        }
+    }
+
     private func load() {
         completedChallengeIDs = Set(UserDefaults.standard.stringArray(forKey: completedKey) ?? [])
         xp = UserDefaults.standard.integer(forKey: xpKey)
@@ -141,6 +181,9 @@ final class QuestStore: ObservableObject {
         hearts = savedHearts ?? 5
         streak = UserDefaults.standard.integer(forKey: streakKey)
         theme = UserDefaults.standard.string(forKey: themeKey).flatMap(QuestTheme.init(rawValue:)) ?? .riviera
+        if UserDefaults.standard.object(forKey: musicKey) != nil {
+            musicEnabled = UserDefaults.standard.bool(forKey: musicKey)
+        }
     }
 
     private func loadDictionary() {

@@ -27,7 +27,7 @@ function dailybreath_verse_of_day(PDO $pdo, string $locale = 'en'): array
         ['We know that all things work together for good for those who love God.', 'Romans 8:28'],
     ];
 
-    $result = null;
+    $result = dailybreath_recovery_verse_for_date(date('Y-m-d'), false);
     try {
         // Prefer the visitor's language, then use the managed English edition
         // until a localized post has been published for the same experience.
@@ -63,6 +63,10 @@ function dailybreath_verse_of_day(PDO $pdo, string $locale = 'en'): array
     }
 
     if ($result === null) {
+        $result = dailybreath_recovery_verse_for_date(date('Y-m-d'));
+    }
+
+    if ($result === null) {
         $webFallback = dailybreath_web_verse_fallback();
         if ($webFallback !== null) {
             $result = $webFallback;
@@ -78,6 +82,65 @@ function dailybreath_verse_of_day(PDO $pdo, string $locale = 'en'): array
 
     $location = dailybreath_reference_location($result['reference']);
     return $result + $location;
+}
+
+/** @return array{text:string,reference:string,source:string,audio_file:string}|null */
+function dailybreath_recovery_verse_for_date(string $date, bool $rotate = true): ?array
+{
+    $source = dirname(__DIR__) . '/data/daily-verses.json';
+    if (!is_file($source)) return null;
+    $document = json_decode((string)file_get_contents($source), true);
+    $entries = is_array($document['entries'] ?? null) ? $document['entries'] : [];
+    if (!$entries) return null;
+
+    $entry = null;
+    foreach ($entries as $candidate) {
+        if (($candidate['schedule_date'] ?? null) === $date) {
+            $entry = $candidate;
+            break;
+        }
+    }
+    if ($entry === null && !$rotate) return null;
+    if ($entry === null) {
+        $entry = $entries[(int)(abs(crc32($date)) % count($entries))];
+    }
+
+    return [
+        'text' => trim((string)($entry['text'] ?? '')),
+        'reference' => trim((string)($entry['reference'] ?? '')),
+        'source' => ($entry['schedule_date'] ?? null) === $date ? 'scheduled_recovery_library' : 'bundled_recovery_rotation',
+        'audio_file' => basename((string)($entry['audio_file'] ?? '')),
+    ];
+}
+
+/** @return array<string,mixed>|null */
+function dailybreath_recovery_devotional_for_date(string $date, bool $rotate = true): ?array
+{
+    $source = dirname(__DIR__) . '/data/daily-devotionals.json';
+    if (!is_file($source)) return null;
+    $document = json_decode((string)file_get_contents($source), true);
+    $entries = is_array($document['entries'] ?? null) ? $document['entries'] : [];
+    if (!$entries) return null;
+
+    foreach ($entries as $entry) if (($entry['schedule_date'] ?? null) === $date && ($entry['schedule_role'] ?? 'primary') === 'primary') return $entry;
+    foreach ($entries as $entry) if (($entry['schedule_date'] ?? null) === $date) return $entry;
+    if (!$rotate) return null;
+    return $entries[(int)(abs(crc32($date)) % count($entries))];
+}
+
+/** @return array<string,mixed>|null */
+function dailybreath_recovery_challenge_for_date(string $date): ?array
+{
+    $source = dirname(__DIR__) . '/data/recovery-challenges.json';
+    if (!is_file($source)) return null;
+    $document = json_decode((string)file_get_contents($source), true);
+    $entries = is_array($document['entries'] ?? null) ? $document['entries'] : [];
+    $active = array_values(array_filter($entries, static fn(array $entry): bool =>
+        (string)($entry['starts_on'] ?? '') <= $date && (string)($entry['ends_on'] ?? '') >= $date
+    ));
+    if (!$active) return null;
+    usort($active, static fn(array $left, array $right): int => strcmp((string)$right['starts_on'], (string)$left['starts_on']));
+    return $active[0] + ['source' => 'bundled_recovery_challenge'];
 }
 
 /** @return array{text:string,reference:string,source:string}|null */
